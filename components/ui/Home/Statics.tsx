@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
+import { Calendar, GraduationCap, Users, Building2 } from "lucide-react";
 
 function Counter({ end, duration = 2, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -35,32 +36,40 @@ function Counter({ end, duration = 2, suffix = "" }: { end: number; duration?: n
 }
 
 const stats = [
-  { label: "Years of Excellence", end: 15, suffix: "+" },
-  { label: "Students Empowered", end: 5000, suffix: "+" },
-  { label: "Qualified Teachers", end: 200, suffix: "+" },
-  { label: "Partner Schools", end: 50, suffix: "+" },
+  { label: "Years of Excellence", end: 15, suffix: "+", icon: Calendar },
+  { label: "Students Empowered", end: 5000, suffix: "+", icon: GraduationCap },
+  { label: "Qualified Teachers", end: 200, suffix: "+", icon: Users },
+  { label: "Partner Schools", end: 50, suffix: "+", icon: Building2 },
 ];
 
 export default function Statics() {
   return (
-    <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-      <div className="max-w-7xl mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((stat, i) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: i * 0.1, duration: 0.6 }}
-              className="text-center"
-            >
-              <div className="text-4xl md:text-5xl font-bold text-primary mb-2">
-                <Counter end={stat.end} suffix={stat.suffix} />
-              </div>
-              <p className="text-gray-600 text-sm md:text-base">{stat.label}</p>
-            </motion.div>
-          ))}
+    <section className="py-20 bg-gray-50/50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {stats.map((stat, i) => {
+            const Icon = stat.icon;
+            return (
+              <motion.div
+                key={stat.label}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1, duration: 0.6 }}
+                className="bg-white border border-gray-100 rounded-2xl p-8 flex flex-col items-center text-center shadow-sm hover:shadow-md transition-shadow duration-300"
+              >
+                <div className="w-14 h-14 rounded-full bg-secondary/10 flex items-center justify-center mb-6">
+                  <Icon className="w-6 h-6 text-secondary" />
+                </div>
+                <div className="text-4xl md:text-5xl font-extrabold tracking-tight text-primary mb-4">
+                  <Counter end={stat.end} suffix={stat.suffix} />
+                </div>
+                <p className="text-gray-500 text-xs md:text-sm uppercase tracking-[0.15em] font-medium">
+                  {stat.label}
+                </p>
+              </motion.div>
+            );
+          })}
         </div>
       </div>
     </section>
