@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Mail, Phone, MapPin, ArrowRight } from "lucide-react";
+import { Mail, Phone, MapPin, ArrowRight, MessageCircle } from "lucide-react";
 
 const FacebookIcon = ({ className }: { className?: string }) => (
   <svg className={className} viewBox="0 0 24 24" fill="currentColor">
@@ -49,6 +49,9 @@ export default function Footer() {
               <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary hover:text-white transition-colors duration-300">
                 <InstagramIcon className="w-4 h-4" />
               </a>
+              <a href="https://wa.me/252615625633" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary hover:text-white transition-colors duration-300">
+                <MessageCircle className="w-4 h-4" />
+              </a>
             </div>
           </div>
 
@@ -95,7 +98,11 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <Phone className="w-5 h-5 text-secondary shrink-0" />
-                <span>+252 61 000 0000</span>
+                <a href="tel:+252615625633" className="hover:text-secondary transition-colors">+252 61 5625633</a>
+              </li>
+              <li className="flex items-center gap-3 text-sm">
+                <MessageCircle className="w-5 h-5 text-secondary shrink-0" />
+                <a href="https://wa.me/252615625633" target="_blank" rel="noopener noreferrer" className="hover:text-secondary transition-colors">WhatsApp Chat</a>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <Mail className="w-5 h-5 text-secondary shrink-0" />
