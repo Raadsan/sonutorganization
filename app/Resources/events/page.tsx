@@ -1,7 +1,11 @@
+import Banneevents from "@/components/events/eventbanner";
+import UpcomingEvents from "@/components/events/upcomingevents";
+
 export default function Events() {
   return (
-    <div>
-      <h1>Events</h1>
-    </div>
+    <>
+      <Banneevents />
+      <UpcomingEvents />
+    </>
   );
 }

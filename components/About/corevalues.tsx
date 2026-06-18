@@ -5,9 +5,9 @@ import {
   Handshake,
   ShieldCheck,
   ClipboardCheck,
-  Search,
   Scale,
-  Star,
+  Lightbulb,
+  Heart,
 } from "lucide-react";
 
 const containerVariants = {
@@ -32,37 +32,37 @@ const coreValues = [
     icon: Handshake,
     title: "Unity",
     description:
-      "We unite teachers across Somalia, fostering solidarity and a collective voice to strengthen the teaching profession.",
+      "We foster collaboration, solidarity, and a unified voice among teachers to advance the teaching profession and educational development throughout Somalia.",
   },
   {
     icon: ShieldCheck,
     title: "Integrity",
     description:
-      "We uphold the highest ethical standards in all our actions, ensuring transparency and honesty in serving our members.",
+      "We uphold the highest standards of professionalism, honesty, transparency, and ethical conduct in all our operations and partnerships.",
   },
   {
     icon: ClipboardCheck,
     title: "Accountability",
     description:
-      "We take responsibility for our commitments and actions, ensuring that our work delivers real impact for teachers and students.",
-  },
-  {
-    icon: Search,
-    title: "Transparency",
-    description:
-      "We operate openly, keeping our members informed and engaged in every step of our advocacy and decision-making.",
+      "We ensure responsible leadership, transparent decision-making, and effective management that builds trust among members and stakeholders.",
   },
   {
     icon: Scale,
-    title: "Equity",
+    title: "Equity & Inclusion",
     description:
-      "We champion equal opportunities for all educators and students, working to eliminate disparities in education across Somalia.",
+      "We champion equal access to quality education for all learners regardless of gender, location, ability, or social background.",
   },
   {
-    icon: Star,
-    title: "Excellence",
+    icon: Lightbulb,
+    title: "Innovation & Resilience",
     description:
-      "We strive for the highest standards in teacher professional development and quality education delivery nationwide.",
+      "We embrace innovation and adaptability, empowering teachers to lead positive change in their schools and communities.",
+  },
+  {
+    icon: Heart,
+    title: "Cultural Respect",
+    description:
+      "We value Somalia’s diverse cultural heritage and promote locally driven solutions through community engagement and participation.",
   },
 ];
 
@@ -86,7 +86,7 @@ export default function CoreValues() {
           </h2>
           <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
             The principles that drive every decision we make and every action we
-            take in serving Somali teachers and students.
+            take in serving teachers and strengthening education across Somalia.
           </p>
         </motion.div>
 

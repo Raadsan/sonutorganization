@@ -1,7 +1,11 @@
-export default function ournews() {
+import Newssbanner from "@/components/news/NwesBanner";
+import OurNews from "@/components/news/ournews";
+
+export default function OurNewsPage() {
   return (
-    <div>
-      <h1>ournews</h1>
-    </div>
+    <>
+      <Newssbanner />
+      <OurNews />
+    </>
   );
 }

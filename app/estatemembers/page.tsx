@@ -1,7 +1,13 @@
-export default function estateMembers() {
+import Memberbanner from "@/components/Members/bannermeber";
+import ProudMembers from "@/components/Members/Proud ";
+import MembersForm from "@/components/Members/memebrsform";
+
+export default function EstateMembersPage() {
   return (
-    <div>
-      <h1>estateMembers</h1>
-    </div>
+    <main>
+      <Memberbanner />
+      <ProudMembers />
+      <MembersForm />
+    </main>
   );
 }

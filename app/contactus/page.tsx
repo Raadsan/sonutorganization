@@ -1,7 +1,12 @@
+import Bannercontact from "@/components/contact/Bannercontact";
+import ContactForm from "@/components/contact/ContactForm";
+
 export default function ContactUs() {
   return (
-    <main className="flex-1 flex items-center justify-center">
-      <h1 className="text-4xl font-bold">Contact Us</h1>
-    </main>
+    <>
+      <Bannercontact />
+      <ContactForm />
+    </>
+
   );
 }

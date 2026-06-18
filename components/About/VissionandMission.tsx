@@ -17,13 +17,13 @@ const data = [
     icon: Eye,
     title: "Our Vision",
     description:
-      "To see a united, educated, and empowered Somali society where teachers are respected, supported, and equipped to deliver quality education for every child.",
+      "To become Africa’s leading teachers’ union, internationally recognized for excellence in advocacy, continuous professional development, and strong member welfare.",
   },
   {
     icon: Target,
     title: "Our Mission",
     description:
-      "To unite, represent, and empower teachers across Somalia through advocacy, professional development, and partnership-building to improve the quality of education nationwide.",
+      "To promote unity and sustained progress among all teachers in Somalia, elevating the teaching profession through stronger education quality and improved conditions of service.",
   },
 ];
 
