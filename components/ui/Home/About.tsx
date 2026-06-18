@@ -7,12 +7,12 @@ import Link from "next/link";
 export default function About() {
   const fadeLeft = {
     hidden: { opacity: 0, x: -50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
   };
 
   const fadeRight = {
     hidden: { opacity: 0, x: 50 },
-    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" } }
+    visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
   };
 
   return (
