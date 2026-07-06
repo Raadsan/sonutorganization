@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import Tobbar from "@/components/ui/Home/Tobbar";
-import Nav from "@/components/ui/Home/Nav";
-import Footer from "@/components/Footer";
-import FloatingWhatsApp from "@/components/FloatingWhatsApp";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import SiteLayout from "@/components/SiteLayout";
 import "./globals.css";
 
 const poppins = Poppins({
@@ -28,13 +26,9 @@ export default function RootLayout({
       className={`${poppins.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-        <Tobbar />
-        <Nav />
-        <main className="flex-grow">
-          {children}
-        </main>
-        <Footer />
-        <FloatingWhatsApp />
+        <TooltipProvider>
+          <SiteLayout>{children}</SiteLayout>
+        </TooltipProvider>
       </body>
     </html>
   );
