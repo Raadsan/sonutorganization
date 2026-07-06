@@ -2,18 +2,27 @@
 
 import { motion } from "framer-motion";
 
-const partners = [
-  "UNICEF Somalia",
-  "Ministry of Education",
-  "Save the Children",
-  "UNESCO",
-  "World Bank Group",
-  "USAID",
-  "Care International",
-  "Global Partnership"
+type PartnerData = {
+  id: number;
+  name: string;
+  logoUrl: string | null;
+  website: string | null;
+};
+
+const defaultPartners: PartnerData[] = [
+  { id: 1, name: "UNICEF Somalia", logoUrl: null, website: null },
+  { id: 2, name: "Ministry of Education", logoUrl: null, website: null },
+  { id: 3, name: "Save the Children", logoUrl: null, website: null },
+  { id: 4, name: "UNESCO", logoUrl: null, website: null },
+  { id: 5, name: "World Bank Group", logoUrl: null, website: null },
+  { id: 6, name: "USAID", logoUrl: null, website: null },
+  { id: 7, name: "Care International", logoUrl: null, website: null },
+  { id: 8, name: "Global Partnership", logoUrl: null, website: null }
 ];
 
-export default function Partners() {
+export default function Partners({ initialData }: { initialData?: PartnerData[] }) {
+  const displayPartners = initialData && initialData.length > 0 ? initialData : defaultPartners;
+
   return (
     <section className="py-20 bg-white overflow-hidden border-t border-gray-100 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-12 text-center">
@@ -43,17 +52,21 @@ export default function Partners() {
         <div className="absolute top-0 bottom-0 left-0 w-24 md:w-48 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
         <div className="absolute top-0 bottom-0 right-0 w-24 md:w-48 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
-        {/* Scrolling Track */}
-        <div className="flex animate-marquee group-hover:pause items-center w-max">
-           {/* Duplicate the list multiple times to ensure seamless infinite scroll */}
-           {[...partners, ...partners, ...partners].map((partner, idx) => (
+        {/* Scrolling Track (or Flex Container) */}
+        <div className="flex items-center justify-center flex-wrap gap-8 w-full max-w-5xl mx-auto">
+           {displayPartners.map((partner, idx) => (
              <div 
-                key={idx} 
-                className="flex-shrink-0 w-56 h-24 mx-6 bg-white border border-gray-100 shadow-sm rounded-2xl flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:shadow-lg hover:border-primary/20 hover:scale-105 transition-all duration-300 cursor-pointer"
+                key={partner.id} 
+                className="flex-shrink-0 w-56 h-24 mx-6 bg-white border border-gray-100 shadow-sm rounded-2xl flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:shadow-lg hover:border-primary/20 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden p-2"
+                onClick={() => partner.website && window.open(partner.website, '_blank')}
               >
-                <span className="font-bold text-gray-400 hover:text-primary text-xl text-center px-4 leading-tight transition-colors">
-                  {partner}
-                </span>
+                {partner.logoUrl ? (
+                  <img src={partner.logoUrl} alt={partner.name} className="max-w-full max-h-full object-contain" />
+                ) : (
+                  <span className="font-bold text-gray-400 hover:text-primary text-xl text-center px-4 leading-tight transition-colors">
+                    {partner.name}
+                  </span>
+                )}
              </div>
            ))}
         </div>

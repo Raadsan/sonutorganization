@@ -4,7 +4,17 @@ import { motion } from "framer-motion";
 import { ArrowRight, Calendar, User } from "lucide-react";
 import Link from "next/link";
 
-const blogPosts = [
+type BlogPostData = {
+  id: number;
+  title: string;
+  excerpt: string | null;
+  category: string;
+  date: string;
+  author: string;
+  image: string | null;
+};
+
+const defaultBlogPosts: BlogPostData[] = [
   {
     id: 1,
     title: "SONUT Launches New Training Program for Rural Teachers",
@@ -34,7 +44,9 @@ const blogPosts = [
   }
 ];
 
-export default function Blog() {
+export default function Blog({ initialData }: { initialData?: BlogPostData[] }) {
+  const displayPosts = initialData && initialData.length > 0 ? initialData : defaultBlogPosts;
+
   return (
     <section className="py-24 bg-gray-50/50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -76,9 +88,8 @@ export default function Blog() {
           </motion.div>
         </div>
 
-        {/* Blog Grid */}
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {blogPosts.map((post, index) => (
+          {displayPosts.map((post, index) => (
             <motion.div 
               key={post.id}
               initial={{ opacity: 0, y: 50 }}
@@ -88,12 +99,16 @@ export default function Blog() {
               className="group bg-white rounded-3xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-2xl transition-all duration-500 flex flex-col"
             >
               {/* Image Container */}
-              <div className="relative h-60 w-full overflow-hidden">
-                <img 
-                  src={post.image} 
-                  alt={post.title} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                />
+              <div className="relative h-60 w-full overflow-hidden bg-gray-100 flex items-center justify-center">
+                {post.image ? (
+                  <img 
+                    src={post.image} 
+                    alt={post.title} 
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                  />
+                ) : (
+                  <span className="text-gray-400 font-medium">No Image</span>
+                )}
                 <div className="absolute inset-0 bg-primary/10 group-hover:bg-transparent transition-colors duration-500" />
                 <div className="absolute top-4 left-4 bg-white/90 backdrop-blur px-3 py-1.5 rounded-full text-xs font-bold text-primary shadow-sm">
                   {post.category}

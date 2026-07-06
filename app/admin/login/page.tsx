@@ -1,19 +1,28 @@
 "use client";
 
 import { useState } from "react";
+import axios from "axios";
 import { Eye, EyeOff, Lock, Mail } from "lucide-react";
 
 export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Simulate admin login
-    console.log("Login attempted with:", email);
-    // Redirect to dashboard
-    window.location.href = "/admin/dashboard";
+    setError("");
+    setLoading(true);
+
+    try {
+      await axios.post("/api/auth/login", { email, password });
+      window.location.href = "/admin/dashboard";
+    } catch (err: any) {
+      setError(err.response?.data?.error || "An error occurred during login.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -24,6 +33,12 @@ export default function AdminLogin() {
             <h1 className="text-3xl font-bold text-gray-900 mb-2">Admin Portal</h1>
             <p className="text-gray-500">Sign in to access the dashboard</p>
           </div>
+
+          {error && (
+            <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm text-center">
+              {error}
+            </div>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
@@ -103,9 +118,10 @@ export default function AdminLogin() {
 
             <button
               type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all duration-300 transform hover:-translate-y-0.5"
+              disabled={loading}
+              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-all disabled:opacity-50"
             >
-              Sign in to Admin
+              {loading ? "Signing in..." : "Sign in to Admin"}
             </button>
           </form>
         </div>

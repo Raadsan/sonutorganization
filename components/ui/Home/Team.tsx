@@ -5,11 +5,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Share2, X, ChevronRight, ChevronLeft } from "lucide-react";
 
 type TeamMember = {
-  id: string;
+  id: string | number;
   name: string;
   role: string;
-  image: string;
-  bio: string;
+  image: string | null;
+  bio: string | null;
   socials: {
     facebook?: string;
     tiktok?: string;
@@ -83,9 +83,11 @@ const InstagramIcon = ({ className }: { className?: string }) => (
   </svg>
 );
 
-export default function Team() {
-  const [activeShareId, setActiveShareId] = useState<string | null>(null);
+export default function Team({ initialData }: { initialData?: TeamMember[] }) {
+  const [activeShareId, setActiveShareId] = useState<string | number | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
+
+  const displayData = initialData && initialData.length > 0 ? initialData : teamData;
 
   const scrollLeft = () => {
     const slider = document.getElementById('team-slider');
@@ -134,7 +136,7 @@ export default function Team() {
           className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-12 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar"
           style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
         >
-          {teamData.map((member, index) => (
+          {displayData.map((member, index) => (
             <motion.div 
               key={member.id}
               initial={{ opacity: 0, scale: 0.9 }}
@@ -144,8 +146,12 @@ export default function Team() {
               className="min-w-[280px] md:min-w-[320px] max-w-[320px] snap-center bg-white rounded-3xl p-4 shadow-sm border border-gray-100 relative group hover:shadow-xl transition-all duration-300"
             >
               {/* Image Container */}
-              <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-5">
-                <img src={member.image} alt={member.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+              <div className="relative w-full aspect-square rounded-2xl overflow-hidden mb-5 bg-gray-100 flex items-center justify-center">
+                {member.image ? (
+                  <img src={member.image} alt={member.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <span className="text-gray-400 font-medium">No Image</span>
+                )}
                 
                 {/* Overlay for aesthetic */}
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -223,8 +229,10 @@ export default function Team() {
               exit={{ opacity: 0, scale: 0.9, y: 20 }}
               className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl overflow-hidden z-10"
             >
-              <div className="h-48 w-full relative">
-                <img src={selectedMember.image} alt={selectedMember.name} className="w-full h-full object-cover" />
+              <div className="h-48 w-full relative bg-gray-200">
+                {selectedMember.image && (
+                  <img src={selectedMember.image} alt={selectedMember.name} className="w-full h-full object-cover" />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/90 to-transparent" />
                 <button 
                   onClick={() => setSelectedMember(null)}
