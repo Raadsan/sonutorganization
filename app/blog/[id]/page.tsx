@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Calendar, User, Tag, Share2, Facebook, Twitter, Linkedin } from "lucide-react";
+import { ArrowLeft, Calendar, User, Tag, Share2 } from "lucide-react";
 import { prisma } from "@/lib/db";
 
 interface PageProps {
@@ -78,13 +78,13 @@ export default async function BlogDetail({ params }: PageProps) {
             <div className="flex items-center gap-2">
               <span className="text-sm text-gray-500 font-medium mr-2 hidden sm:inline-block">Share:</span>
               <button className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-colors">
-                <Facebook className="w-4 h-4" />
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path fillRule="evenodd" d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z" clipRule="evenodd" /></svg>
               </button>
               <button className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center hover:bg-black hover:text-white transition-colors">
-                <Twitter className="w-4 h-4" />
+                <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" /></svg>
               </button>
               <button className="w-8 h-8 rounded-full bg-gray-100 text-gray-500 flex items-center justify-center hover:bg-[#0A66C2] hover:text-white transition-colors">
-                <Linkedin className="w-4 h-4" />
+                <Share2 className="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -134,17 +134,17 @@ export default async function BlogDetail({ params }: PageProps) {
           
           <div className="relative z-10">
             <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">
-              Diyaar ma u tahay inaad qayb ka noqoto SONUT?
+              Are you ready to be part of SONUT?
             </h2>
             <p className="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-              Ku soo biir ururka macalimiinta Soomaaliyeed si aad qayb uga noqoto horumarinta tayada waxbarashada iyo xuquuqda macalinka.
+              Join the Somali National Union of Teachers to be part of improving the quality of education and protecting teachers' rights.
             </p>
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link href="/join" className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-full hover:scale-105 hover:shadow-lg transition-all duration-300">
-                Hadda Is-diiwaangeli
+                Register Now
               </Link>
               <Link href="/about" className="w-full sm:w-auto px-8 py-4 bg-primary-foreground/10 text-white font-bold rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300">
-                Wax badan ka baro
+                Learn More
               </Link>
             </div>
           </div>
