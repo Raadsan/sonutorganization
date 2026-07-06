@@ -6,7 +6,7 @@ import Team from "@/components/ui/Home/Team";
 import Partners from "@/components/ui/Home/Partners";
 import Blog from "@/components/ui/Home/blog";
 import Cta from "@/components/ui/Home/Cta";
-import SocialUpdates from "@/components/ui/Home/SocialUpdates";
+
 
 export default function Home() {
   return (
@@ -17,7 +17,7 @@ export default function Home() {
       <Team />
       <Priorities />
       <Partners />
-      <SocialUpdates />
+
       <Blog />
       <Cta />
     </>
