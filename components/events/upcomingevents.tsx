@@ -3,7 +3,11 @@
 import { useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { Calendar, MapPin, Clock, Search, ArrowRight } from "lucide-react";
+import {
+  Calendar, MapPin, Clock, Search, ArrowRight, Loader2,
+} from "lucide-react";
+import Link from "next/link";
+import Image from "next/image";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,103 +15,47 @@ interface Event {
   id: number;
   title: string;
   description: string;
-  date: string;
-  endDate: string;
   location: string;
+  startDate: string;
+  endDate: string;
   time: string;
-  category: "upcoming" | "past";
-  image: string;
+  coverImageUrl: string | null;
+  isPublished: boolean;
 }
 
-const eventsData: Event[] = [
-  {
-    id: 1,
-    title: "Annual General Meeting 2026",
-    description:
-      "Join us for the Annual General Meeting where we will discuss the union's achievements, financial report, and elect new leadership for the coming term.",
-    date: "2026-08-15",
-    endDate: "2026-08-16",
-    location: "Mogadishu, Somalia",
-    time: "09:00 AM - 5:00 PM",
-    category: "upcoming",
-    image:
-      "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80",
-  },
-  {
-    id: 2,
-    title: "Teachers' Professional Development Workshop",
-    description:
-      "A two-day workshop focused on modern teaching methodologies, classroom management, and curriculum development for primary and secondary educators.",
-    date: "2026-07-10",
-    endDate: "2026-07-11",
-    location: "Hargeisa, Somaliland",
-    time: "08:30 AM - 4:30 PM",
-    category: "upcoming",
-    image:
-      "https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=600&q=80",
-  },
-  {
-    id: 3,
-    title: "Education Policy Forum",
-    description:
-      "A high-level forum bringing together policymakers, educators, and international partners to shape the future of education in Somalia.",
-    date: "2026-09-05",
-    endDate: "2026-09-06",
-    location: "Kismayo, Somalia",
-    time: "09:00 AM - 5:00 PM",
-    category: "upcoming",
-    image:
-      "https://images.unsplash.com/photo-1515187029135-18ee286d815b?w=600&q=80",
-  },
-  {
-    id: 4,
-    title: "Somali Teachers' Day Celebration",
-    description:
-      "A celebration honoring the contributions of teachers across Somalia with awards, cultural performances, and recognition ceremonies.",
-    date: "2026-03-15",
-    endDate: "2026-03-15",
-    location: "Mogadishu, Somalia",
-    time: "10:00 AM - 3:00 PM",
-    category: "past",
-    image:
-      "https://images.unsplash.com/photo-1523580494863-6f3031224c94?w=600&q=80",
-  },
-  {
-    id: 5,
-    title: "Women in Education Leadership Summit",
-    description:
-      "A summit empowering female educators with leadership skills, mentorship opportunities, and networking with industry leaders.",
-    date: "2026-02-20",
-    endDate: "2026-02-21",
-    location: "Garowe, Puntland",
-    time: "09:00 AM - 4:00 PM",
-    category: "past",
-    image:
-      "https://images.unsplash.com/photo-1571260899304-425eee4c7efc?w=600&q=80",
-  },
-  {
-    id: 6,
-    title: "Digital Literacy in Schools Initiative",
-    description:
-      "A training program introducing teachers to digital tools, online resources, and blended learning techniques for modern classrooms.",
-    date: "2026-01-12",
-    endDate: "2026-01-14",
-    location: "Baidoa, Somalia",
-    time: "08:00 AM - 5:00 PM",
-    category: "past",
-    image:
-      "https://images.unsplash.com/photo-1509062522246-3755977927d7?w=600&q=80",
-  },
-];
+const FALLBACK =
+  "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=600&q=80";
+
+function isPast(startDate: string) {
+  return new Date(startDate) < new Date();
+}
 
 export default function UpcomingEvents() {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<"upcoming" | "past">("upcoming");
   const [search, setSearch] = useState("");
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
-  const filtered = eventsData
-    .filter((e) => e.category === filter)
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const res = await fetch("/api/admin/events");
+        const data: Event[] = await res.json();
+        // Only published events
+        setEvents(data.filter((e) => e.isPublished));
+      } catch (e) {
+        console.error("Failed to load events", e);
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEvents();
+  }, []);
+
+  const filtered = events
+    .filter((e) => (filter === "past" ? isPast(e.startDate) : !isPast(e.startDate)))
     .filter(
       (e) =>
         e.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -136,7 +84,7 @@ export default function UpcomingEvents() {
         },
       }
     );
-  }, [filter, search]);
+  }, [filter, search, events]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -174,10 +122,10 @@ export default function UpcomingEvents() {
             OUR EVENTS
           </div>
           <h2 className="text-4xl md:text-5xl font-serif font-extrabold text-primary mb-4">
-            Events & Gatherings
+            Events &amp; Gatherings
           </h2>
           <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
-            Stay connected with SONUT's upcoming and past events, workshops, and
+            Stay connected with SONUT&apos;s upcoming and past events, workshops, and
             community gatherings.
           </p>
         </div>
@@ -218,14 +166,16 @@ export default function UpcomingEvents() {
           </div>
         </div>
 
-        {filtered.length === 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-24">
+            <Loader2 className="w-10 h-10 text-primary animate-spin" />
+          </div>
+        ) : filtered.length === 0 ? (
           <div className="text-center py-20">
             <div className="w-16 h-16 mx-auto rounded-full bg-primary/10 flex items-center justify-center mb-4">
               <Calendar className="w-7 h-7 text-primary" />
             </div>
-            <h3 className="text-xl font-bold text-gray-900 mb-2">
-              No events found
-            </h3>
+            <h3 className="text-xl font-bold text-gray-900 mb-2">No events found</h3>
             <p className="text-muted-foreground text-sm">
               {search
                 ? "Try a different search term."
@@ -233,73 +183,84 @@ export default function UpcomingEvents() {
             </p>
           </div>
         ) : (
-          <div
-            ref={cardsRef}
-            className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8"
-          >
-            {filtered.map((event) => (
-              <article
-                key={event.id}
-                className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col"
-              >
-                <div className="relative h-52 overflow-hidden">
-                  <img
-                    src={event.image}
-                    alt={event.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-                  <div className="absolute bottom-3 left-3">
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-primary/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {new Date(event.date).toLocaleDateString("en-US", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                      })}
-                    </span>
+          <div ref={cardsRef} className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filtered.map((event) => {
+              const past = isPast(event.startDate);
+              return (
+                <article
+                  key={event.id}
+                  className="group bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 overflow-hidden flex flex-col"
+                >
+                  <div className="relative h-52 overflow-hidden bg-gray-100">
+                    {event.coverImageUrl ? (
+                      <Image
+                        src={event.coverImageUrl}
+                        alt={event.title}
+                        fill
+                        className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                      />
+                    ) : (
+                      <img
+                        src={FALLBACK}
+                        alt={event.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                      />
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                    <div className="absolute bottom-3 left-3">
+                      <span className="inline-flex items-center gap-1.5 text-xs font-bold text-white bg-primary/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
+                        <Calendar className="w-3.5 h-3.5" />
+                        {new Date(event.startDate).toLocaleDateString("en-US", {
+                          month: "short",
+                          day: "numeric",
+                          year: "numeric",
+                        })}
+                      </span>
+                    </div>
+                    <div className="absolute top-3 right-3">
+                      <span
+                        className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-sm ${
+                          past
+                            ? "bg-gray-500/80 text-white"
+                            : "bg-green-500/90 text-white"
+                        }`}
+                      >
+                        {past ? "Past" : "Upcoming"}
+                      </span>
+                    </div>
                   </div>
-                  <div className="absolute top-3 right-3">
-                    <span
-                      className={`text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full backdrop-blur-sm ${
-                        event.category === "upcoming"
-                          ? "bg-green-500/90 text-white"
-                          : "bg-gray-500/80 text-white"
-                      }`}
+
+                  <div className="p-5 flex flex-col flex-1">
+                    <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300 leading-snug line-clamp-2">
+                      {event.title}
+                    </h3>
+
+                    <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2 flex-1">
+                      {event.description}
+                    </p>
+
+                    <div className="space-y-2 mb-5">
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                        {event.location}
+                      </div>
+                      <div className="flex items-center gap-2 text-xs text-gray-500">
+                        <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                        {event.time}
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/Resources/events/${event.id}`}
+                      className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#2A1A99] text-white text-sm font-bold py-3 rounded-xl transition-all duration-300 active:scale-[0.98] group/btn"
                     >
-                      {event.category === "upcoming" ? "Upcoming" : "Past"}
-                    </span>
+                      View Details
+                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                    </Link>
                   </div>
-                </div>
-
-                <div className="p-5 flex flex-col flex-1">
-                  <h3 className="text-lg font-bold text-gray-900 mb-2 group-hover:text-primary transition-colors duration-300 leading-snug line-clamp-2">
-                    {event.title}
-                  </h3>
-
-                  <p className="text-muted-foreground text-sm leading-relaxed mb-4 line-clamp-2 flex-1">
-                    {event.description}
-                  </p>
-
-                  <div className="space-y-2 mb-5">
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <MapPin className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                      {event.location}
-                    </div>
-                    <div className="flex items-center gap-2 text-xs text-gray-500">
-                      <Clock className="w-3.5 h-3.5 text-gray-400 shrink-0" />
-                      {event.time}
-                    </div>
-                  </div>
-
-                  <button className="w-full inline-flex items-center justify-center gap-2 bg-primary hover:bg-[#2A1A99] text-white text-sm font-bold py-3 rounded-xl transition-all duration-300 active:scale-[0.98] group/btn">
-                    Read More
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform duration-300" />
-                  </button>
-                </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         )}
       </div>

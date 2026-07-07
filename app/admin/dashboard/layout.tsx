@@ -9,6 +9,7 @@ import {
   Users,
   Handshake,
   BookOpen,
+  CalendarDays,
   LogOut,
   Menu,
   X,
@@ -20,6 +21,7 @@ const navItems = [
   { href: '/admin/dashboard/leadership', label: 'Leadership', icon: Users },
   { href: '/admin/dashboard/partners', label: 'Partners', icon: Handshake },
   { href: '/admin/dashboard/blog', label: 'Blog', icon: BookOpen },
+  { href: '/admin/dashboard/events', label: 'Events', icon: CalendarDays },
 ];
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

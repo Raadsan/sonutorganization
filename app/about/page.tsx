@@ -14,7 +14,7 @@ export default function AboutPage() {
       <VissionAndMission />
       <CoreValues />
       <AimsAndObjectives />
-      <OurHistory />
+      {/* <OurHistory /> */}
       <Partners />
 
     </main>
