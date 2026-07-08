@@ -170,7 +170,6 @@ export default function MembersForm() {
                           <option value="Jubaland">Jubaland</option>
                           <option value="Puntland">Puntland</option>
                           <option value="South West">South West</option>
-                          <option value="Somaliland">Somaliland</option>
                         </select>
                       </div>
                     </div>

@@ -17,7 +17,6 @@ const navLinks = [
       { label: "Our News", href: "/Resources/ournews" },
     ],
   },
-  { label: "Estate Members", href: "/estatemembers" },
   { label: "Contact", href: "/contactus" },
 ];
 
@@ -101,8 +100,14 @@ export default function Nav() {
         {/* Button - Gesh (Mobile + Desktop) */}
         <div className="flex items-center gap-3">
           <Link
+            href="/estatemembers"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#1E0D79] border border-[#1E0D79] hover:bg-gray-50 transition-colors"
+          >
+            Join Estate Members
+          </Link>
+          <Link
             href="/contactus"
-            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-[#1E0D79] px-4 py-2 text-sm font-medium text-white hover:bg-[#2a1a8a] transition-colors"
+            className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-[#F4313F] px-4 py-2 text-sm font-medium text-white hover:bg-[#d92936] transition-colors"
           >
             Verify Your ID
           </Link>
@@ -173,13 +178,20 @@ export default function Nav() {
                   )}
                 </li>
               ))}
-              <li className="pt-2">
+              <li className="pt-2 flex flex-col gap-2">
+                <Link
+                  href="/estatemembers"
+                  onClick={() => setOpen(false)}
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-white border border-[#1E0D79] px-4 py-2 text-sm font-medium text-[#1E0D79]"
+                >
+                  Join Estate Members
+                </Link>
                 <Link
                   href="/contactus"
                   onClick={() => setOpen(false)}
-                  className="inline-flex items-center gap-1.5 rounded-lg bg-[#1E0D79] px-4 py-2 text-sm font-medium text-white"
+                  className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-[#F4313F] px-4 py-2 text-sm font-medium text-white"
                 >
-                Verify Your ID 
+                  Verify Your ID 
                 </Link>
               </li>
             </ul>
