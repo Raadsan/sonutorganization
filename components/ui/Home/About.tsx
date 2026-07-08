@@ -1,8 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { ShieldCheck, BookOpen, ArrowUpRight, Check } from "lucide-react";
 import Link from "next/link";
+import { useState, useEffect } from "react";
+
+const aboutImages = [
+  "/images/1.jpg",
+  "/images/2.jpg",
+  "/images/3.jpg",
+  "/images/4.jpg",
+  "/images/5.jpg"
+];
 
 export default function About() {
   const fadeLeft = {
@@ -15,10 +24,19 @@ export default function About() {
     visible: { opacity: 1, x: 0, transition: { duration: 0.8, ease: "easeOut" as const } }
   };
 
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentImageIndex((prev) => (prev + 1) % aboutImages.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
+
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-start">
+        <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
           
           {/* Left Column - Images (Fade In Left) */}
           <motion.div 
@@ -26,24 +44,22 @@ export default function About() {
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
             variants={fadeLeft}
-            className="relative sticky top-24"
+            className="relative"
           >
             {/* Main large image */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square lg:aspect-[4/5] w-full max-w-lg mx-auto md:mx-0">
-              <img 
-                src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=1000&auto=format&fit=crop" 
-                alt="Main About Image" 
-                className="w-full h-full object-cover"
-              />
-            </div>
-            
-            {/* Overlapping small image */}
-            <div className="absolute -bottom-8 -right-8 w-2/3 max-w-[300px] rounded-2xl overflow-hidden border-[8px] border-white shadow-xl aspect-[4/3] hidden sm:block">
-              <img 
-                src="https://images.unsplash.com/photo-1516549655169-df83a0774514?q=80&w=800&auto=format&fit=crop" 
-                alt="Secondary About Image" 
-                className="w-full h-full object-cover"
-              />
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square lg:aspect-[4/5] w-full max-w-lg mx-auto md:mx-0 bg-gray-100">
+              <AnimatePresence mode="popLayout">
+                <motion.img 
+                  key={currentImageIndex}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8 }}
+                  src={aboutImages[currentImageIndex]} 
+                  alt="About SONUT" 
+                  className="w-full h-full object-cover absolute inset-0"
+                />
+              </AnimatePresence>
             </div>
           </motion.div>
 
@@ -97,22 +113,6 @@ export default function About() {
               </div>
             </div>
 
-            {/* Checklist */}
-            <ul className="space-y-4 mb-10">
-              {[
-                "Established in 2004 and serving teachers across Somalia.",
-                "Represents educators from primary, secondary, technical, and teacher training institutions.",
-                "Promotes quality education, teacher welfare, and educational development nationwide.",
-                "Builds partnerships with government institutions, communities, and international organizations."
-              ].map((item, idx) => (
-                <li key={idx} className="flex items-start gap-3">
-                  <div className="mt-0.5 rounded-full bg-secondary/20 p-1 shrink-0">
-                    <Check className="w-3.5 h-3.5 text-secondary" strokeWidth={3} />
-                  </div>
-                  <span className="text-muted-foreground text-sm font-medium">{item}</span>
-                </li>
-              ))}
-            </ul>
 
             {/* CTA Button */}
             <div className="mt-2">
