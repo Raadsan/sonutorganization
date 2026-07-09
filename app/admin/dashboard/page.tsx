@@ -1,13 +1,14 @@
 import Link from 'next/link';
-import { Users, Handshake, BookOpen, TrendingUp } from 'lucide-react';
+import { Users, Handshake, BookOpen, TrendingUp, UserCheck } from 'lucide-react';
 import { prisma } from '@/lib/db';
 
 export default async function DashboardPage() {
-  const [leaderCount, partnerCount, blogCount, publishedCount] = await Promise.all([
+  const [leaderCount, partnerCount, blogCount, publishedCount, memberCount] = await Promise.all([
     prisma.leader.count(),
     prisma.partner.count(),
     prisma.blogPost.count(),
     prisma.blogPost.count({ where: { isPublished: true } }),
+    prisma.member.count(),
   ]);
 
   const stats = [
@@ -47,6 +48,15 @@ export default async function DashboardPage() {
       bg: 'bg-orange-500/10',
       border: 'border-orange-500/20',
     },
+    {
+      label: 'Members',
+      value: memberCount,
+      icon: UserCheck,
+      href: '/admin/dashboard/members',
+      color: 'from-indigo-500 to-indigo-700',
+      bg: 'bg-indigo-500/10',
+      border: 'border-indigo-500/20',
+    },
   ];
 
   return (
@@ -85,8 +95,10 @@ export default async function DashboardPage() {
         {[
           { href: '/admin/dashboard/leadership', label: 'Manage Leadership', desc: 'Add or edit team members', icon: Users },
           { href: '/admin/dashboard/partners', label: 'Manage Partners', desc: 'Add or edit partners', icon: Handshake },
+          { href: '/admin/dashboard/members', label: 'Manage Members', desc: 'Review member applications', icon: UserCheck },
           { href: '/admin/dashboard/blog', label: 'Manage Blog', desc: 'Create and publish posts', icon: BookOpen },
         ].map((item) => {
+
           const Icon = item.icon;
           return (
             <Link

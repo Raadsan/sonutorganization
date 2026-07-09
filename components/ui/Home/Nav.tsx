@@ -100,10 +100,10 @@ export default function Nav() {
         {/* Button - Gesh (Mobile + Desktop) */}
         <div className="flex items-center gap-3">
           <Link
-            href="/estatemembers"
+            href="/join"
             className="hidden sm:inline-flex items-center gap-1.5 rounded-lg bg-white px-4 py-2 text-sm font-medium text-[#1E0D79] border border-[#1E0D79] hover:bg-gray-50 transition-colors"
           >
-            Join Estate Members
+            Join SONUT
           </Link>
           <Link
             href="/contactus"
@@ -180,11 +180,11 @@ export default function Nav() {
               ))}
               <li className="pt-2 flex flex-col gap-2">
                 <Link
-                  href="/estatemembers"
+                  href="/join"
                   onClick={() => setOpen(false)}
                   className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-white border border-[#1E0D79] px-4 py-2 text-sm font-medium text-[#1E0D79]"
                 >
-                  Join Estate Members
+                  Join SONUT
                 </Link>
                 <Link
                   href="/contactus"

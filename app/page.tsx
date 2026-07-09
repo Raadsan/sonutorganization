@@ -33,7 +33,7 @@ export default async function Home() {
     where: { isActive: true },
     orderBy: { order: 'asc' }
   });
-  
+
   const formattedPartners = dbPartners.map(p => ({
     id: p.id,
     name: p.name,
@@ -62,8 +62,8 @@ export default async function Home() {
       <Hero />
       <Statics />
       <About />
-      <Team initialData={formattedLeaders} />
       <Priorities />
+      <Team initialData={formattedLeaders} />
       <Partners initialData={formattedPartners} />
       <Blog initialData={formattedBlogPosts} />
       <Cta />

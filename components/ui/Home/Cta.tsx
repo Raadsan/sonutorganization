@@ -41,7 +41,7 @@ export default function Cta() {
           
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Link 
-              href="/register" 
+              href="/join" 
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full bg-secondary px-8 py-4 text-base font-bold text-white shadow-lg shadow-secondary/20 transition-all duration-300 hover:bg-secondary/90 hover:scale-105 hover:shadow-xl hover:shadow-secondary/40 group"
             >
               Become a Member

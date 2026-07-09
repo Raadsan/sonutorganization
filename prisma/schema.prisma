@@ -76,3 +76,42 @@ model Event {
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
+
+enum MemberStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+model Member {
+  id                  Int          @id @default(autoincrement())
+  // Personal
+  fullName            String
+  motherName          String
+  gender              String
+  dateOfBirth         String
+  placeOfBirth        String
+  bloodType           String
+  teacherImageUrl     String?
+  // Contact
+  phone               String
+  email               String
+  district            String
+  // Professional
+  subject             String
+  teachingStatus      String
+  fieldOfStudy        String
+  teachingLevel       String
+  institutionName     String
+  institutionLocation String
+  // Emergency
+  emergencyName       String
+  emergencyPhone      String
+  emergencyEmail      String
+  // Admin
+  status              MemberStatus @default(PENDING)
+  adminNote           String?      @db.Text
+  createdAt           DateTime     @default(now())
+  updatedAt           DateTime     @updatedAt
+}
+

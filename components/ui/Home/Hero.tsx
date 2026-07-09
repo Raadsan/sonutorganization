@@ -102,6 +102,13 @@ export default function Hero({ videoId }: HeroProps) {
           className="mt-10 flex flex-wrap items-center gap-4"
         >
           <Link
+            href="/join"
+            className="rounded-full bg-[#F4313F] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#F4313F]/30 transition-all duration-300 hover:scale-105 hover:bg-[#F4313F]/90 hover:shadow-xl"
+          >
+            Join SONUT
+          </Link>
+
+          <Link
             href="/about"
             className="rounded-full bg-[#1E0D79] px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#1E0D79]/90 hover:shadow-[#1E0D79]/30 hover:shadow-2xl"
           >
