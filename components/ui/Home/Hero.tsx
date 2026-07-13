@@ -110,17 +110,17 @@ export default function Hero({ videoId }: HeroProps) {
 
           <Link
             href="/about"
-            className="rounded-full bg-[#1E0D79] px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-[#1E0D79]/90 hover:shadow-[#1E0D79]/30 hover:shadow-2xl"
+            className="rounded-full border border-white/30 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105 hover:bg-white/10"
           >
             About Sonut
           </Link>
 
-          <Link
+          {/* <Link
             href="/contact"
             className="rounded-full border border-white/30 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/10"
           >
             Contact Us
-          </Link>
+          </Link> */}
         </motion.div>
       </div>
 
