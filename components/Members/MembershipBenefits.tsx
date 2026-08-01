@@ -2,65 +2,65 @@
 
 import { motion } from "framer-motion";
 import {
+  Megaphone,
   Shield,
-  BookOpen,
-  Users,
-  Scale,
+  Handshake,
+  GraduationCap,
   HeartHandshake,
-  Award,
+  Wallet,
 } from "lucide-react";
 
 const benefits = [
   {
-    icon: Shield,
-    title: "Legal Protection",
+    icon: Megaphone,
+    title: "Advocacy & Voice",
     description:
-      "Access expert legal advice and representation if you face workplace disputes, disciplinary proceedings, or professional challenges.",
+      "Be part of a collective voice that influences education policy at all levels of government.",
     color: "bg-[#1E0D79]",
     light: "bg-[#1E0D79]/10",
     textColor: "text-[#1E0D79]",
   },
   {
-    icon: BookOpen,
-    title: "Professional Development",
+    icon: Shield,
+    title: "Legal Protection",
     description:
-      "Take advantage of free and subsidised training courses, workshops, and conferences designed to advance your teaching career.",
+      "Comprehensive legal support for professional matters including wrongful termination and workplace disputes.",
     color: "bg-[#F4313F]",
     light: "bg-[#F4313F]/10",
     textColor: "text-[#F4313F]",
   },
   {
-    icon: Users,
-    title: "Strong Community",
+    icon: Handshake,
+    title: "Collective Bargaining",
     description:
-      "Connect and collaborate with thousands of educators nationwide. Share knowledge, experiences, and best practices.",
+      "SONUT negotiates better salaries, allowances, and working conditions on your behalf.",
     color: "bg-emerald-600",
     light: "bg-emerald-50",
     textColor: "text-emerald-600",
   },
   {
-    icon: Scale,
-    title: "Collective Bargaining",
+    icon: GraduationCap,
+    title: "Training Program",
     description:
-      "Benefit from union negotiations that secure better pay, working conditions, and job security for all members.",
+      "Continuous professional development opportunities through workshops, seminars, and conferences.",
     color: "bg-amber-600",
     light: "bg-amber-50",
     textColor: "text-amber-600",
   },
   {
     icon: HeartHandshake,
-    title: "Welfare Support",
+    title: "Health Insurance",
     description:
-      "Access financial assistance, health programmes, and personal support services when you need them most.",
+      "Access to affordable healthcare plans and medical support for members and their families.",
     color: "bg-sky-600",
     light: "bg-sky-50",
     textColor: "text-sky-600",
   },
   {
-    icon: Award,
-    title: "National Recognition",
+    icon: Wallet,
+    title: "Financial Support",
     description:
-      "Be part of an internationally recognised union that advocates for your rights on the national and global stage.",
+      "Access to loans, grants, and emergency assistance during difficult times.",
     color: "bg-purple-600",
     light: "bg-purple-50",
     textColor: "text-purple-600",
@@ -99,9 +99,7 @@ export default function MembershipBenefits() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-muted-foreground max-w-2xl mx-auto"
           >
-            As a SONUT member, you gain access to a comprehensive package of
-            support, resources, and representation designed to protect and
-            advance your career.
+            Join over 25,000 Teachers who are already benefiting from SONUT membership.
           </motion.p>
         </div>
 

@@ -5,6 +5,7 @@ import Statics from "@/components/ui/Home/Statics";
 import Team from "@/components/ui/Home/Team";
 import Partners from "@/components/ui/Home/Partners";
 import Blog from "@/components/ui/Home/blog";
+import Faq from "@/components/ui/Home/Faq";
 import Cta from "@/components/ui/Home/Cta";
 
 
@@ -65,6 +66,7 @@ export default async function Home() {
       <Priorities />
       <Team initialData={formattedLeaders} />
       <Partners initialData={formattedPartners} />
+      <Faq />
       <Blog initialData={formattedBlogPosts} />
       <Cta />
     </>

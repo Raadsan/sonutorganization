@@ -70,9 +70,9 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Resources */}
+          {/* Media Hub */}
           <div>
-            <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Resources</h3>
+            <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Media Hub</h3>
             <ul className="space-y-4">
               {['Join SONUT', 'Teacher Training', 'Events & Conferences', 'Privacy Policy', 'Terms of Service'].map((item) => (
                 <li key={item}>

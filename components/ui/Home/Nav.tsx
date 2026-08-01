@@ -10,7 +10,7 @@ const navLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   {
-    label: "Resources",
+    label: "Media Hub",
     href: "#",
     submenu: [
       { label: "Events", href: "/Resources/events" },
