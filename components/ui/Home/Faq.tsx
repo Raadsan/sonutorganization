@@ -39,6 +39,58 @@ const faqs: FaqItem[] = [
     question: "How can I register as a SONUT member?",
     answer: "A teacher can register by completing the SONUT membership form, providing the required personal and professional information, and fulfilling the membership conditions set by the union.",
   },
+  {
+    question: "Is SONUT only for school teachers?",
+    answer: "No. SONUT can support teachers and educators from different levels of education, including primary schools, secondary schools, colleges, universities, vocational institutions, and other learning centers.",
+  },
+  {
+    question: "Does SONUT organize training for teachers?",
+    answer: "Yes. SONUT organizes and supports training programs, workshops, seminars, conferences, and professional development activities aimed at improving teachers’ knowledge, skills, and classroom performance.",
+  },
+  {
+    question: "What topics are covered in SONUT teacher trainings?",
+    answer: "Training topics may include effective teaching methods, classroom management, curriculum development, assessment techniques, educational leadership, child protection, inclusive education, technology in teaching, and teachers’ rights.",
+  },
+  {
+    question: "How does SONUT contribute to improving education in Somalia?",
+    answer: "SONUT contributes by strengthening teachers’ capacity, promoting teacher welfare, encouraging professional standards, supporting educational reforms, and working with education authorities and partners.",
+  },
+  {
+    question: "Can SONUT work with the Ministry of Education?",
+    answer: "Yes. SONUT can cooperate with the Ministry of Education, regional education authorities, schools, universities, civil society organizations, and international partners to promote quality education and teacher development.",
+  },
+  {
+    question: "Does SONUT represent female teachers?",
+    answer: "Yes. SONUT supports the participation, leadership, rights, safety, and professional growth of female teachers. It may also organize special programs and conferences for women teachers.",
+  },
+  {
+    question: "What is the role of SONUT in teachers’ professional development?",
+    answer: "SONUT helps teachers improve their professional skills through capacity-building programs, mentorship, information sharing, networking opportunities, and participation in educational events.",
+  },
+  {
+    question: "Can young or newly qualified teachers join SONUT?",
+    answer: "Yes. Newly qualified teachers and early-career educators can join SONUT and benefit from professional guidance, training opportunities, networking, and teacher development programs.",
+  },
+  {
+    question: "Does SONUT organize national teacher conferences?",
+    answer: "Yes. SONUT can organize national conferences, meetings, forums, and educational summits that bring together teachers, school leaders, education experts, government representatives, and partners.",
+  },
+  {
+    question: "How can teachers participate in SONUT activities?",
+    answer: "Teachers can participate by becoming members, attending meetings, joining training sessions, volunteering in programs, participating in committees, and following SONUT’s official announcements.",
+  },
+  {
+    question: "What is SONUT’s vision for Somali teachers?",
+    answer: "SONUT aims to build a united, empowered, skilled, respected, and professionally supported teaching community that contributes to a strong education system in Somalia.",
+  },
+  {
+    question: "How can schools or organizations collaborate with SONUT?",
+    answer: "Schools, universities, NGOs, government institutions, and development partners can collaborate with SONUT through teacher training, education projects, research, conferences, advocacy campaigns, and community education initiatives.",
+  },
+  {
+    question: "How can I get more information about SONUT?",
+    answer: "You can contact SONUT through its official leadership, communication channels, social media platforms, meetings, membership offices, or official announcements.",
+  },
 ];
 
 export default function Faq() {
@@ -57,7 +109,7 @@ export default function Faq() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
+        <div>
           
           {/* Left Column - Header info */}
           <motion.div 
@@ -65,28 +117,28 @@ export default function Faq() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
-            className="lg:col-span-5 flex flex-col justify-center"
+            className="mx-auto mb-14 flex max-w-3xl flex-col items-center text-center"
           >
             {/* Badge */}
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E0D79]/10 text-primary text-xs font-bold tracking-widest uppercase mb-6 self-start">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E0D79]/10 text-primary text-xs font-bold tracking-widest uppercase mb-6">
               <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
               FAQ
             </div>
 
             {/* Title */}
             <h2 className="text-4xl md:text-5xl font-serif font-extrabold text-primary mb-6 leading-tight">
-              Frequently Asked Questions
+              Frequently Asked Questions About SONUT
             </h2>
 
             {/* Paragraph */}
             <p className="text-muted-foreground text-sm md:text-base leading-relaxed mb-8">
-              Here are answers to the most common questions about the Somali National Union of Teachers (SONUT). If you can't find what you are looking for, feel free to contact us.
+              Here are answers to the most common questions about the Somali National Union of Teachers (SONUT). If you can&apos;t find what you are looking for, feel free to contact us.
             </p>
 
             {/* Secondary CTA */}
-            <div className="flex flex-wrap gap-4">
+            <div className="flex flex-wrap justify-center gap-4">
               <Link
-                href="/contact"
+                href="/contactus"
                 className="inline-flex items-center justify-center gap-2 rounded-full border border-primary text-primary px-6 py-3 text-sm font-semibold transition-all duration-300 hover:bg-primary hover:text-white hover:shadow-lg"
               >
                 Still have questions? Contact Us
@@ -94,10 +146,13 @@ export default function Faq() {
             </div>
           </motion.div>
 
-          {/* Right Column - Accordion */}
-          <div className="lg:col-span-7 flex flex-col gap-4">
-            {faqs.map((faq, index) => {
-              const isOpen = activeIndex === index;
+          {/* Two accordion columns: 10 questions in each column */}
+          <div className="grid items-start gap-5 lg:grid-cols-2">
+            {[faqs.slice(0, 10), faqs.slice(10, 20)].map((column, columnIndex) => (
+              <div key={columnIndex} className="flex flex-col gap-4">
+            {column.map((faq, index) => {
+              const actualIndex = columnIndex * 10 + index;
+              const isOpen = activeIndex === actualIndex;
               return (
                 <motion.div
                   key={index}
@@ -112,7 +167,7 @@ export default function Faq() {
                   }`}
                 >
                   <button
-                    onClick={() => toggleFaq(index)}
+                    onClick={() => toggleFaq(actualIndex)}
                     className="w-full flex items-start gap-4 px-6 md:px-8 py-5 text-left font-bold text-gray-900 group"
                   >
                     <div className={`mt-0.5 rounded-lg p-1.5 flex items-center justify-center shrink-0 transition-colors ${
@@ -150,6 +205,8 @@ export default function Faq() {
                 </motion.div>
               );
             })}
+              </div>
+            ))}
           </div>
 
         </div>

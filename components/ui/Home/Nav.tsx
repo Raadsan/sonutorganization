@@ -8,13 +8,32 @@ import { useState } from "react";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
   {
-    label: "Media Hub",
+    label: "Who We Are",
     href: "#",
     submenu: [
-      { label: "Events", href: "/Resources/events" },
-      { label: "Our News", href: "/Resources/ournews" },
+      { label: "About", href: "/about" },
+      { label: "Structure", href: "/structure" },
+      { label: "Leadership", href: "/leadership" },
+      { label: "FAQ", href: "/faq" },
+    ],
+  },
+  { label: "Membership", href: "/membership" },
+  {
+    label: "What We Do",
+    href: "#",
+    submenu: [
+      { label: "Our Programmes", href: "/our-programmes" },
+      { label: "Activity", href: "/activity" },
+    ],
+  },
+  {
+    label: "Media",
+    href: "#",
+    submenu: [
+      { label: "News", href: "/media/news" },
+      { label: "Reports", href: "/media/reports" },
+      { label: "SONUT Talk", href: "/media/sonut-talk" },
     ],
   },
   { label: "Contact", href: "/contactus" },
@@ -22,7 +41,7 @@ const navLinks = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
-  const [resourceOpen, setResourceOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   return (
     <motion.nav
@@ -48,7 +67,7 @@ export default function Nav() {
         <ul className="hidden md:flex items-center gap-6 text-sm font-medium">
           {navLinks.map((link, i) => (
             <motion.li
-              key={link.href}
+              key={link.label}
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
@@ -57,12 +76,15 @@ export default function Nav() {
               {link.submenu ? (
                 <>
                   <button
-                    onClick={() => setResourceOpen(!resourceOpen)}
+                    onClick={() =>
+                      setOpenDropdown(openDropdown === link.label ? null : link.label)
+                    }
+                    aria-expanded={openDropdown === link.label}
                     className="flex items-center gap-1 text-gray-700 hover:text-[#1E0D79] transition-colors cursor-pointer"
                   >
                     {link.label}
                     <svg
-                      className={`w-4 h-4 transition-transform ${resourceOpen ? "rotate-180" : ""}`}
+                      className={`w-4 h-4 transition-transform ${openDropdown === link.label ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -70,13 +92,13 @@ export default function Nav() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </button>
-                  {resourceOpen && (
+                  {openDropdown === link.label && (
                     <div className="absolute top-full left-0 mt-1 w-44 rounded-lg bg-white shadow-lg border z-50">
                       {link.submenu.map((sub) => (
                         <Link
                           key={sub.href}
                           href={sub.href}
-                          onClick={() => setResourceOpen(false)}
+                          onClick={() => setOpenDropdown(null)}
                           className="block px-4 py-2.5 text-sm text-gray-700 hover:text-[#1E0D79] hover:bg-gray-50 rounded-lg"
                         >
                           {sub.label}
@@ -135,16 +157,19 @@ export default function Nav() {
           >
             <ul className="flex flex-col px-4 py-4 gap-3 text-sm font-medium">
               {navLinks.map((link) => (
-                <li key={link.href}>
+                <li key={link.label}>
                   {link.submenu ? (
                     <>
                       <button
-                        onClick={() => setResourceOpen(!resourceOpen)}
+                        onClick={() =>
+                          setOpenDropdown(openDropdown === link.label ? null : link.label)
+                        }
+                        aria-expanded={openDropdown === link.label}
                         className="flex items-center justify-between w-full py-1.5 text-gray-700 hover:text-[#1E0D79]"
                       >
                         {link.label}
                         <svg
-                          className={`w-4 h-4 transition-transform ${resourceOpen ? "rotate-180" : ""}`}
+                          className={`w-4 h-4 transition-transform ${openDropdown === link.label ? "rotate-180" : ""}`}
                           fill="none"
                           stroke="currentColor"
                           viewBox="0 0 24 24"
@@ -152,13 +177,16 @@ export default function Nav() {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
-                      {resourceOpen && (
+                      {openDropdown === link.label && (
                         <div className="pl-4 flex flex-col gap-2 mt-1">
                           {link.submenu.map((sub) => (
                             <Link
                               key={sub.href}
                               href={sub.href}
-                              onClick={() => setOpen(false)}
+                              onClick={() => {
+                                setOpen(false);
+                                setOpenDropdown(null);
+                              }}
                               className="block py-1.5 text-gray-600 hover:text-[#1E0D79] text-sm"
                             >
                               {sub.label}

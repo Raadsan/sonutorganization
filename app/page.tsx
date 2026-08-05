@@ -5,17 +5,47 @@ import Statics from "@/components/ui/Home/Statics";
 import Team from "@/components/ui/Home/Team";
 import Partners from "@/components/ui/Home/Partners";
 import Blog from "@/components/ui/Home/blog";
-import Faq from "@/components/ui/Home/Faq";
 import Cta from "@/components/ui/Home/Cta";
 
 
 import { prisma } from "@/lib/db";
+import type { BlogPost, Leader, Partner } from "@prisma/client";
+
+async function getHomepageData(): Promise<{
+  leaders: Leader[];
+  partners: Partner[];
+  blogPosts: BlogPost[];
+}> {
+  try {
+    const [leaders, partners, blogPosts] = await Promise.all([
+      prisma.leader.findMany({
+        where: { isActive: true },
+        orderBy: { order: "asc" },
+      }),
+      prisma.partner.findMany({
+        where: { isActive: true },
+        orderBy: { order: "asc" },
+      }),
+      prisma.blogPost.findMany({
+        where: { isPublished: true },
+        orderBy: { createdAt: "desc" },
+        take: 3,
+      }),
+    ]);
+
+    return { leaders, partners, blogPosts };
+  } catch (error) {
+    console.error("Unable to load homepage data from the database:", error);
+    return { leaders: [], partners: [], blogPosts: [] };
+  }
+}
 
 export default async function Home() {
-  const dbLeaders = await prisma.leader.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' }
-  });
+  const {
+    leaders: dbLeaders,
+    partners: dbPartners,
+    blogPosts: dbBlogPosts,
+  } = await getHomepageData();
 
   const formattedLeaders = dbLeaders.map(l => ({
     id: l.id,
@@ -30,23 +60,12 @@ export default async function Home() {
     }
   }));
 
-  const dbPartners = await prisma.partner.findMany({
-    where: { isActive: true },
-    orderBy: { order: 'asc' }
-  });
-
   const formattedPartners = dbPartners.map(p => ({
     id: p.id,
     name: p.name,
     logoUrl: p.logoUrl,
     website: p.website
   }));
-
-  const dbBlogPosts = await prisma.blogPost.findMany({
-    where: { isPublished: true },
-    orderBy: { createdAt: 'desc' },
-    take: 3
-  });
 
   const formattedBlogPosts = dbBlogPosts.map(post => ({
     id: post.id,
@@ -61,13 +80,13 @@ export default async function Home() {
   return (
     <>
       <Hero />
-      <Statics />
       <About />
       <Priorities />
+      <Statics />
       <Team initialData={formattedLeaders} />
-      <Partners initialData={formattedPartners} />
-      <Faq />
+
       <Blog initialData={formattedBlogPosts} />
+      <Partners initialData={formattedPartners} />
       <Cta />
     </>
   );

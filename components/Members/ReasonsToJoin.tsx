@@ -36,7 +36,7 @@ const reasons = [
   },
 ];
 
-export default function ReasonsToJoin() {
+export default function ReasonsToJoin({ registerHref = "#register" }: { registerHref?: string }) {
   return (
     <section className="py-24 bg-[#fafafa]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -65,7 +65,7 @@ export default function ReasonsToJoin() {
             </p>
 
             <a
-              href="#register"
+              href={registerHref}
               className="group inline-flex items-center gap-2 rounded-full bg-[#1E0D79] px-7 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#1E0D79]/30 transition-all duration-300 hover:bg-[#1E0D79]/90 hover:scale-105"
             >
               Become a Member

@@ -12,7 +12,7 @@ const eligibleGroups = [
   "Retired teachers (associate membership)",
 ];
 
-export default function WhoCanJoin() {
+export default function WhoCanJoin({ registerHref = "#register" }: { registerHref?: string }) {
   return (
     <section className="py-24 bg-white">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -63,7 +63,7 @@ export default function WhoCanJoin() {
 
             <div className="space-y-4">
               <a
-                href="#register"
+                href={registerHref}
                 className="group w-full flex items-center justify-center gap-2 rounded-xl bg-[#F4313F] text-white font-bold text-sm py-4 px-6 shadow-lg shadow-[#F4313F]/20 transition-all duration-300 hover:bg-[#F4313F]/90 hover:scale-[1.02]"
               >
                 REGISTER ONLINE NOW →
