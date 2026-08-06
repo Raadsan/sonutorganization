@@ -25,6 +25,7 @@ export async function GET() {
     return NextResponse.json({ message: 'Admin created successfully', email: admin.email });
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Failed to create admin', details: error.message }, { status: 500 });
+    const details = error instanceof Error ? error.message : 'Unknown error';
+    return NextResponse.json({ error: 'Failed to create admin', details }, { status: 500 });
   }
 }
