@@ -84,8 +84,7 @@ export default async function Home() {
       <Priorities />
       <Statics />
       <Team initialData={formattedLeaders} />
-
-      <Blog initialData={formattedBlogPosts} />
+       <Blog initialData={formattedBlogPosts} />
       <Partners initialData={formattedPartners} />
       <Cta />
     </>
