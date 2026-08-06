@@ -6,6 +6,7 @@ import Team from "@/components/ui/Home/Team";
 import Partners from "@/components/ui/Home/Partners";
 import Blog from "@/components/ui/Home/blog";
 import Cta from "@/components/ui/Home/Cta";
+import Social from "@/components/Socila";
 
 
 import { prisma } from "@/lib/db";
@@ -86,6 +87,7 @@ export default async function Home() {
       <Team initialData={formattedLeaders} />
        <Blog initialData={formattedBlogPosts} />
       <Partners initialData={formattedPartners} />
+      <Social />
       <Cta />
     </>
   );
