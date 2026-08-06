@@ -13,6 +13,11 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   title: "SONUT",
   description: "Somali National Union of Teachers (SONUT)",
+  icons: {
+    icon: [{ url: "/images/fv.jpg", type: "image/jpeg" }],
+    shortcut: [{ url: "/images/fv.jpg", type: "image/jpeg" }],
+    apple: [{ url: "/images/fv.jpg", type: "image/jpeg" }],
+  },
 };
 
 export default function RootLayout({
