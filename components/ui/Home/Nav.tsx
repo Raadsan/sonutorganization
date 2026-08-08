@@ -18,7 +18,6 @@ const navLinks = [
       { label: "FAQ", href: "/faq" },
     ],
   },
-  { label: "Membership", href: "/membership" },
   {
     label: "What We Do",
     href: "#",
@@ -27,6 +26,7 @@ const navLinks = [
       { label: "Activity", href: "/activity" },
     ],
   },
+  { label: "Membership", href: "/membership" },
   {
     label: "Media",
     href: "#",

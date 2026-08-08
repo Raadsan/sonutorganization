@@ -29,7 +29,7 @@ function extractVideoId(raw?: string) {
 
 export default function Hero({ videoId }: HeroProps) {
   const embedId = extractVideoId(videoId);
-  const src = `https://www.youtube.com/embed/${embedId}?autoplay=1&mute=1&loop=1&controls=0&playsinline=1&modestbranding=1&rel=0&playlist=${embedId}`;
+  const src = `https://www.youtube.com/embed/RYL-uQWg8qs?autoplay=1&mute=1&loop=1&controls=0&playsinline=1&modestbranding=1&rel=0&playlist=RYL-uQWg8qs`;
   // Kala dambaynta animation-ka mid mid u soo galaya (Fade In Left)
   const fadeLeftVariant = {
     hidden: { opacity: 0, x: -50 },
