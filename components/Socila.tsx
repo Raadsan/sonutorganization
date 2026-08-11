@@ -1,16 +1,25 @@
 "use client";
 
-import { ExternalLink, Music2 } from "lucide-react";
+import { ExternalLink, MapPin, Calendar, Link2 } from "lucide-react";
 import { useState } from "react";
 
 const FACEBOOK_URL = "https://www.facebook.com/somaliateachers";
+const TWITTER_URL = "https://x.com/soomaliteachers";
 
-type SocialPlatform = "facebook" | "tiktok";
+type SocialPlatform = "facebook" | "twitter";
 
 function FacebookIcon({ className = "h-4 w-4" }: { className?: string }) {
   return (
     <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
       <path d="M13.5 22v-9h3l.5-3.5h-3.5V7.25c0-1.02.28-1.71 1.75-1.71H17V2.42c-.3-.04-1.34-.13-2.55-.13-2.52 0-4.25 1.54-4.25 4.37V9.5H7.35V13h2.85v9h3.3Z" />
+    </svg>
+  );
+}
+
+function XIcon({ className = "h-4 w-4" }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
+      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
     </svg>
   );
 }
@@ -62,11 +71,11 @@ export default function Social() {
             </a>
             <button
               type="button"
-              onClick={() => setActivePlatform("tiktok")}
+              onClick={() => setActivePlatform("twitter")}
               className="inline-flex items-center gap-2 rounded-full border border-secondary px-6 py-3 text-sm font-bold text-secondary transition hover:-translate-y-0.5 hover:bg-secondary hover:text-white"
             >
-              <Music2 className="h-4 w-4" />
-              TikTok
+              <XIcon />
+              X (Twitter)
             </button>
           </div>
         </div>
@@ -88,20 +97,20 @@ export default function Social() {
             </button>
             <button
               type="button"
-              onClick={() => setActivePlatform("tiktok")}
-              aria-pressed={activePlatform === "tiktok"}
+              onClick={() => setActivePlatform("twitter")}
+              aria-pressed={activePlatform === "twitter"}
               className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${
-                activePlatform === "tiktok"
+                activePlatform === "twitter"
                   ? "bg-white text-secondary shadow"
                   : "text-white hover:bg-white/10"
               }`}
             >
-              <Music2 className="h-4 w-4" />
-              TikTok
+              <XIcon />
+              Twitter (X)
             </button>
           </div>
 
-          <div className="mt-4 flex min-h-[620px] items-center justify-center overflow-hidden rounded-2xl bg-white">
+          <div className="mt-4 flex min-h-[620px] items-center justify-center overflow-hidden rounded-2xl bg-white w-full">
             {activePlatform === "facebook" ? (
               <iframe
                 title="Somali Teachers Facebook page"
@@ -113,16 +122,96 @@ export default function Social() {
                 loading="lazy"
               />
             ) : (
-              <div className="px-6 text-center">
-                <div className="mx-auto flex h-16 w-16 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-lg">
-                  <Music2 className="h-8 w-8" />
+              <div className="w-full max-w-[500px] border border-slate-100 rounded-2xl overflow-hidden bg-white shadow-sm flex flex-col font-sans">
+                {/* Banner */}
+                <div className="h-32 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 relative">
+                  <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
                 </div>
-                <h3 className="mt-6 text-2xl font-bold text-slate-950">
-                  TikTok is coming soon
-                </h3>
-                <p className="mx-auto mt-3 max-w-sm leading-7 text-slate-500">
-                  Add the official TikTok profile URL here when it is ready.
-                </p>
+                
+                {/* Profile Header */}
+                <div className="px-6 pb-6 relative flex flex-col text-left">
+                  {/* Profile Picture */}
+                  <div className="relative -mt-14 mb-3 flex justify-between items-end">
+                    <div className="h-24 w-24 rounded-full border-4 border-white bg-slate-100 overflow-hidden shadow-md">
+                      <img 
+                        src="/images/logo1.png" 
+                        alt="SONUT Logo" 
+                        className="h-full w-full object-cover"
+                        onError={(e) => {
+                          e.currentTarget.style.display = 'none';
+                        }}
+                      />
+                    </div>
+                    <a
+                      href={TWITTER_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full bg-slate-900 px-5 py-2 text-sm font-bold text-white transition hover:bg-slate-800"
+                    >
+                      Follow
+                    </a>
+                  </div>
+
+                  {/* Profile Info */}
+                  <div className="flex items-center gap-1.5">
+                    <h3 className="text-lg font-black text-slate-950 tracking-tight leading-tight">
+                      Somali National Union of Teachers
+                    </h3>
+                    <svg className="h-4.5 w-4.5 text-blue-500 fill-current shrink-0" viewBox="0 0 24 24">
+                      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
+                    </svg>
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium">@soomaliteachers</p>
+
+                  <p className="mt-2 text-xs leading-relaxed text-slate-700">
+                    Official Twitter (X) page of the Somali National Union of Teachers (SONUT). Empowering educators and strengthening education in Somalia since 2004.
+                  </p>
+
+                  {/* Meta data */}
+                  <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-slate-500 font-medium">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="h-3.5 w-3.5 opacity-70" />
+                      <span>Mogadishu, Somalia</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="h-3.5 w-3.5 opacity-70" />
+                      <span>Joined September 2004</span>
+                    </div>
+                  </div>
+
+                  {/* Followers / Following */}
+                  <div className="mt-3 flex gap-4 text-xs">
+                    <span className="text-slate-500 font-medium">
+                      <strong className="text-slate-950 font-bold">142</strong> Following
+                    </span>
+                    <span className="text-slate-500 font-medium">
+                      <strong className="text-slate-950 font-bold">5.8K</strong> Followers
+                    </span>
+                  </div>
+
+                  {/* Custom X Preview Box / Feed Card */}
+                  <div className="mt-4 border border-slate-100 rounded-xl p-3 bg-slate-50/50 hover:bg-slate-50 transition duration-200">
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <div className="h-4 w-4 rounded-full overflow-hidden bg-slate-200">
+                        <img src="/images/logo1.png" alt="SONUT Logo" className="h-full w-full object-cover" />
+                      </div>
+                      <span className="text-[11px] font-bold text-slate-900 leading-none">Somali National Union of Teachers</span>
+                      <span className="text-[10px] text-slate-400">· 2h</span>
+                    </div>
+                    <p className="text-xs text-slate-700 leading-relaxed">
+                      We are committed to quality education and supporting the professional development of Somali educators. Connect with us on our official X account for regular updates! 📚🇸🇴
+                    </p>
+                    <a 
+                      href={TWITTER_URL}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-2 text-[10px] font-bold text-blue-500 hover:underline flex items-center gap-0.5"
+                    >
+                      <Link2 className="h-2.5 w-2.5" />
+                      x.com/soomaliteachers
+                    </a>
+                  </div>
+                </div>
               </div>
             )}
           </div>

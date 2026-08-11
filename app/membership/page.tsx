@@ -1,8 +1,7 @@
-import Link from "next/link";
-import { ArrowRight } from "lucide-react";
-import MembershipBenefits from "@/components/Members/MembershipBenefits";
-import ReasonsToJoin from "@/components/Members/ReasonsToJoin";
 import WhoCanJoin from "@/components/Members/WhoCanJoin";
+import MembershipBenefits from "@/components/Members/MembershipBenefits";
+import MembershipRequirements from "@/components/Members/MembershipRequirements";
+import MembersForm from "@/components/Members/memebrsform";
 
 export const metadata = {
   title: "Membership | SONUT",
@@ -20,26 +19,16 @@ export default function MembershipPage() {
           <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-white/75 md:text-lg">
             Join a nationwide community that represents teachers, protects their rights, and strengthens education across Somalia.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-4">
-            <Link
-              href="/join#register"
-              className="inline-flex items-center gap-2 rounded-full bg-secondary px-7 py-3.5 text-sm font-bold text-white transition-transform hover:scale-105"
-            >
-              Become a Member
-              <ArrowRight className="h-4 w-4" />
-            </Link>
-            <Link
-              href="/contactus"
-              className="rounded-full border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10"
-            >
-              Contact Us
-            </Link>
-          </div>
         </div>
       </section>
+      
+      <WhoCanJoin registerHref="#register" />
       <MembershipBenefits />
-      <ReasonsToJoin registerHref="/join#register" />
-      <WhoCanJoin registerHref="/join#register" />
+      <MembershipRequirements />
+      
+      <div id="register" className="py-12 bg-white">
+        <MembersForm />
+      </div>
     </main>
   );
 }

@@ -48,10 +48,10 @@ const INITIAL: FormData = {
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const TABS = [
-  { id: 1, label: "Xogta Shakhsiga", sub: "Personal Info", icon: User },
-  { id: 2, label: "Xiriirka", sub: "Contact Info", icon: Phone },
-  { id: 3, label: "Xirfadda", sub: "Professional", icon: BookOpen },
-  { id: 4, label: "Xaaladda Deg-degta", sub: "Emergency", icon: AlertCircle },
+  { id: 1, label: "Personal Info", icon: User },
+  { id: 2, label: "Contact Info", icon: Phone },
+  { id: 3, label: "Professional Details", icon: BookOpen },
+  { id: 4, label: "Emergency Contact", icon: AlertCircle },
 ];
 
 function Field({
@@ -138,51 +138,51 @@ export default function MembersForm() {
   const tabContent: Record<number, React.ReactNode> = {
     1: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Magaca" subLabel="Full Name">
+        <Field label="Full Name">
           <input type="text" required value={data.fullName}
             onChange={e => set("fullName", e.target.value)}
-            placeholder="Magacaaga oo dhamays tiran" className={inputCls} />
+            placeholder="Enter your full name" className={inputCls} />
         </Field>
 
-        <Field label="Magaca Hooyo" subLabel="Mother Name">
+        <Field label="Mother's Name">
           <input type="text" required value={data.motherName}
             onChange={e => set("motherName", e.target.value)}
-            placeholder="Magaca Hooyadaa" className={inputCls} />
+            placeholder="Enter mother's full name" className={inputCls} />
         </Field>
 
-        <Field label="Jinsiga" subLabel="Gender">
+        <Field label="Gender">
           <select required value={data.gender}
             onChange={e => set("gender", e.target.value)} className={selectCls}>
-            <option value="">Dooro / Choose</option>
-            <option value="Rag">Rag / Male</option>
-            <option value="Dumar">Dumar / Female</option>
+            <option value="">Choose Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
           </select>
         </Field>
 
-        <Field label="Nooca Dhiigaaga" subLabel="Blood Type">
+        <Field label="Blood Type">
           <select required value={data.bloodType}
             onChange={e => set("bloodType", e.target.value)} className={selectCls}>
-            <option value="">Dooro / Choose</option>
+            <option value="">Choose Blood Type</option>
             {["A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"].map(t => (
               <option key={t} value={t}>{t}</option>
             ))}
           </select>
         </Field>
 
-        <Field label="Taariikhda Dhalashada" subLabel="Date of Birth">
+        <Field label="Date of Birth">
           <input type="date" required value={data.dateOfBirth}
             onChange={e => set("dateOfBirth", e.target.value)} className={inputCls} />
         </Field>
 
-        <Field label="Goobta Dhalashada" subLabel="Place of Birth">
+        <Field label="Place of Birth">
           <input type="text" required value={data.placeOfBirth}
             onChange={e => set("placeOfBirth", e.target.value)}
-            placeholder="Magaalada / Degmada" className={inputCls} />
+            placeholder="City / District" className={inputCls} />
         </Field>
 
         {/* Image upload – full width */}
         <div className="sm:col-span-2">
-          <Field label="Sawirka Macalinka" subLabel="Teacher Photo">
+          <Field label="Teacher Photo">
             <div
               onClick={() => fileRef.current?.click()}
               className="relative flex items-center gap-4 border-2 border-dashed border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all"
@@ -197,7 +197,7 @@ export default function MembersForm() {
               )}
               <div>
                 <p className="text-sm font-semibold text-gray-700">
-                  {data.teacherImage ? data.teacherImage.name : "Guji si aad sawir u soo rarido"}
+                  {data.teacherImage ? data.teacherImage.name : "Click to upload your photo"}
                 </p>
                 <p className="text-xs text-gray-400 mt-1">PNG, JPG · Max 10 MB</p>
               </div>
@@ -211,7 +211,7 @@ export default function MembersForm() {
 
     2: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Taleefanka" subLabel="Phone Number">
+        <Field label="Phone Number">
           <div className="relative">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
             <input type="tel" required value={data.phone}
@@ -221,26 +221,26 @@ export default function MembersForm() {
           </div>
         </Field>
 
-        <Field label="Email" subLabel="Your Email">
+        <Field label="Email Address">
           <input type="email" required value={data.email}
             onChange={e => set("email", e.target.value)}
-            placeholder="macallin@example.com" className={inputCls} />
+            placeholder="teacher@example.com" className={inputCls} />
         </Field>
 
         <div className="sm:col-span-2">
-          <Field label="Degmada aad hadda ku nooshahay" subLabel="Your District">
+          <Field label="Current District of Residence">
             <input type="text" required value={data.district}
               onChange={e => set("district", e.target.value)}
-              placeholder="Degmadaada / Magaalada" className={inputCls} />
+              placeholder="Your current district / city" className={inputCls} />
           </Field>
         </div>
 
         {/* Info card */}
         <div className="sm:col-span-2 bg-[#1E0D79]/5 rounded-2xl p-5 border border-[#1E0D79]/10">
-          <p className="text-xs text-[#1E0D79] font-semibold mb-2">📌 Xusuusin / Note</p>
+          <p className="text-xs text-[#1E0D79] font-semibold mb-2">📌 Note</p>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Xiriirka aad bixiso ayaa loo isticmaali doonaa xaqiijinta codsigaaga iyo
-            wadahadallada mustaqbalka ee Ururka. Fadlan hubi inaad xog sax ah bixinayso.
+            The contact details you provide will be used for application verification and
+            future communication from the Union. Please ensure they are accurate.
           </p>
         </div>
       </div>
@@ -248,52 +248,52 @@ export default function MembersForm() {
 
     3: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Maadada Macallinka uu dhigo" subLabel="Your Subject">
+        <Field label="Teaching Subject">
           <input type="text" required value={data.subject}
             onChange={e => set("subject", e.target.value)}
-            placeholder="Xisaab, Ingiriisi, Sayniska..." className={inputCls} />
+            placeholder="Mathematics, English, Science..." className={inputCls} />
         </Field>
 
-        <Field label="Heerka Waxbarasho" subLabel="Status of Teaching">
+        <Field label="Education Level">
           <select required value={data.teachingStatus}
             onChange={e => set("teachingStatus", e.target.value)} className={selectCls}>
-            <option value="">Dooro / Choose</option>
-            <option value="Jaamacad">Jaamacad / University</option>
-            <option value="Dugsi Sare">Dugsi Sare / Secondary</option>
-            <option value="Dugsi Dhexe">Dugsi Dhexe / Middle</option>
-            <option value="Dugsi Hoose">Dugsi Hoose / Primary</option>
+            <option value="">Choose Level</option>
+            <option value="University">University</option>
+            <option value="Secondary">Secondary School</option>
+            <option value="Middle">Middle School</option>
+            <option value="Primary">Primary School</option>
             <option value="TVET">TVET / Vocational</option>
           </select>
         </Field>
 
-        <Field label="Takhasuska" subLabel="Field of Study">
+        <Field label="Field of Study / Specialization">
           <input type="text" required value={data.fieldOfStudy}
             onChange={e => set("fieldOfStudy", e.target.value)}
-            placeholder="Takhasuska waxbarashadaada" className={inputCls} />
+            placeholder="e.g., Bachelor of Education" className={inputCls} />
         </Field>
 
-        <Field label="Heerkee wax ka dhigtaa" subLabel="Teaching Level">
+        <Field label="Class Levels Taught">
           <select required value={data.teachingLevel}
             onChange={e => set("teachingLevel", e.target.value)} className={selectCls}>
-            <option value="">Dooro / Choose</option>
-            <option value="Heer 1">Heer 1 – Dugsi Hoose (Grades 1-4)</option>
-            <option value="Heer 2">Heer 2 – Dugsi Dhexe (Grades 5-8)</option>
-            <option value="Heer 3">Heer 3 – Dugsi Sare (Grades 9-12)</option>
-            <option value="Heer Jaamacad">Heer Jaamacad / University</option>
+            <option value="">Choose Level</option>
+            <option value="Level 1">Level 1 – Primary School (Grades 1-4)</option>
+            <option value="Level 2">Level 2 – Middle School (Grades 5-8)</option>
+            <option value="Level 3">Level 3 – Secondary School (Grades 9-12)</option>
+            <option value="University Level">University Level</option>
             <option value="TVET">TVET / Vocational</option>
           </select>
         </Field>
 
-        <Field label="Magaca Xarunta" subLabel="Name of Institution">
+        <Field label="Institution Name">
           <input type="text" required value={data.institutionName}
             onChange={e => set("institutionName", e.target.value)}
-            placeholder="Magaca Dugsiga / Jaamacadda" className={inputCls} />
+            placeholder="School / University Name" className={inputCls} />
         </Field>
 
-        <Field label="Goobta Xarunta" subLabel="Location of Institution">
+        <Field label="Institution Location">
           <input type="text" required value={data.institutionLocation}
             onChange={e => set("institutionLocation", e.target.value)}
-            placeholder="Degmada / Magaalada" className={inputCls} />
+            placeholder="District / City" className={inputCls} />
         </Field>
       </div>
     ),
@@ -301,21 +301,21 @@ export default function MembersForm() {
     4: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
         <div className="sm:col-span-2 bg-[#F4313F]/5 rounded-2xl p-5 border border-[#F4313F]/10">
-          <p className="text-xs text-[#F4313F] font-semibold mb-2">⚠️ Xaaladda Deg-degta / Emergency Contact</p>
+          <p className="text-xs text-[#F4313F] font-semibold mb-2">⚠️ Emergency Contact Details</p>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Qofka aan la xiriiri karin xaaladda degdegta. Fadlan buuxi macluumaadkan si buuxa.
+            Please provide the details of a contact person we can reach in case of an emergency.
           </p>
         </div>
 
         <div className="sm:col-span-2">
-          <Field label="Magaca Qofka Lagala xiriiri karo" subLabel="Emergency Contact Name">
+          <Field label="Emergency Contact Name">
             <input type="text" required value={data.emergencyName}
               onChange={e => set("emergencyName", e.target.value)}
-              placeholder="Magaca qofka xiriirka" className={inputCls} />
+              placeholder="Full name of emergency contact" className={inputCls} />
           </Field>
         </div>
 
-        <Field label="Teleefanka Xaaladda" subLabel="Emergency Contact Phone">
+        <Field label="Emergency Contact Phone">
           <div className="relative">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
             <input type="tel" required value={data.emergencyPhone}
@@ -325,24 +325,24 @@ export default function MembersForm() {
           </div>
         </Field>
 
-        <Field label="Email Xaaladda" subLabel="Emergency Contact Email">
+        <Field label="Emergency Contact Email">
           <input type="email" required value={data.emergencyEmail}
             onChange={e => set("emergencyEmail", e.target.value)}
-            placeholder="xiriir@example.com" className={inputCls} />
+            placeholder="contact@example.com" className={inputCls} />
         </Field>
 
         {/* Membership requirements */}
         <div className="sm:col-span-2 space-y-3">
           <p className="text-sm font-bold text-gray-800">
-            Shuruudaha Xubinnimada / Requirements for Membership
+            Requirements for Membership
           </p>
           {[
-            "Inaad tahay macallin ka howlgala xarun waxbarasho rasmi ah.",
-            "Inaad buuxisid foomka codsiga xubinnimada si buuxa oo sax ah.",
-            "Inaad bixiso lacagta xubinnimada bil walba oo ah $3.",
-            "Inaad bixiso lacagta kaarka aqoonsiga (ID Card) oo ah $5 (Sanad waliba).",
-            "Inaad diyaar u tahay inaad ka qaybqaadato kulamada, tababarada, iyo hawlaha ururka.",
-            "Inaad ilaalin doonto Xeerarka iyo qiyamka ururka.",
+            "You must be an active teacher working in an official educational institution.",
+            "You must complete the membership application form fully and accurately.",
+            "You must pay a monthly membership fee of $3.",
+            "You must pay an annual ID Card issuance fee of $5.",
+            "You must be willing to participate in Union meetings, trainings, and activities.",
+            "You must respect and adhere to the Union's Constitution and values.",
           ].map((req, i) => (
             <div key={i} className="flex items-start gap-3 text-xs text-gray-600">
               <CheckCircle2 className="w-4 h-4 text-[#1E0D79] shrink-0 mt-0.5" />
@@ -353,7 +353,7 @@ export default function MembersForm() {
 
         {/* Contact info */}
         <div className="sm:col-span-2 bg-gray-50 rounded-xl p-4 text-xs text-gray-500 leading-relaxed border border-gray-100">
-          <span className="font-semibold text-gray-700">Xiriir:</span>{" "}
+          <span className="font-semibold text-gray-700">Contact:</span>{" "}
           +252616478844 · info@sonut.org.so · Howl-wadaag District, Mogadishu – Somalia
         </div>
       </div>
@@ -374,13 +374,13 @@ export default function MembersForm() {
             <div className="w-24 h-24 bg-green-50 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2 className="w-12 h-12 text-green-500" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-3">Codsigaaga Waa La Helay!</h3>
+            <h3 className="text-2xl font-bold text-gray-900 mb-3">Application Submitted!</h3>
             <p className="text-gray-500 text-sm leading-relaxed mb-2">
-              Application Received! Waad ku mahadsantahay. Kooxdayadu waxay dib kugu soo xiriiri doontaa
-              si ay u xaqiijiyaan xubinnimadaada.
+              Thank you! Your application has been successfully received. Our team will contact you shortly
+              to verify your membership status.
             </p>
             <p className="text-xs text-gray-400 mt-4">
-              Xiriir: +252616478844 · info@sonut.org.so
+              Contact: +252616478844 · info@sonut.org.so
             </p>
           </motion.div>
         </div>
@@ -403,14 +403,13 @@ export default function MembersForm() {
         <div className="text-center mb-12">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E0D79]/10 text-[#1E0D79] text-xs font-bold tracking-widest uppercase mb-4">
             <span className="w-2 h-2 rounded-full bg-[#1E0D79] animate-pulse" />
-            KU SOO BIIR URURKA
+            JOIN THE UNION
           </div>
           <h2 className="text-4xl md:text-5xl font-extrabold text-[#1E0D79] mb-3 font-serif">
-            Xogta Hubinta
+            Membership Registration
           </h2>
           <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-            Ku Soo Biir Ururka Macallimiinta Qaranka Soomaaliyeed — Foomkan waxaa loogu talagalay
-            uruurinta xogta Macallimiinta ee doonaya xubinnimada rasmi ah.
+            Join the Somali National Union of Teachers — This form is for teachers seeking official membership registration.
           </p>
         </div>
 
@@ -479,7 +478,7 @@ export default function MembersForm() {
                   {(() => { const Icon = TABS[step - 1].icon; return <Icon className="w-5 h-5 text-[#1E0D79]" />; })()}
                 </div>
                 <div>
-                  <p className="text-xs text-gray-400 font-medium">Tallaabo {step} / {TABS.length}</p>
+                  <p className="text-xs text-gray-400 font-medium">Step {step} / {TABS.length}</p>
                   <h3 className="text-lg font-bold text-gray-900">{TABS[step - 1].label}</h3>
                 </div>
               </div>
@@ -512,7 +511,7 @@ export default function MembersForm() {
                 `}
               >
                 <ChevronLeft className="w-4 h-4" />
-                Hore
+                Back
               </button>
 
               {step < 4 ? (
@@ -521,7 +520,7 @@ export default function MembersForm() {
                   onClick={next}
                   className="inline-flex items-center gap-2 rounded-xl bg-[#1E0D79] text-white px-7 py-2.5 text-sm font-bold shadow-md shadow-[#1E0D79]/20 hover:bg-[#1E0D79]/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
                 >
-                  Xiga
+                  Next
                   <ChevronRight className="w-4 h-4" />
                 </button>
               ) : (
@@ -534,7 +533,7 @@ export default function MembersForm() {
                     <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                   ) : (
                     <>
-                      Gudbi Codsiga
+                      Submit Application
                       <Send className="w-4 h-4" />
                     </>
                   )}
@@ -546,7 +545,7 @@ export default function MembersForm() {
 
         {/* Footer note */}
         <p className="text-center text-xs text-gray-400 mt-6">
-          Wixi Faahfaahin ah kala xirir{" "}
+          For more information, contact{" "}
           <span className="font-semibold text-[#1E0D79]">+252616478844</span> ·{" "}
           <a href="mailto:info@sonut.org.so" className="hover:underline text-[#1E0D79]">
             info@sonut.org.so
