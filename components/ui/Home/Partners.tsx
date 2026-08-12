@@ -21,7 +21,7 @@ const defaultPartners: PartnerData[] = [
 ];
 
 export default function Partners({ initialData }: { initialData?: PartnerData[] }) {
-  const displayPartners = initialData !== undefined ? initialData : defaultPartners;
+  const displayPartners = initialData && initialData.length > 0 ? initialData : defaultPartners;
 
   if (displayPartners.length === 0) {
     return null;

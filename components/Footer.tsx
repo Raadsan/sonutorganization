@@ -92,7 +92,7 @@ export default function Footer() {
               <li className="flex items-start gap-3 text-sm">
                 <MapPin className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
                 <span>
-                  Holwadaag District,Mogadishu,<br />
+                  Hol-wadag District,Mogadishu,<br />
                   Somalia
                 </span>
               </li>
