@@ -43,7 +43,7 @@ export default function Footer() {
               <a href="https://www.facebook.com/somaliateachers" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary hover:text-white transition-colors duration-300">
                 <FacebookIcon className="w-4 h-4" />
               </a>
-              <a href="https://x.com/soomaliteachers" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary hover:text-white transition-colors duration-300">
+              <a href="https://x.com/somaliateachers?s=21" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary hover:text-white transition-colors duration-300">
                 <TwitterIcon className="w-4 h-4" />
               </a>
               <a href="#" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-secondary hover:text-white transition-colors duration-300">

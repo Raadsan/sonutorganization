@@ -159,7 +159,7 @@ export default function Social() {
                       <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z" />
                     </svg>
                   </div>
-                  <p className="text-xs text-slate-500 font-medium">@soomaliteachers</p>
+                  <p className="text-xs text-slate-500 font-medium">@somaliateachers</p>
 
                   <p className="mt-2 text-xs leading-relaxed text-slate-700">
                     Official Twitter (X) page of the Somali National Union of Teachers (SONUT). Empowering educators and strengthening education in Somalia since 2004.
@@ -206,7 +206,7 @@ export default function Social() {
                       className="mt-2 text-[10px] font-bold text-blue-500 hover:underline flex items-center gap-0.5"
                     >
                       <Link2 className="h-2.5 w-2.5" />
-                      x.com/soomaliteachers
+                      x.com/somaliateachers
                     </a>
                   </div>
                 </div>

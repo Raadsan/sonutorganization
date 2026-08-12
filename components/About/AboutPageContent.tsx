@@ -16,13 +16,13 @@ export default function AboutPageContent() {
               <span className="h-2 w-2 animate-pulse rounded-full bg-secondary" />
               About Us
             </div>
-            <h2 className="mb-6 font-serif text-4xl font-extrabold leading-[1.15] text-primary md:text-5xl">
+            {/* <h2 className="mb-6 font-serif text-4xl font-extrabold leading-[1.15] text-primary md:text-5xl">
               Somali National Union of Teachers
-            </h2>
+            </h2> */}
 
-            <div className="mb-8 space-y-5 text-sm leading-relaxed text-muted-foreground md:text-base text-justify">
+            <div className="mb-8 space-y-5 text-sm leading-relaxed text-muted-foreground md:text-base text-left">
               <p>
-                The <strong className="text-foreground">Somali National Union of Teachers (SONUT)</strong>{" "}is a national service organization concerned with ensuring better conditions of service for its members. Our members are drawn from pre-tertiary levels of the educational system, including public and private primary and secondary schools, teacher training colleges, technical institutes, and offices of educational administration units.
+                <strong className="text-foreground">Somali National Union of Teachers (SONUT)</strong>{" "}is a national service organization concerned with ensuring better conditions of service for its members. Our members are drawn from pre-tertiary levels of the educational system, including public and private primary and secondary schools, teacher training colleges, technical institutes, and offices of educational administration units.
               </p>
               <p>
                 SONUT (formerly SNUT) was established on{" "}
