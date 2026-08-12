@@ -4,7 +4,7 @@ import { ExternalLink, MapPin, Calendar, Link2 } from "lucide-react";
 import { useState } from "react";
 
 const FACEBOOK_URL = "https://www.facebook.com/somaliateachers";
-const TWITTER_URL = "https://x.com/soomaliteachers";
+const TWITTER_URL = "https://x.com/somaliateachers?s=21";
 
 type SocialPlatform = "facebook" | "twitter";
 
@@ -86,11 +86,10 @@ export default function Social() {
               type="button"
               onClick={() => setActivePlatform("facebook")}
               aria-pressed={activePlatform === "facebook"}
-              className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${
-                activePlatform === "facebook"
+              className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${activePlatform === "facebook"
                   ? "bg-white text-primary shadow"
                   : "text-white hover:bg-white/10"
-              }`}
+                }`}
             >
               <FacebookIcon />
               Facebook
@@ -99,11 +98,10 @@ export default function Social() {
               type="button"
               onClick={() => setActivePlatform("twitter")}
               aria-pressed={activePlatform === "twitter"}
-              className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${
-                activePlatform === "twitter"
+              className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold transition ${activePlatform === "twitter"
                   ? "bg-white text-secondary shadow"
                   : "text-white hover:bg-white/10"
-              }`}
+                }`}
             >
               <XIcon />
               Twitter (X)
@@ -127,15 +125,15 @@ export default function Social() {
                 <div className="h-32 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-950 relative">
                   <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-900/20 via-transparent to-transparent" />
                 </div>
-                
+
                 {/* Profile Header */}
                 <div className="px-6 pb-6 relative flex flex-col text-left">
                   {/* Profile Picture */}
                   <div className="relative -mt-14 mb-3 flex justify-between items-end">
                     <div className="h-24 w-24 rounded-full border-4 border-white bg-slate-100 overflow-hidden shadow-md">
-                      <img 
-                        src="/images/logo1.png" 
-                        alt="SONUT Logo" 
+                      <img
+                        src="/images/logo1.png"
+                        alt="SONUT Logo"
                         className="h-full w-full object-cover"
                         onError={(e) => {
                           e.currentTarget.style.display = 'none';
@@ -201,7 +199,7 @@ export default function Social() {
                     <p className="text-xs text-slate-700 leading-relaxed">
                       We are committed to quality education and supporting the professional development of Somali educators. Connect with us on our official X account for regular updates! 📚🇸🇴
                     </p>
-                    <a 
+                    <a
                       href={TWITTER_URL}
                       target="_blank"
                       rel="noreferrer"

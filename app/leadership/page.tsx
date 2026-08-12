@@ -2,6 +2,8 @@ import WhoWeAreBanner from "@/components/About/WhoWeAreBanner";
 import Team from "@/components/ui/Home/Team";
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 async function getLeaders() {
   try {
     return await prisma.leader.findMany({

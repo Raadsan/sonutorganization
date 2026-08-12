@@ -45,7 +45,11 @@ const defaultBlogPosts: BlogPostData[] = [
 ];
 
 export default function Blog({ initialData }: { initialData?: BlogPostData[] }) {
-  const displayPosts = initialData && initialData.length > 0 ? initialData : defaultBlogPosts;
+  const displayPosts = initialData !== undefined ? initialData : defaultBlogPosts;
+
+  if (displayPosts.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-24 bg-gray-50/50 relative overflow-hidden">

@@ -87,7 +87,11 @@ export default function Team({ initialData }: { initialData?: TeamMember[] }) {
   const [activeShareId, setActiveShareId] = useState<string | number | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
-  const displayData = initialData && initialData.length > 0 ? initialData : teamData;
+  const displayData = initialData !== undefined ? initialData : teamData;
+
+  if (displayData.length === 0) {
+    return null;
+  }
 
   const scrollLeft = () => {
     const slider = document.getElementById('team-slider');

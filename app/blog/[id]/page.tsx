@@ -4,6 +4,8 @@ import Link from "next/link";
 import { ArrowLeft, Calendar, User, Tag, Share2 } from "lucide-react";
 import { prisma } from "@/lib/db";
 
+export const dynamic = "force-dynamic";
+
 interface PageProps {
   params: Promise<{ id: string }>;
 }

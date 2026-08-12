@@ -12,6 +12,8 @@ import Social from "@/components/Socila";
 import { prisma } from "@/lib/db";
 import type { BlogPost, Leader, Partner } from "@prisma/client";
 
+export const dynamic = "force-dynamic";
+
 async function getHomepageData(): Promise<{
   leaders: Leader[];
   partners: Partner[];

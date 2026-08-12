@@ -21,7 +21,11 @@ const defaultPartners: PartnerData[] = [
 ];
 
 export default function Partners({ initialData }: { initialData?: PartnerData[] }) {
-  const displayPartners = initialData && initialData.length > 0 ? initialData : defaultPartners;
+  const displayPartners = initialData !== undefined ? initialData : defaultPartners;
+
+  if (displayPartners.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-20 bg-white overflow-hidden border-t border-gray-100 relative">
