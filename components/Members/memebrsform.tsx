@@ -102,14 +102,14 @@ export default function MembersForm() {
     setIsSubmitting(true);
     try {
       const formData = new FormData();
-      
+
       // Append all string fields
       Object.entries(data).forEach(([key, value]) => {
         if (key !== "teacherImage") {
           formData.append(key, value as string);
         }
       });
-      
+
       // Append image if exists
       if (data.teacherImage) {
         formData.append("teacherImage", data.teacherImage);
@@ -350,12 +350,6 @@ export default function MembersForm() {
             </div>
           ))}
         </div>
-
-        {/* Contact info */}
-        <div className="sm:col-span-2 bg-gray-50 rounded-xl p-4 text-xs text-gray-500 leading-relaxed border border-gray-100">
-          <span className="font-semibold text-gray-700">Contact:</span>{" "}
-          +252616478844 · info@sonut.org.so · Howl-wadaag District, Mogadishu – Somalia
-        </div>
       </div>
     ),
   };
@@ -393,167 +387,159 @@ export default function MembersForm() {
     <>
       <Toaster position="top-center" richColors />
       <section className="py-20 bg-[#fafafa] relative overflow-hidden" id="register">
-      {/* BG blobs */}
-      <div className="pointer-events-none absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#1E0D79]/5 blur-3xl" />
-      <div className="pointer-events-none absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#F4313F]/5 blur-3xl" />
+        {/* BG blobs */}
+        <div className="pointer-events-none absolute -top-32 -right-32 w-96 h-96 rounded-full bg-[#1E0D79]/5 blur-3xl" />
+        <div className="pointer-events-none absolute -bottom-32 -left-32 w-96 h-96 rounded-full bg-[#F4313F]/5 blur-3xl" />
 
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E0D79]/10 text-[#1E0D79] text-xs font-bold tracking-widest uppercase mb-4">
-            <span className="w-2 h-2 rounded-full bg-[#1E0D79] animate-pulse" />
-            JOIN THE UNION
+          {/* Header */}
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#1E0D79]/10 text-[#1E0D79] text-xs font-bold tracking-widest uppercase mb-4">
+              <span className="w-2 h-2 rounded-full bg-[#1E0D79] animate-pulse" />
+              JOIN THE UNION
+            </div>
+            <h2 className="text-4xl md:text-5xl font-extrabold text-[#1E0D79] mb-3 font-serif">
+              Membership Registration
+            </h2>
+            <p className="text-muted-foreground text-sm max-w-xl mx-auto">
+              Join the Somali National Union of Teachers — This form is for teachers seeking official membership registration.
+            </p>
           </div>
-          <h2 className="text-4xl md:text-5xl font-extrabold text-[#1E0D79] mb-3 font-serif">
-            Membership Registration
-          </h2>
-          <p className="text-muted-foreground text-sm max-w-xl mx-auto">
-            Join the Somali National Union of Teachers — This form is for teachers seeking official membership registration.
-          </p>
-        </div>
 
-        {/* Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6 }}
-          className="bg-white rounded-3xl shadow-xl shadow-gray-200/60 border border-gray-100 overflow-hidden"
-        >
-          {/* ── Tab bar ─────────────────────────────────────────────────────── */}
-          <div className="flex border-b border-gray-100 overflow-x-auto scrollbar-none">
-            {TABS.map((tab) => {
-              const Icon = tab.icon;
-              const active = step === tab.id;
-              const done = step > tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  type="button"
-                  onClick={() => tab.id < step && setStep(tab.id)}
-                  className={`
+          {/* Card */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="bg-white rounded-3xl shadow-xl shadow-gray-200/60 border border-gray-100 overflow-hidden"
+          >
+            {/* ── Tab bar ─────────────────────────────────────────────────────── */}
+            <div className="flex border-b border-gray-100 overflow-x-auto scrollbar-none">
+              {TABS.map((tab) => {
+                const Icon = tab.icon;
+                const active = step === tab.id;
+                const done = step > tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    type="button"
+                    onClick={() => tab.id < step && setStep(tab.id)}
+                    className={`
                     flex-1 min-w-[120px] flex flex-col items-center gap-1 py-4 px-3 text-xs font-semibold
                     border-b-2 transition-all duration-300 relative
                     ${active
-                      ? "border-[#1E0D79] text-[#1E0D79] bg-[#1E0D79]/5"
-                      : done
-                        ? "border-[#1E0D79]/30 text-[#1E0D79]/60 cursor-pointer hover:bg-gray-50"
-                        : "border-transparent text-gray-400 cursor-default"
-                    }
+                        ? "border-[#1E0D79] text-[#1E0D79] bg-[#1E0D79]/5"
+                        : done
+                          ? "border-[#1E0D79]/30 text-[#1E0D79]/60 cursor-pointer hover:bg-gray-50"
+                          : "border-transparent text-gray-400 cursor-default"
+                      }
                   `}
-                >
-                  <div className={`
+                  >
+                    <div className={`
                     w-8 h-8 rounded-full flex items-center justify-center transition-all
                     ${active ? "bg-[#1E0D79] text-white" : done ? "bg-[#1E0D79]/20 text-[#1E0D79]" : "bg-gray-100 text-gray-400"}
                   `}>
-                    {done ? <CheckCircle2 className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
+                      {done ? <CheckCircle2 className="w-4 h-4" /> : <Icon className="w-4 h-4" />}
+                    </div>
+                    <span className="hidden sm:block leading-tight text-center">
+                      <span className="block text-[10px] opacity-70">{tab.id}.</span>
+                      {tab.label}
+                    </span>
+                    <span className="block sm:hidden text-[10px]">{tab.id}</span>
+                  </button>
+                );
+              })}
+            </div>
+
+            {/* ── Progress bar ────────────────────────────────────────────────── */}
+            <div className="h-1 bg-gray-100">
+              <motion.div
+                className="h-full bg-gradient-to-r from-[#1E0D79] to-[#F4313F]"
+                initial={false}
+                animate={{ width: `${((step - 1) / 3) * 100}%` }}
+                transition={{ duration: 0.4, ease: "easeInOut" }}
+              />
+            </div>
+
+            {/* ── Form body ───────────────────────────────────────────────────── */}
+            <form onSubmit={handleSubmit}>
+              <div className="p-6 md:p-10">
+                {/* Step heading */}
+                <div className="mb-7 flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-xl bg-[#1E0D79]/10 flex items-center justify-center">
+                    {(() => { const Icon = TABS[step - 1].icon; return <Icon className="w-5 h-5 text-[#1E0D79]" />; })()}
                   </div>
-                  <span className="hidden sm:block leading-tight text-center">
-                    <span className="block text-[10px] opacity-70">{tab.id}.</span>
-                    {tab.label}
-                  </span>
-                  <span className="block sm:hidden text-[10px]">{tab.id}</span>
-                </button>
-              );
-            })}
-          </div>
-
-          {/* ── Progress bar ────────────────────────────────────────────────── */}
-          <div className="h-1 bg-gray-100">
-            <motion.div
-              className="h-full bg-gradient-to-r from-[#1E0D79] to-[#F4313F]"
-              initial={false}
-              animate={{ width: `${((step - 1) / 3) * 100}%` }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
-            />
-          </div>
-
-          {/* ── Form body ───────────────────────────────────────────────────── */}
-          <form onSubmit={handleSubmit}>
-            <div className="p-6 md:p-10">
-              {/* Step heading */}
-              <div className="mb-7 flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#1E0D79]/10 flex items-center justify-center">
-                  {(() => { const Icon = TABS[step - 1].icon; return <Icon className="w-5 h-5 text-[#1E0D79]" />; })()}
+                  <div>
+                    <p className="text-xs text-gray-400 font-medium">Step {step} / {TABS.length}</p>
+                    <h3 className="text-lg font-bold text-gray-900">{TABS[step - 1].label}</h3>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-xs text-gray-400 font-medium">Step {step} / {TABS.length}</p>
-                  <h3 className="text-lg font-bold text-gray-900">{TABS[step - 1].label}</h3>
-                </div>
+
+                {/* Animated step content */}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={step}
+                    initial={{ opacity: 0, x: 30 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -30 }}
+                    transition={{ duration: 0.25, ease: "easeOut" }}
+                  >
+                    {tabContent[step]}
+                  </motion.div>
+                </AnimatePresence>
               </div>
 
-              {/* Animated step content */}
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={step}
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -30 }}
-                  transition={{ duration: 0.25, ease: "easeOut" }}
-                >
-                  {tabContent[step]}
-                </motion.div>
-              </AnimatePresence>
-            </div>
-
-            {/* ── Navigation buttons ──────────────────────────────────────── */}
-            <div className="px-6 md:px-10 pb-8 flex items-center justify-between gap-4">
-              <button
-                type="button"
-                onClick={prev}
-                disabled={step === 1}
-                className={`
-                  inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all
-                  ${step === 1
-                    ? "text-gray-300 cursor-not-allowed"
-                    : "text-[#1E0D79] border border-[#1E0D79]/30 hover:bg-[#1E0D79]/5"}
-                `}
-              >
-                <ChevronLeft className="w-4 h-4" />
-                Back
-              </button>
-
-              {step < 4 ? (
+              {/* ── Navigation buttons ──────────────────────────────────────── */}
+              <div className="px-6 md:px-10 pb-8 flex items-center justify-between gap-4">
                 <button
                   type="button"
-                  onClick={next}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#1E0D79] text-white px-7 py-2.5 text-sm font-bold shadow-md shadow-[#1E0D79]/20 hover:bg-[#1E0D79]/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  onClick={prev}
+                  disabled={step === 1}
+                  className={`
+                  inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-semibold transition-all
+                  ${step === 1
+                      ? "text-gray-300 cursor-not-allowed"
+                      : "text-[#1E0D79] border border-[#1E0D79]/30 hover:bg-[#1E0D79]/5"}
+                `}
                 >
-                  Next
-                  <ChevronRight className="w-4 h-4" />
+                  <ChevronLeft className="w-4 h-4" />
+                  Back
                 </button>
-              ) : (
-                <button
-                  type="submit"
-                  disabled={isSubmitting}
-                  className="inline-flex items-center gap-2 rounded-xl bg-[#F4313F] text-white px-7 py-2.5 text-sm font-bold shadow-md shadow-[#F4313F]/20 hover:bg-[#F4313F]/90 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
-                >
-                  {isSubmitting ? (
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  ) : (
-                    <>
-                      Submit Application
-                      <Send className="w-4 h-4" />
-                    </>
-                  )}
-                </button>
-              )}
-            </div>
-          </form>
-        </motion.div>
 
-        {/* Footer note */}
-        <p className="text-center text-xs text-gray-400 mt-6">
-          For more information, contact{" "}
-          <span className="font-semibold text-[#1E0D79]">+252616478844</span> ·{" "}
-          <a href="mailto:info@sonut.org.so" className="hover:underline text-[#1E0D79]">
-            info@sonut.org.so
-          </a>{" "}
-          · Howl-wadaag District, Mogadishu – Somalia
-        </p>
-      </div>
-    </section>
+                {step < 4 ? (
+                  <button
+                    type="button"
+                    onClick={next}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#1E0D79] text-white px-7 py-2.5 text-sm font-bold shadow-md shadow-[#1E0D79]/20 hover:bg-[#1E0D79]/90 hover:scale-[1.02] active:scale-[0.98] transition-all"
+                  >
+                    Next
+                    <ChevronRight className="w-4 h-4" />
+                  </button>
+                ) : (
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="inline-flex items-center gap-2 rounded-xl bg-[#F4313F] text-white px-7 py-2.5 text-sm font-bold shadow-md shadow-[#F4313F]/20 hover:bg-[#F4313F]/90 hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    {isSubmitting ? (
+                      <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                    ) : (
+                      <>
+                        Submit Application
+                        <Send className="w-4 h-4" />
+                      </>
+                    )}
+                  </button>
+                )}
+              </div>
+            </form>
+          </motion.div>
+
+
+        </div>
+      </section>
     </>
   );
 }

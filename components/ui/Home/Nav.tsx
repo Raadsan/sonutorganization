@@ -41,6 +41,7 @@ const navLinks = [
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [openDropdown, setOpenDropdown] = useState<string | null>(null);
 
   return (
@@ -71,7 +72,15 @@ export default function Nav() {
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="relative group py-5"
+              className="relative py-5"
+              onMouseEnter={() => setActiveDropdown(link.label)}
+              onMouseLeave={() => setActiveDropdown(null)}
+              onFocus={() => setActiveDropdown(link.label)}
+              onBlur={(e) => {
+                if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+                  setActiveDropdown(null);
+                }
+              }}
             >
               {link.submenu ? (
                 <>
@@ -80,7 +89,7 @@ export default function Nav() {
                   >
                     {link.label}
                     <svg
-                      className="w-4 h-4 transition-transform group-hover:rotate-180"
+                      className={`w-4 h-4 transition-transform duration-300 ${activeDropdown === link.label ? "rotate-180" : ""}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -88,19 +97,34 @@ export default function Nav() {
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                   </div>
-                  <div className="absolute top-full left-0 pt-2 w-44 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50">
-                    <div className="rounded-lg bg-white shadow-lg border p-1">
-                      {link.submenu.map((sub) => (
-                        <Link
-                          key={sub.href}
-                          href={sub.href}
-                          className="block px-4 py-2.5 text-sm text-gray-700 hover:text-white hover:bg-[#F4313F] rounded-lg font-normal transition-all duration-300"
-                        >
-                          {sub.label}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                  <AnimatePresence>
+                    {activeDropdown === link.label && (
+                      <motion.div
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 10 }}
+                        transition={{ duration: 0.15 }}
+                        className="absolute top-full left-0 pt-2 w-44 z-50"
+                      >
+                        <div className="rounded-lg bg-white shadow-lg border p-1">
+                          {link.submenu.map((sub) => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              onClick={() => {
+                                setActiveDropdown(null);
+                                setOpen(false);
+                                setOpenDropdown(null);
+                              }}
+                              className="block px-4 py-2.5 text-sm text-gray-700 hover:text-white hover:bg-[#F4313F] rounded-lg font-normal transition-all duration-300"
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </>
               ) : (
                 <Link
