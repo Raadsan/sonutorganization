@@ -64,53 +64,48 @@ export default function Nav() {
         </Link>
 
         {/* Menu - Dhaxda (Desktop) */}
-        <ul className="hidden md:flex items-center gap-6 text-sm font-medium">
+        <ul className="hidden md:flex items-center gap-6 text-sm font-medium h-full">
           {navLinks.map((link, i) => (
             <motion.li
               key={link.label}
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.05 }}
-              className="relative"
+              className="relative group py-5"
             >
               {link.submenu ? (
                 <>
-                  <button
-                    onClick={() =>
-                      setOpenDropdown(openDropdown === link.label ? null : link.label)
-                    }
-                    aria-expanded={openDropdown === link.label}
-                    className="flex items-center gap-1 text-gray-700 hover:text-[#1E0D79] transition-colors cursor-pointer"
+                  <div
+                    className="flex items-center gap-1 text-gray-700 hover:text-[#F4313F] transition-colors duration-300 cursor-pointer"
                   >
                     {link.label}
                     <svg
-                      className={`w-4 h-4 transition-transform ${openDropdown === link.label ? "rotate-180" : ""}`}
+                      className="w-4 h-4 transition-transform group-hover:rotate-180"
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
-                  </button>
-                  {openDropdown === link.label && (
-                    <div className="absolute top-full left-0 mt-1 w-44 rounded-lg bg-white shadow-lg border z-50">
+                  </div>
+                  <div className="absolute top-full left-0 pt-2 w-44 opacity-0 invisible group-hover:opacity-100 group-hover:visible group-focus-within:opacity-100 group-focus-within:visible transition-all duration-200 z-50">
+                    <div className="rounded-lg bg-white shadow-lg border p-1">
                       {link.submenu.map((sub) => (
                         <Link
                           key={sub.href}
                           href={sub.href}
-                          onClick={() => setOpenDropdown(null)}
-                          className="block px-4 py-2.5 text-sm text-gray-700 hover:text-[#1E0D79] hover:bg-gray-50 rounded-lg"
+                          className="block px-4 py-2.5 text-sm text-gray-700 hover:text-white hover:bg-[#F4313F] rounded-lg font-normal transition-all duration-300"
                         >
                           {sub.label}
                         </Link>
                       ))}
                     </div>
-                  )}
+                  </div>
                 </>
               ) : (
                 <Link
                   href={link.href}
-                  className="text-gray-700 hover:text-[#1E0D79] transition-colors"
+                  className="text-gray-700 hover:text-[#F4313F] transition-colors duration-300"
                 >
                   {link.label}
                 </Link>
@@ -165,7 +160,7 @@ export default function Nav() {
                           setOpenDropdown(openDropdown === link.label ? null : link.label)
                         }
                         aria-expanded={openDropdown === link.label}
-                        className="flex items-center justify-between w-full py-1.5 text-gray-700 hover:text-[#1E0D79]"
+                        className="flex items-center justify-between w-full py-1.5 text-gray-700 hover:text-[#F4313F] transition-colors duration-300"
                       >
                         {link.label}
                         <svg
@@ -187,7 +182,7 @@ export default function Nav() {
                                 setOpen(false);
                                 setOpenDropdown(null);
                               }}
-                              className="block py-1.5 text-gray-600 hover:text-[#1E0D79] text-sm"
+                              className="block py-1.5 text-gray-600 hover:text-[#F4313F] text-sm transition-colors duration-300"
                             >
                               {sub.label}
                             </Link>
@@ -199,7 +194,7 @@ export default function Nav() {
                     <Link
                       href={link.href}
                       onClick={() => setOpen(false)}
-                      className="block py-1.5 text-gray-700 hover:text-[#1E0D79]"
+                      className="block py-1.5 text-gray-700 hover:text-[#F4313F] transition-colors duration-300"
                     >
                       {link.label}
                     </Link>

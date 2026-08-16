@@ -13,7 +13,7 @@ import {
 const programmes = [
   {
     icon: GraduationCap,
-    title: "Teachers Professional Development Program",
+    title: "Teachers professional development program",
     description: "SONUT provides training, workshops, and learning opportunities to improve teachers’ knowledge, skills, teaching methods, and professional standards.",
   },
   {
@@ -71,7 +71,7 @@ export default function OurProgrammesPage() {
             <span className="text-xs font-bold uppercase tracking-[0.22em] text-secondary">Our Areas of Work</span>
             <h2 className="mt-3 text-3xl font-extrabold text-primary md:text-5xl">Building a Stronger Teaching Profession</h2>
           </div>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {programmes.map((programme, index) => (
               <article key={programme.title} className="group relative overflow-hidden rounded-3xl border border-gray-100 bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl">
                 <span className="absolute right-5 top-3 text-6xl font-black text-primary/5">

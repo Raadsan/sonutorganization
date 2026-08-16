@@ -13,7 +13,7 @@ import {
 const benefits = [
   {
     icon: Megaphone,
-    title: "Advocacy & Voice",
+    title: "Advocacy & voice",
     description:
       "Be part of a collective voice that influences education policy at all levels of government.",
     color: "bg-[#1E0D79]",
@@ -22,7 +22,7 @@ const benefits = [
   },
   {
     icon: Shield,
-    title: "Legal Protection",
+    title: "Legal protection",
     description:
       "Comprehensive legal support for professional matters including wrongful termination and workplace disputes.",
     color: "bg-[#F4313F]",
@@ -31,7 +31,7 @@ const benefits = [
   },
   {
     icon: Handshake,
-    title: "Collective Bargaining",
+    title: "Collective bargaining",
     description:
       "SONUT negotiates better salaries, allowances, and working conditions on your behalf.",
     color: "bg-emerald-600",
@@ -40,7 +40,7 @@ const benefits = [
   },
   {
     icon: GraduationCap,
-    title: "Training Program",
+    title: "Training program",
     description:
       "Continuous professional development opportunities through workshops, seminars, and conferences.",
     color: "bg-amber-600",
@@ -49,18 +49,18 @@ const benefits = [
   },
   {
     icon: HeartHandshake,
-    title: "Health Insurance",
+    title: "Health insurance",
     description:
-      "Access to affordable healthcare plans and medical support for members and their families.",
+      "Access to affordable healthcare plans and medical support for members and their families",
     color: "bg-sky-600",
     light: "bg-sky-50",
     textColor: "text-sky-600",
   },
   {
     icon: Wallet,
-    title: "Financial Support",
+    title: "Financial support",
     description:
-      "Access to loans, grants, and emergency assistance during difficult times.",
+      "Access to loans, grants, and emergency assistance during difficult time.",
     color: "bg-purple-600",
     light: "bg-purple-50",
     textColor: "text-purple-600",
