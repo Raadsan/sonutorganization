@@ -2,11 +2,12 @@
 
 import { useState, useEffect } from "react";
 import axios from "axios";
+import Image from "next/image";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import {
   Loader2, Search, Trash2, CheckCircle, XCircle, Clock,
-  Eye, X, User, Phone, Mail, MapPin, Droplets, Calendar,
+  X, User, Phone, Mail, MapPin, Droplets, Calendar,
   BookOpen, Building2, AlertCircle, GraduationCap, ChevronRight,
 } from "lucide-react";
 
@@ -93,10 +94,16 @@ function MemberPanel({
         <div className="sticky top-0 z-10 bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {member.teacherImageUrl ? (
-              <img src={member.teacherImageUrl} alt={member.fullName}
-                className="w-10 h-10 rounded-full object-cover" />
+              <Image
+                src={member.teacherImageUrl}
+                alt={member.fullName}
+                width={40}
+                height={40}
+                unoptimized
+                className="h-10 w-10 rounded-full object-cover"
+              />
             ) : (
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1E0D79] to-[#F4313F] flex items-center justify-center text-white font-bold text-sm">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-[#1E0D79] to-[#D92936] flex items-center justify-center text-white font-bold text-sm">
                 {initials}
               </div>
             )}
@@ -230,18 +237,31 @@ export default function MembersAdminPage() {
   const [filterStatus, setFilterStatus] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("ALL");
   const [selected, setSelected] = useState<Member | null>(null);
 
-  const fetchMembers = async () => {
-    try {
-      const res = await axios.get("/api/members");
-      if (res.data.success) setMembers(res.data.members);
-    } catch {
-      toast.error("Failed to load members");
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    let isCurrent = true;
 
-  useEffect(() => { fetchMembers(); }, []);
+    axios
+      .get<{ success: boolean; members: Member[] }>("/api/members")
+      .then(({ data }) => {
+        if (isCurrent && data.success) {
+          setMembers(data.members);
+        }
+      })
+      .catch(() => {
+        if (isCurrent) {
+          toast.error("Failed to load members");
+        }
+      })
+      .finally(() => {
+        if (isCurrent) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   const handleStatusChange = async (id: number, status: string) => {
     try {
@@ -369,10 +389,16 @@ export default function MembersAdminPage() {
                         <td className="p-4">
                           <div className="flex items-center gap-3">
                             {m.teacherImageUrl ? (
-                              <img src={m.teacherImageUrl} alt={m.fullName}
-                                className="w-9 h-9 rounded-full object-cover shrink-0" />
+                              <Image
+                                src={m.teacherImageUrl}
+                                alt={m.fullName}
+                                width={36}
+                                height={36}
+                                unoptimized
+                                className="h-9 w-9 shrink-0 rounded-full object-cover"
+                              />
                             ) : (
-                              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1E0D79] to-[#F4313F] flex items-center justify-center text-white text-xs font-bold shrink-0">
+                              <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#1E0D79] to-[#D92936] flex items-center justify-center text-white text-xs font-bold shrink-0">
                                 {initials}
                               </div>
                             )}

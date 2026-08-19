@@ -137,5 +137,110 @@
     }
   html {
     @apply font-sans;
-    }
+  }
+}
+
+.admin-light .bg-gray-950 {
+  background-color: #f7f8fc !important;
+}
+
+.admin-light .bg-gray-900 {
+  background-color: #ffffff !important;
+}
+
+.admin-light .bg-gray-800 {
+  background-color: #f1f3f8 !important;
+}
+
+.admin-light .bg-gray-950\/50,
+.admin-light .bg-gray-950\/60,
+.admin-light .bg-gray-800\/40 {
+  background-color: #f7f8fc !important;
+}
+
+.admin-light .border-gray-800 {
+  border-color: #e6e8f0 !important;
+}
+
+.admin-light .border-gray-700 {
+  border-color: #d7dbe5 !important;
+}
+
+.admin-light .border-gray-600,
+.admin-light .border-gray-500 {
+  border-color: #c7cdd9 !important;
+}
+
+.admin-light .text-white {
+  color: #111827 !important;
+}
+
+.admin-light .text-gray-200 {
+  color: #1f2937 !important;
+}
+
+.admin-light .text-gray-300 {
+  color: #374151 !important;
+}
+
+.admin-light .text-gray-400,
+.admin-light .text-gray-500 {
+  color: #64748b !important;
+}
+
+.admin-light .text-gray-600 {
+  color: #94a3b8 !important;
+}
+
+.admin-light .admin-on-brand,
+.admin-light .admin-on-brand.text-white,
+.admin-light .admin-on-brand .text-white,
+.admin-light [class*="bg-gradient"].text-white,
+.admin-light .bg-blue-600.text-white,
+.admin-light .bg-purple-600.text-white,
+.admin-light .bg-cyan-600.text-white,
+.admin-light .bg-green-600.text-white,
+.admin-light .bg-green-500.text-white,
+.admin-light .bg-red-600.text-white,
+.admin-light .bg-red-500.text-white {
+  color: #ffffff !important;
+}
+
+.admin-light .bg-blue-600,
+.admin-light .bg-purple-600,
+.admin-light .bg-cyan-600 {
+  background-color: #1e0d79 !important;
+}
+
+.admin-light .hover\:bg-blue-700:hover,
+.admin-light .hover\:bg-purple-700:hover,
+.admin-light .hover\:bg-cyan-700:hover {
+  background-color: #16095b !important;
+}
+
+.admin-light .hover\:bg-gray-800:hover,
+.admin-light .hover\:bg-gray-700:hover {
+  background-color: #e8ebf2 !important;
+}
+
+.admin-light .hover\:text-white:hover {
+  color: #1e0d79 !important;
+}
+
+.admin-light input,
+.admin-light textarea,
+.admin-light select {
+  color: #111827;
+}
+
+.admin-light input::placeholder,
+.admin-light textarea::placeholder {
+  color: #94a3b8;
+}
+
+.admin-light .focus\:border-blue-500:focus,
+.admin-light .focus\:border-purple-500:focus,
+.admin-light .focus\:border-cyan-500:focus,
+.admin-light .focus\:border-green-500:focus {
+  border-color: #1e0d79 !important;
 }
