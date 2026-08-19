@@ -14,9 +14,9 @@ export default function JoinSonutPage() {
   return (
     <main>
       <JoinBanner />
-      <MembershipBenefits />
+      {/* <MembershipBenefits />
       <ReasonsToJoin />
-      <WhoCanJoin />
+      <WhoCanJoin /> */}
       <div id="register">
         <MembersForm />
       </div>

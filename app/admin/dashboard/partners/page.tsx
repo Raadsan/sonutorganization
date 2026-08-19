@@ -37,7 +37,29 @@ export default function PartnersPage() {
     finally { setLoading(false); }
   };
 
-  useEffect(() => { fetchPartners(); }, []);
+  useEffect(() => {
+    let isCurrent = true;
+
+    axios
+      .get<Partner[]>('/api/admin/partners')
+      .then(({ data }) => {
+        if (isCurrent) {
+          setPartners(data);
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      })
+      .finally(() => {
+        if (isCurrent) {
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      isCurrent = false;
+    };
+  }, []);
 
   const openCreate = () => {
     setEditing(null); setForm(emptyForm); setLogoFile(null); setLogoPreview(null); setShowModal(true);
@@ -102,7 +124,7 @@ export default function PartnersPage() {
             <div key={partner.id} className="bg-gray-900 border border-gray-800 rounded-xl overflow-hidden hover:border-gray-700 transition-colors">
               <div className="h-32 bg-gray-800 relative flex items-center justify-center p-4">
                 {partner.logoUrl ? (
-                  <Image src={partner.logoUrl} alt={partner.name} fill className="object-contain p-4" />
+                  <Image src={partner.logoUrl} alt={partner.name} fill unoptimized className="object-contain p-4" />
                 ) : (
                   <Handshake className="w-12 h-12 text-gray-600" />
                 )}
@@ -142,7 +164,7 @@ export default function PartnersPage() {
             <form onSubmit={handleSubmit} className="p-5 space-y-4">
               <div onClick={() => fileRef.current?.click()} className="cursor-pointer border-2 border-dashed border-gray-700 hover:border-gray-500 rounded-xl h-32 flex flex-col items-center justify-center gap-2 transition-colors relative overflow-hidden bg-gray-800">
                 {logoPreview ? (
-                  <Image src={logoPreview} alt="Preview" fill className="object-contain p-4" />
+                  <Image src={logoPreview} alt="Preview" fill unoptimized className="object-contain p-4" />
                 ) : (
                   <>
                     <Upload className="w-6 h-6 text-gray-500" />

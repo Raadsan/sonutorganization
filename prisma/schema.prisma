@@ -19,47 +19,60 @@ model Admin {
 }
 
 model Leader {
-  id          Int      @id @default(autoincrement())
-  name        String
-  title       String
-  bio         String?  @db.Text
-  imageUrl    String?
-  imagePublicId String?
-  facebook    String?
-  tiktok      String?
-  instagram   String?
-  order       Int      @default(0)
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-}
-
-model Partner {
   id            Int      @id @default(autoincrement())
   name          String
-  logoUrl       String?
-  logoPublicId  String?
-  website       String?
-  description   String?  @db.Text
+  title         String
+  bio           String?  @db.Text
+  imageUrl      String?
+  imagePublicId String?
+  facebook      String?
+  tiktok        String?
+  instagram     String?
   order         Int      @default(0)
   isActive      Boolean  @default(true)
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 }
 
+model Partner {
+  id           Int      @id @default(autoincrement())
+  name         String
+  logoUrl      String?
+  logoPublicId String?
+  website      String?
+  description  String?  @db.Text
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Affiliate {
+  id           Int      @id @default(autoincrement())
+  name         String
+  logoUrl      String
+  logoPublicId String
+  website      String?
+  description  String?  @db.Text
+  order        Int      @default(0)
+  isActive     Boolean  @default(true)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
 model BlogPost {
-  id            Int      @id @default(autoincrement())
-  title         String
-  slug          String   @unique
-  content       String   @db.LongText
-  excerpt       String?  @db.Text
-  coverImageUrl String?
+  id                 Int       @id @default(autoincrement())
+  title              String
+  slug               String    @unique
+  content            String    @db.LongText
+  excerpt            String?   @db.Text
+  coverImageUrl      String?
   coverImagePublicId String?
-  author        String   @default("Admin")
-  isPublished   Boolean  @default(false)
-  publishedAt   DateTime?
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  author             String    @default("Admin")
+  isPublished        Boolean   @default(false)
+  publishedAt        DateTime?
+  createdAt          DateTime  @default(now())
+  updatedAt          DateTime  @updatedAt
 }
 
 model Event {

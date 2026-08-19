@@ -1,6 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 type PartnerData = {
   id: number;
@@ -9,19 +10,8 @@ type PartnerData = {
   website: string | null;
 };
 
-const defaultPartners: PartnerData[] = [
-  { id: 1, name: "UNICEF Somalia", logoUrl: null, website: null },
-  { id: 2, name: "Ministry of Education", logoUrl: null, website: null },
-  { id: 3, name: "Save the Children", logoUrl: null, website: null },
-  { id: 4, name: "UNESCO", logoUrl: null, website: null },
-  { id: 5, name: "World Bank Group", logoUrl: null, website: null },
-  { id: 6, name: "USAID", logoUrl: null, website: null },
-  { id: 7, name: "Care International", logoUrl: null, website: null },
-  { id: 8, name: "Global Partnership", logoUrl: null, website: null }
-];
-
 export default function Partners({ initialData }: { initialData?: PartnerData[] }) {
-  const displayPartners = initialData && initialData.length > 0 ? initialData : defaultPartners;
+  const displayPartners = initialData ?? [];
 
   if (displayPartners.length === 0) {
     return null;
@@ -58,14 +48,21 @@ export default function Partners({ initialData }: { initialData?: PartnerData[] 
 
         {/* Scrolling Track (or Flex Container) */}
         <div className="flex items-center justify-center flex-wrap gap-8 w-full max-w-5xl mx-auto">
-           {displayPartners.map((partner, idx) => (
+           {displayPartners.map((partner) => (
              <div 
                 key={partner.id} 
                 className="flex-shrink-0 w-56 h-24 mx-6 bg-white border border-gray-100 shadow-sm rounded-2xl flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:shadow-lg hover:border-primary/20 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden p-2"
                 onClick={() => partner.website && window.open(partner.website, '_blank')}
               >
                 {partner.logoUrl ? (
-                  <img src={partner.logoUrl} alt={partner.name} className="max-w-full max-h-full object-contain" />
+                  <Image
+                    src={partner.logoUrl}
+                    alt={partner.name}
+                    width={200}
+                    height={80}
+                    unoptimized
+                    className="max-w-full max-h-full object-contain"
+                  />
                 ) : (
                   <span className="font-bold text-gray-400 hover:text-primary text-xl text-center px-4 leading-tight transition-colors">
                     {partner.name}

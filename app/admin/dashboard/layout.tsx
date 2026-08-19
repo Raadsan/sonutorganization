@@ -15,12 +15,14 @@ import {
   X,
   ChevronRight,
   UserCheck,
+  BadgeCheck,
 } from 'lucide-react';
 
 const navItems = [
   { href: '/admin/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/admin/dashboard/leadership', label: 'Leadership', icon: Users },
   { href: '/admin/dashboard/partners', label: 'Partners', icon: Handshake },
+  { href: '/admin/dashboard/affiliates', label: 'Affiliates', icon: BadgeCheck },
   { href: '/admin/dashboard/members', label: 'Members', icon: UserCheck },
   { href: '/admin/dashboard/blog', label: 'Blog', icon: BookOpen },
   { href: '/admin/dashboard/events', label: 'Events', icon: CalendarDays },
