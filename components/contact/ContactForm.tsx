@@ -1,7 +1,15 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Phone, Mail, MapPin, Send, User, MessageSquare } from "lucide-react";
+import {
+    Phone,
+    Mail,
+    MapPin,
+    Send,
+    User,
+    MessageSquare,
+    ChevronDown,
+} from "lucide-react";
 import { useState } from "react";
 
 const contactInfo = [
@@ -57,7 +65,7 @@ export default function ContactForm() {
                         Contact Us
                     </h2>
                     <p className="text-muted-foreground max-w-xl mx-auto text-sm md:text-base">
-                        Have a question or want to learn more about SONUT? We'd love to hear from you.
+                        Have a question or want to learn more about SONUT? We&apos;d love to hear from you.
                     </p>
                 </div>
 
@@ -116,7 +124,7 @@ export default function ContactForm() {
                         <div className="md:col-span-3 p-8 md:p-10">
                             <div className="mb-8">
                                 <h3 className="text-2xl font-bold text-gray-900 mb-1">Send Us a Message</h3>
-                                <p className="text-muted-foreground text-sm">We'll respond within 24 hours.</p>
+                                <p className="text-muted-foreground text-sm">We&apos;ll respond within 24 hours.</p>
                             </div>
 
                             {submitted ? (
@@ -162,6 +170,28 @@ export default function ContactForm() {
                                                     className="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                                 />
                                             </div>
+                                        </div>
+                                    </div>
+
+                                    {/* Inquiry Type */}
+                                    <div className="space-y-1.5">
+                                        <label htmlFor="inquiryType" className="text-sm font-semibold text-gray-700">
+                                            Inquiry Type
+                                        </label>
+                                        <div className="relative">
+                                            <select
+                                                id="inquiryType"
+                                                name="inquiryType"
+                                                defaultValue="general-inquiry"
+                                                className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 pr-10 text-sm text-gray-900 outline-none transition-all focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20"
+                                            >
+                                                <option value="general-inquiry">General Inquiry</option>
+                                                <option value="membership">Membership</option>
+                                                <option value="technical-support">Technical Support</option>
+                                                <option value="complaint">Complaint</option>
+                                                <option value="suggestion">Suggestion</option>
+                                            </select>
+                                            <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                                         </div>
                                     </div>
 

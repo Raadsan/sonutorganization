@@ -4,10 +4,10 @@ import { motion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 
 const eligibleGroups = [
-  "1. All teachers in public primary and secondary schools",
-  "2. All teachers in private primary and secondary schools",
-  "3. Institute and collage teachers",
-  "4. Retired teachers",
+  "All teachers in public primary and secondary schools",
+  "All teachers in private primary and secondary schools",
+  "Institute and collage teachers",
+  "Retired teachers",
 ];
 
 export default function WhoCanJoin({ registerHref = "#register" }: { registerHref?: string }) {

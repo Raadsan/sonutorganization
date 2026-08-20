@@ -34,9 +34,6 @@ export default function Affiliates({ initialData }: { initialData: AffiliateData
             <span className="h-2 w-2 rounded-full bg-secondary" />
             Our Affiliates
           </div>
-          <h2 className="mb-4 font-serif text-3xl font-bold text-primary md:text-5xl">
-            Connected through shared purpose
-          </h2>
           <p className="text-sm leading-relaxed text-muted-foreground md:text-base">
             We are proud to be affiliated with organizations that share our commitment
             to teachers, quality education, and stronger communities.

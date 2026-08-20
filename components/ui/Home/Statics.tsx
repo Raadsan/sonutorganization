@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useInView } from "framer-motion";
-import { Calendar, GraduationCap, Users, Building2 } from "lucide-react";
+import { Calendar, Mars, Venus, Building2 } from "lucide-react";
 
 function Counter({ end, duration = 2, suffix = "" }: { end: number; duration?: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
@@ -36,10 +36,10 @@ function Counter({ end, duration = 2, suffix = "" }: { end: number; duration?: n
 }
 
 const stats = [
-  { label: "Years of Excellence", end: 15, suffix: "+", icon: Calendar },
-  { label: "Students Empowered", end: 5000, suffix: "+", icon: GraduationCap },
-  { label: "Qualified Teachers", end: 200, suffix: "+", icon: Users },
-  { label: "Partner Schools", end: 50, suffix: "+", icon: Building2 },
+  { label: "Years of Excellence", end: 22, suffix: "+", icon: Calendar },
+  { label: "Partner Schools", end: 490, suffix: "+", icon: Building2 },
+  { label: "Male Teachers", end: 24080, suffix: "+", icon: Mars },
+  { label: "Female Teachers", end: 2400, suffix: "+", icon: Venus },
 ];
 
 export default function Statics() {

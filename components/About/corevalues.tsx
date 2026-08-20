@@ -29,40 +29,40 @@ const cardVariants = {
 
 const coreValues = [
   {
-    icon: Handshake,
-    title: "Unity",
-    description:
-      "We foster collaboration, solidarity, and a unified voice among teachers to advance the teaching profession and educational development throughout Somalia.",
-  },
-  {
-    icon: ShieldCheck,
-    title: "Integrity",
-    description:
-      "We uphold the highest standards of professionalism, honesty, transparency, and ethical conduct in all our operations and partnerships.",
-  },
-  {
-    icon: ClipboardCheck,
-    title: "Accountability",
-    description:
-      "We ensure responsible leadership, transparent decision-making, and effective management that builds trust among members and stakeholders.",
-  },
-  {
     icon: Scale,
     title: "Equity & Inclusion",
     description:
-      "We champion equal access to quality education for all learners regardless of gender, location, ability, or social background.",
+      "We champion equal access to quality education for all—regardless of gender, geography, ability, or background. Our programs prioritize marginalized communities and promote inclusive teaching practices.",
+  },
+  {
+    icon: ShieldCheck,
+    title: "Professionalism & Integrity",
+    description:
+      "We uphold the highest standards of ethical conduct, transparency, and accountability in all our operations. Our members are committed to lifelong learning and responsible leadership.",
+  },
+  {
+    icon: Handshake,
+    title: "Solidarity & Unity",
+    description:
+      "We believe in the collective strength of teachers. SONUT fosters collaboration, mutual support, and a unified voice to advocate for educators’ rights and well-being.",
   },
   {
     icon: Lightbulb,
-    title: "Innovation & Resilience",
+    title: "Resilience & Innovation",
     description:
-      "We embrace innovation and adaptability, empowering teachers to lead positive change in their schools and communities.",
+      "In the face of crisis and change, we adapt, innovate, and persevere. SONUT empowers teachers to be agents of transformation in their classrooms and communities.",
   },
   {
     icon: Heart,
-    title: "Cultural Respect",
+    title: "Cultural Respect & Local Ownership",
     description:
-      "We value Somalia’s diverse cultural heritage and promote locally driven solutions through community engagement and participation.",
+      "We honor Somalia’s diverse cultural heritage and promote locally led solutions. SONUT’s work is rooted in community engagement and contextual relevance.",
+  },
+  {
+    icon: ClipboardCheck,
+    title: "Accountability & Good Governance",
+    description:
+      "We ensure transparent decision-making, responsible leadership, and ethical management in all our activities and partnerships, building trust and credibility across the education sector.",
   },
 ];
 

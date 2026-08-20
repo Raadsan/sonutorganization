@@ -9,18 +9,18 @@ const structure = [
   },
   {
     icon: Network,
-    title: "Executive Committee",
-    description: "Elected leaders responsible for policy implementation, governance, and accountability between assemblies.",
+    title: "National Level",
+    description: "National Executive Council (NEC) and National Working Committee.",
   },
   {
     icon: Building2,
-    title: "National Secretariat",
-    description: "The professional team coordinating programs, administration, communications, and member services.",
+    title: "State Level",
+    description: "Seven state memberships, each with full-time secretaries.",
   },
   {
     icon: School,
-    title: "Regional & Local Branches",
-    description: "Grassroots branches connecting teachers, schools, and communities to the national union.",
+    title: "School Level",
+    description: "School representatives in every institution.",
   },
 ];
 

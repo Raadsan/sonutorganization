@@ -33,7 +33,7 @@ export default function Cta() {
 
           {/* Qoraalka / Paragraph */}
           <p className="text-base md:text-lg text-primary max-w-2xl mx-auto mb-10 leading-relaxed">
-            Join thousands of educators across the nation. Together we advocate for teachers' rights, improve educational standards, and build a brighter tomorrow.
+            Join thousands of educators across the nation. Together we advocate for teachers&apos; rights, improve educational standards, and build a brighter tomorrow.
           </p>
 
           {/* Badhamada / Buttons */}
@@ -47,7 +47,7 @@ export default function Cta() {
             </Link>
 
             <Link
-              href="/contact"
+              href="/contactus"
               className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-white font-bold text-primary  border border-primary bg-primary transition-all duration-300 hover:bg-white hover:text-primary hover:scale-105"
             >
               Contact Us

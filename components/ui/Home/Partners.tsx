@@ -30,9 +30,7 @@ export default function Partners({ initialData }: { initialData?: PartnerData[] 
             <span className="w-2 h-2 rounded-full bg-secondary"></span>
             OUR PARTNERS
           </div>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-primary mb-4">
-            Trusted by the best
-          </h2>
+
           <p className="text-muted-foreground text-sm md:text-base max-w-2xl mx-auto">
             We collaborate with leading national and international organizations to improve the quality of education and support educators across Somalia.
           </p>
@@ -41,35 +39,35 @@ export default function Partners({ initialData }: { initialData?: PartnerData[] 
 
       {/* Marquee Container */}
       <div className="relative w-full flex overflow-hidden group py-4">
-        
+
         {/* Left & Right Fading Edges to make it look smooth */}
         <div className="absolute top-0 bottom-0 left-0 w-24 md:w-48 bg-gradient-to-r from-white to-transparent z-10 pointer-events-none"></div>
         <div className="absolute top-0 bottom-0 right-0 w-24 md:w-48 bg-gradient-to-l from-white to-transparent z-10 pointer-events-none"></div>
 
         {/* Scrolling Track (or Flex Container) */}
         <div className="flex items-center justify-center flex-wrap gap-8 w-full max-w-5xl mx-auto">
-           {displayPartners.map((partner) => (
-             <div 
-                key={partner.id} 
-                className="flex-shrink-0 w-56 h-24 mx-6 bg-white border border-gray-100 shadow-sm rounded-2xl flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:shadow-lg hover:border-primary/20 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden p-2"
-                onClick={() => partner.website && window.open(partner.website, '_blank')}
-              >
-                {partner.logoUrl ? (
-                  <Image
-                    src={partner.logoUrl}
-                    alt={partner.name}
-                    width={200}
-                    height={80}
-                    unoptimized
-                    className="max-w-full max-h-full object-contain"
-                  />
-                ) : (
-                  <span className="font-bold text-gray-400 hover:text-primary text-xl text-center px-4 leading-tight transition-colors">
-                    {partner.name}
-                  </span>
-                )}
-             </div>
-           ))}
+          {displayPartners.map((partner) => (
+            <div
+              key={partner.id}
+              className="flex-shrink-0 w-56 h-24 mx-6 bg-white border border-gray-100 shadow-sm rounded-2xl flex items-center justify-center grayscale opacity-60 hover:grayscale-0 hover:opacity-100 hover:shadow-lg hover:border-primary/20 hover:scale-105 transition-all duration-300 cursor-pointer overflow-hidden p-2"
+              onClick={() => partner.website && window.open(partner.website, '_blank')}
+            >
+              {partner.logoUrl ? (
+                <Image
+                  src={partner.logoUrl}
+                  alt={partner.name}
+                  width={200}
+                  height={80}
+                  unoptimized
+                  className="max-w-full max-h-full object-contain"
+                />
+              ) : (
+                <span className="font-bold text-gray-400 hover:text-primary text-xl text-center px-4 leading-tight transition-colors">
+                  {partner.name}
+                </span>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
