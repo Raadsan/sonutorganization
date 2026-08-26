@@ -29,40 +29,40 @@ const cardVariants = {
 
 const aimsData = [
   {
-    icon: GraduationCap,
-    title: "Quality Education",
-    description:
-      "To promote and ensure access to quality education for all Somali children, regardless of their background or location.",
-  },
-  {
-    icon: Scale,
-    title: "Teachers' Rights",
-    description:
-      "To defend and protect the professional, economic, and social rights of teachers across Somalia.",
-  },
-  {
     icon: Handshake,
-    title: "Union Unity",
+    title: "Unity & Progress",
     description:
-      "To strengthen the unity and solidarity of teachers through a strong, democratic, and representative union structure.",
-  },
-  {
-    icon: BookOpen,
-    title: "Professional Development",
-    description:
-      "To provide continuous professional development opportunities that enhance teaching quality and career growth.",
-  },
-  {
-    icon: Globe,
-    title: "Global Partnership",
-    description:
-      "To build partnerships with local and international organizations dedicated to education and teachers' welfare.",
+      "To promote unity and progress among all teachers in Somalia.",
   },
   {
     icon: Users,
-    title: "Social Dialogue",
+    title: "Teamwork & Cooperation",
     description:
-      "To foster constructive dialogue between teachers, government, and communities for educational reform.",
+      "To encourage teamwork and friendly cooperation between teachers and other workers.",
+  },
+  {
+    icon: GraduationCap,
+    title: "Quality & Conditions",
+    description:
+      "To improve the teaching profession by raising the quality of education and improving teachers' working conditions.",
+  },
+  {
+    icon: Scale,
+    title: "Advocacy & Reform",
+    description:
+      "To support education and the teaching profession across the country, and work to remove problems, abuses, unfair practices, and outdated rules that hinder progress.",
+  },
+  {
+    icon: Globe,
+    title: "Welfare & Well-being",
+    description:
+      "To improve the social and economic well-being of union members and create welfare funds to support them.",
+  },
+  {
+    icon: BookOpen,
+    title: "Collaboration",
+    description:
+      "To provide a meeting place for teachers to work together and promote their welfare, as well as the interests of education.",
   },
 ];
 
@@ -110,7 +110,7 @@ export default function AimsAndObjectives() {
               <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-secondary transition-colors duration-500">
                 {item.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed text-justify">
                 {item.description}
               </p>
             </motion.div>

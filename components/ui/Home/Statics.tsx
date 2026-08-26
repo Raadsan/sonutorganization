@@ -32,14 +32,14 @@ function Counter({ end, duration = 2, suffix = "" }: { end: number; duration?: n
     return () => cancelAnimationFrame(frame);
   }, [isInView, end, duration]);
 
-  return <span ref={ref}>{count}{suffix}</span>;
+  return <span ref={ref}>{count.toLocaleString()}{suffix}</span>;
 }
 
 const stats = [
   { label: "Years of Excellence", end: 22, suffix: "+", icon: Calendar },
   { label: "Partner Schools", end: 490, suffix: "+", icon: Building2 },
-  { label: "Male Teachers", end: 24080, suffix: "+", icon: Mars },
-  { label: "Female Teachers", end: 2400, suffix: "+", icon: Venus },
+  { label: "Male Teachers", end: 21400, suffix: "+", icon: Mars },
+  { label: "Female Teachers", end: 5800, suffix: "+", icon: Venus },
 ];
 
 export default function Statics() {

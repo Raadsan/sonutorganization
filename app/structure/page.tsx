@@ -5,22 +5,22 @@ const structure = [
   {
     icon: Users,
     title: "General Assembly",
-    description: "The union's highest decision-making body, representing members and setting SONUT's overall direction.",
+    description: "The union's highest decision-making body, setting our overall direction and ensuring decisions reflect the collective voice of members.",
   },
   {
     icon: Network,
     title: "National Level",
-    description: "National Executive Council (NEC) and National Working Committee.",
+    description: "Elected leaders (NEC & Working Committee) responsible for daily leadership, policy implementation, and providing strategic direction.",
   },
   {
     icon: Building2,
     title: "State Level",
-    description: "Seven state memberships, each with full-time secretaries.",
+    description: "State Representatives with full-time Secretaries coordinating activities and linking national leadership with local schools.",
   },
   {
     icon: School,
     title: "School Level",
-    description: "School representatives in every institution.",
+    description: "Representatives in every institution directly supporting teachers, addressing concerns, and connecting them to the wider union.",
   },
 ];
 

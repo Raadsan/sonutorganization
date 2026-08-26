@@ -110,7 +110,7 @@ export default function CoreValues() {
               <h3 className="text-lg font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors duration-500">
                 {value.title}
               </h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
+              <p className="text-muted-foreground text-sm leading-relaxed text-justify">
                 {value.description}
               </p>
             </motion.div>

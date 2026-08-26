@@ -119,19 +119,19 @@ export default function Hero({ videoId }: HeroProps) {
         >
           {/* Join SONUT */}
           <Link
-            href="/join"
+            href="/about"
             className="rounded-full bg-[#F4313F] px-8 py-3.5 text-sm font-bold text-white shadow-lg shadow-[#F4313F]/30 transition-all duration-300 hover:scale-105 hover:bg-[#F4313F]/90 hover:shadow-xl"
           >
-            Join SONUT
+           Read More
           </Link>
 
           {/* About SONUT */}
-          <Link
+          {/* <Link
             href="/about"
             className="rounded-full border border-white/30 bg-white/5 px-8 py-3.5 text-sm font-semibold text-white shadow-lg backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:bg-white/10"
           >
             About SONUT
-          </Link>
+          </Link> */}
         </motion.div>
       </div>
 

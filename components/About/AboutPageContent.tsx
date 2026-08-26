@@ -20,19 +20,18 @@ export default function AboutPageContent() {
               Somali National Union of Teachers
             </h2> */}
 
-            <div className="mb-8 space-y-5 text-sm leading-relaxed text-muted-foreground md:text-base text-left">
+            <div className="mb-8 space-y-5 text-sm leading-relaxed text-muted-foreground md:text-base text-justify">
               <p>
-                <strong className="text-foreground">Somali National Union of Teachers (SONUT)</strong>{" "}is a national service organization concerned with ensuring better conditions of service for its members. Our members are drawn from pre-tertiary levels of the educational system, including public and private primary and secondary schools, teacher training colleges, technical institutes, and offices of educational administration units.
+                <strong>Somali National Union of Teachers (SONUT)</strong> is a service organization that is concerned with ensuring better conditions of service for its members who are drawn from pre-tertiary levels of the educational system, that is from public and private primary, secondary schools, teacher training colleges, technical institutes and offices of educational administration units.
               </p>
               <p>
-                SONUT (formerly SNUT) was established on{" "}
-                <strong className="text-foreground">November 21st, 2004</strong>{" "}by a group of head teachers from seven different regions across Somalia. The union was created to revive hope and support teachers in their effort to transform the lives of pupils and students at all levels of education. We are committed to providing programs that answer teachers&apos; basic needs and remain highly relevant to current challenges, welcoming all teachers regardless of race or location.
+                SONUT formerly SNUT was established in November 21st 2004 by a group of head teachers from seven different regions across Somalia. It has been set to relive the hopes and support teachers in our effort to transform the lives of our pupils/students at all levels of education.
               </p>
               <p>
-                Importantly, SONUT was established to break ethnic and tribal barriers, organizing teachers into one cohesive force to safeguard their interests and those of the nation. The organization is fully equipped to maintain professional norms, shape national policies, and build strong international relations.
+                SONUT is committed to provide programs answering to teacher's basic needs that are relevant on the current situation. It is open to all teachers no matter which race or location the individual belongs.
               </p>
               <p>
-                Our formation came at a critical time when many teachers faced severe issues with local hostility, including kidnappings, injuries, and tragic loss of life in broad daylight. These issues raised an alarming siren across the nation. Today, they challenge all of us to introspect on the value we place on our educators, and what contributions we must make to ensure they can work in a safe atmosphere that brings out their best.
+                At the moment SONUT is in the process of developing an educational policy to guide regional scholastic process as it embarks on the path of reconstruction and educational development Current membership is about 490 schools and 27,200 membership teachers.
               </p>
             </div>
 

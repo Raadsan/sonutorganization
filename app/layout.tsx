@@ -11,8 +11,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-  title: "SONUT",
-  description: "Somali National Union of Teachers (SONUT)",
+  title: "Somali National Union of Teachers (SONUT)",
+  description: "Somali National Union of Teachers (SONUT) advocates for teachers' rights, quality education, and professional development across Somalia. Learn about our mission, leaders, and impact.",
   icons: {
     icon: [{ url: "/images/fv.jpg", type: "image/jpeg" }],
     shortcut: [{ url: "/images/fv.jpg", type: "image/jpeg" }],
