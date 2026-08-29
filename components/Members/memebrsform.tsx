@@ -2,7 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  User, Mail, Phone, MapPin, Send, ChevronRight, ChevronLeft,
+  User, Phone, Send, ChevronRight, ChevronLeft,
   CheckCircle2, Camera, BookOpen, AlertCircle,
 } from "lucide-react";
 
@@ -37,6 +37,9 @@ type FormData = {
   emergencyEmail: string;
 };
 
+type FormField = keyof FormData;
+type FormErrors = Partial<Record<FormField, string>>;
+
 const INITIAL: FormData = {
   fullName: "", motherName: "", gender: "", dateOfBirth: "",
   placeOfBirth: "", bloodType: "", teacherImage: null,
@@ -54,19 +57,121 @@ const TABS = [
   { id: 4, label: "Emergency Contact", icon: AlertCircle },
 ];
 
+const STEP_FIELDS: Record<number, FormField[]> = {
+  1: ["fullName", "motherName", "gender", "bloodType", "dateOfBirth", "placeOfBirth", "teacherImage"],
+  2: ["phone", "email", "district"],
+  3: ["subject", "teachingStatus", "fieldOfStudy", "teachingLevel", "institutionName", "institutionLocation"],
+  4: ["emergencyName", "emergencyPhone", "emergencyEmail"],
+};
+
+const TODAY = new Date().toISOString().slice(0, 10);
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
+const VALID_IMAGE_TYPES = ["image/jpeg", "image/png"];
+const NAME_PATTERN = /^[\p{L}\p{M}]+(?:[ '\u2019-][\p{L}\p{M}]+)*$/u;
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+
+function sanitizeName(value: string) {
+  return value
+    .replace(/[^\p{L}\p{M} '\u2019-]/gu, "")
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[ '\u2019-]+/, "")
+    .slice(0, 100);
+}
+
+function sanitizeText(value: string, allowNumbers = false) {
+  const sanitized = allowNumbers
+    ? value.replace(/[^\p{L}\p{M}\d .,'\u2019()&/+\-]/gu, "")
+    : value.replace(/[^\p{L}\p{M} .,'\u2019()&/+\-]/gu, "");
+
+  return sanitized
+    .replace(/\s{2,}/g, " ")
+    .replace(/^[\s.,'\u2019()&/+\-]+/, "")
+    .slice(0, 120);
+}
+
+function sanitizeEmail(value: string) {
+  const cleaned = value
+    .replace(/\s/g, "")
+    .replace(/[^a-zA-Z0-9@._+\-]/g, "")
+    .slice(0, 254);
+  const [localPart, ...domainParts] = cleaned.split("@");
+
+  return domainParts.length > 0
+    ? `${localPart}@${domainParts.join("")}`
+    : localPart;
+}
+
+function validateField(field: FormField, value: string | File | null): string {
+  if (field === "teacherImage") {
+    if (!(value instanceof File)) return "Please upload a teacher photo.";
+    if (!VALID_IMAGE_TYPES.includes(value.type)) return "Only JPG and PNG images are allowed.";
+    if (value.size > MAX_IMAGE_SIZE) return "The photo must be 10 MB or smaller.";
+    return "";
+  }
+
+  const text = typeof value === "string" ? value.trim() : "";
+  if (!text) return "This field is required.";
+
+  switch (field) {
+    case "fullName":
+    case "motherName":
+    case "emergencyName":
+      if (text.length < 3 || !NAME_PATTERN.test(text)) {
+        return "Use letters only and enter a valid full name.";
+      }
+      return "";
+    case "phone":
+    case "emergencyPhone":
+      return /^\d{9}$/.test(text) ? "" : "Enter exactly 9 digits after +252.";
+    case "email":
+    case "emergencyEmail":
+      return EMAIL_PATTERN.test(text) ? "" : "Enter a valid email, for example name@example.com.";
+    case "dateOfBirth":
+      if (Number.isNaN(Date.parse(text))) return "Enter a valid date of birth.";
+      return text <= TODAY ? "" : "Date of birth cannot be in the future.";
+    case "gender":
+      return ["Male", "Female"].includes(text) ? "" : "Choose a valid gender.";
+    case "bloodType":
+      return ["A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"].includes(text)
+        ? ""
+        : "Choose a valid blood type.";
+    case "teachingStatus":
+      return ["University", "Secondary", "Middle", "Primary", "TVET"].includes(text)
+        ? ""
+        : "Choose a valid education level.";
+    case "teachingLevel":
+      return ["Level 1", "Level 2", "Level 3", "University Level", "TVET"].includes(text)
+        ? ""
+        : "Choose a valid class level.";
+    default:
+      return text.length >= 2 ? "" : "Enter at least 2 characters.";
+  }
+}
+
 function Field({
-  label, subLabel, required = true, children,
+  label, htmlFor, error, subLabel, required = true, children,
 }: {
-  label: string; subLabel?: string; required?: boolean; children: React.ReactNode;
+  label: string;
+  htmlFor: string;
+  error?: string;
+  subLabel?: string;
+  required?: boolean;
+  children: React.ReactNode;
 }) {
   return (
     <div className="space-y-1.5">
-      <label className="block text-sm font-semibold text-gray-800">
+      <label htmlFor={htmlFor} className="block text-sm font-semibold text-gray-800">
         {label}
         {subLabel && <span className="ml-1 text-xs font-normal text-gray-400">/ {subLabel}</span>}
         {required && <span className="ml-1 text-[#F4313F]">*</span>}
       </label>
       {children}
+      {error && (
+        <p id={`${htmlFor}-error`} role="alert" className="flex items-center gap-1 text-xs text-[#F4313F]">
+          <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+          {error}
+        </p>
+      )}
     </div>
   );
 }
@@ -74,31 +179,132 @@ function Field({
 const inputCls =
   "block w-full px-4 py-2.5 border border-gray-200 rounded-xl bg-gray-50/60 focus:bg-white focus:ring-2 focus:ring-[#1E0D79]/20 focus:border-[#1E0D79] outline-none transition-all text-sm placeholder:text-gray-400";
 const selectCls = inputCls + " appearance-none cursor-pointer";
+const invalidInputCls = " border-[#F4313F] bg-red-50/40 focus:border-[#F4313F] focus:ring-[#F4313F]/15";
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function MembersForm() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<FormData>(INITIAL);
+  const [errors, setErrors] = useState<FormErrors>({});
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const set = (field: keyof FormData, value: string) =>
-    setData((d) => ({ ...d, [field]: value }));
+  const set = (field: Exclude<FormField, "teacherImage">, value: string) => {
+    setData((current) => ({ ...current, [field]: value }));
+    setErrors((current) => {
+      if (!current[field]) return current;
+
+      const next = { ...current };
+      const error = validateField(field, value);
+      if (error) next[field] = error;
+      else delete next[field];
+      return next;
+    });
+  };
+
+  const fieldProps = (field: FormField) => ({
+    id: field,
+    name: field,
+    "aria-invalid": Boolean(errors[field]),
+    "aria-describedby": errors[field] ? `${field}-error` : undefined,
+    onBlur: () => {
+      const value = data[field];
+      const normalizedValue = typeof value === "string" ? value.trim() : value;
+
+      if (typeof normalizedValue === "string" && normalizedValue !== value) {
+        setData((current) => ({ ...current, [field]: normalizedValue }));
+      }
+
+      const error = validateField(field, normalizedValue);
+      setErrors((current) => {
+        const next = { ...current };
+        if (error) next[field] = error;
+        else delete next[field];
+        return next;
+      });
+    },
+  });
+
+  const inputClass = (field: FormField, isSelect = false, extra = "") =>
+    `${isSelect ? selectCls : inputCls}${errors[field] ? invalidInputCls : ""}${extra}`;
+
+  const validateFields = (fields: FormField[]) => {
+    let firstInvalid: FormField | null = null;
+    const checkedErrors: FormErrors = {};
+
+    fields.forEach((field) => {
+      const error = validateField(field, data[field]);
+      if (error) {
+        checkedErrors[field] = error;
+        firstInvalid ??= field;
+      }
+    });
+
+    setErrors((current) => {
+      const next = { ...current };
+      fields.forEach((field) => delete next[field]);
+      return { ...next, ...checkedErrors };
+    });
+
+    return firstInvalid;
+  };
+
+  const focusField = (field: FormField) => {
+    window.setTimeout(() => document.getElementById(field)?.focus(), 300);
+  };
 
   const handleImage = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const error = validateField("teacherImage", file);
+    if (error) {
+      setData((current) => ({ ...current, teacherImage: null }));
+      setErrors((current) => ({ ...current, teacherImage: error }));
+      setPreview(null);
+      e.target.value = "";
+      return;
+    }
+
+    if (preview) URL.revokeObjectURL(preview);
     setData((d) => ({ ...d, teacherImage: file }));
+    setErrors((current) => {
+      const next = { ...current };
+      delete next.teacherImage;
+      return next;
+    });
     setPreview(URL.createObjectURL(file));
   };
 
-  const next = () => setStep((s) => Math.min(s + 1, 4));
+  const next = () => {
+    const firstInvalid = validateFields(STEP_FIELDS[step]);
+    if (firstInvalid) {
+      focusField(firstInvalid);
+      toast.error("Please correct the highlighted fields before continuing.");
+      return;
+    }
+
+    setStep((s) => Math.min(s + 1, 4));
+  };
   const prev = () => setStep((s) => Math.max(s - 1, 1));
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    const allFields = Object.values(STEP_FIELDS).flat();
+    const firstInvalid = validateFields(allFields);
+    if (firstInvalid) {
+      const invalidStep = Number(
+        Object.entries(STEP_FIELDS).find(([, fields]) => fields.includes(firstInvalid))?.[0] ?? 1,
+      );
+      setStep(invalidStep);
+      focusField(firstInvalid);
+      toast.error("Please correct the highlighted fields before submitting.");
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const formData = new FormData();
@@ -106,7 +312,7 @@ export default function MembersForm() {
       // Append all string fields
       Object.entries(data).forEach(([key, value]) => {
         if (key !== "teacherImage") {
-          formData.append(key, value as string);
+          formData.append(key, (value as string).trim());
         }
       });
 
@@ -121,13 +327,13 @@ export default function MembersForm() {
       });
 
       const result = await res.json();
-      if (result.success) {
+      if (res.ok && result.success) {
         setSubmitted(true);
         toast.success("Application submitted successfully!");
       } else {
         toast.error(result.error || "Failed to submit application");
       }
-    } catch (error) {
+    } catch {
       toast.error("An error occurred during submission");
     } finally {
       setIsSubmitting(false);
@@ -138,30 +344,32 @@ export default function MembersForm() {
   const tabContent: Record<number, React.ReactNode> = {
     1: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Full Name">
-          <input type="text" required value={data.fullName}
-            onChange={e => set("fullName", e.target.value)}
-            placeholder="Enter your full name" className={inputCls} />
+        <Field label="Full Name" htmlFor="fullName" error={errors.fullName}>
+          <input {...fieldProps("fullName")} type="text" required value={data.fullName}
+            onChange={e => set("fullName", sanitizeName(e.target.value))}
+            autoComplete="name" maxLength={100}
+            placeholder="Enter your full name" className={inputClass("fullName")} />
         </Field>
 
-        <Field label="Mother's Name">
-          <input type="text" required value={data.motherName}
-            onChange={e => set("motherName", e.target.value)}
-            placeholder="Enter mother's full name" className={inputCls} />
+        <Field label="Mother's Name" htmlFor="motherName" error={errors.motherName}>
+          <input {...fieldProps("motherName")} type="text" required value={data.motherName}
+            onChange={e => set("motherName", sanitizeName(e.target.value))}
+            maxLength={100}
+            placeholder="Enter mother's full name" className={inputClass("motherName")} />
         </Field>
 
-        <Field label="Gender">
-          <select required value={data.gender}
-            onChange={e => set("gender", e.target.value)} className={selectCls}>
+        <Field label="Gender" htmlFor="gender" error={errors.gender}>
+          <select {...fieldProps("gender")} required value={data.gender}
+            onChange={e => set("gender", e.target.value)} className={inputClass("gender", true)}>
             <option value="">Choose Gender</option>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
         </Field>
 
-        <Field label="Blood Type">
-          <select required value={data.bloodType}
-            onChange={e => set("bloodType", e.target.value)} className={selectCls}>
+        <Field label="Blood Type" htmlFor="bloodType" error={errors.bloodType}>
+          <select {...fieldProps("bloodType")} required value={data.bloodType}
+            onChange={e => set("bloodType", e.target.value)} className={inputClass("bloodType", true)}>
             <option value="">Choose Blood Type</option>
             {["A+", "A−", "B+", "B−", "AB+", "AB−", "O+", "O−"].map(t => (
               <option key={t} value={t}>{t}</option>
@@ -169,23 +377,25 @@ export default function MembersForm() {
           </select>
         </Field>
 
-        <Field label="Date of Birth">
-          <input type="date" required value={data.dateOfBirth}
-            onChange={e => set("dateOfBirth", e.target.value)} className={inputCls} />
+        <Field label="Date of Birth" htmlFor="dateOfBirth" error={errors.dateOfBirth}>
+          <input {...fieldProps("dateOfBirth")} type="date" required value={data.dateOfBirth}
+            max={TODAY}
+            onChange={e => set("dateOfBirth", e.target.value)} className={inputClass("dateOfBirth")} />
         </Field>
 
-        <Field label="Place of Birth">
-          <input type="text" required value={data.placeOfBirth}
-            onChange={e => set("placeOfBirth", e.target.value)}
-            placeholder="City / District" className={inputCls} />
+        <Field label="Place of Birth" htmlFor="placeOfBirth" error={errors.placeOfBirth}>
+          <input {...fieldProps("placeOfBirth")} type="text" required value={data.placeOfBirth}
+            onChange={e => set("placeOfBirth", sanitizeText(e.target.value))}
+            maxLength={120}
+            placeholder="City / District" className={inputClass("placeOfBirth")} />
         </Field>
 
         {/* Image upload – full width */}
         <div className="sm:col-span-2">
-          <Field label="Teacher Photo">
+          <Field label="Teacher Photo" htmlFor="teacherImage" error={errors.teacherImage}>
             <div
               onClick={() => fileRef.current?.click()}
-              className="relative flex items-center gap-4 border-2 border-dashed border-gray-200 rounded-2xl p-5 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all"
+              className={`relative flex items-center gap-4 border-2 border-dashed rounded-2xl p-5 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all ${errors.teacherImage ? "border-[#F4313F] bg-red-50/40" : "border-gray-200"}`}
             >
               {preview ? (
                 <img src={preview} alt="preview"
@@ -201,7 +411,8 @@ export default function MembersForm() {
                 </p>
                 <p className="text-xs text-gray-400 mt-1">PNG, JPG · Max 10 MB</p>
               </div>
-              <input ref={fileRef} type="file" accept="image/*"
+              <input {...fieldProps("teacherImage")} ref={fileRef} type="file"
+                accept=".jpg,.jpeg,.png,image/jpeg,image/png"
                 className="hidden" onChange={handleImage} />
             </div>
           </Field>
@@ -211,27 +422,30 @@ export default function MembersForm() {
 
     2: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Phone Number">
+        <Field label="Phone Number" htmlFor="phone" error={errors.phone}>
           <div className="relative">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
-            <input type="tel" required value={data.phone}
-              onChange={e => set("phone", e.target.value)}
+            <input {...fieldProps("phone")} type="tel" required value={data.phone}
+              onChange={e => set("phone", e.target.value.replace(/\D/g, "").slice(0, 9))}
+              inputMode="numeric" autoComplete="tel-national" maxLength={9}
               placeholder="61 XXXXXXX"
-              className={inputCls + " pl-14"} />
+              className={inputClass("phone", false, " pl-14")} />
           </div>
         </Field>
 
-        <Field label="Email Address">
-          <input type="email" required value={data.email}
-            onChange={e => set("email", e.target.value)}
-            placeholder="teacher@example.com" className={inputCls} />
+        <Field label="Email Address" htmlFor="email" error={errors.email}>
+          <input {...fieldProps("email")} type="email" required value={data.email}
+            onChange={e => set("email", sanitizeEmail(e.target.value))}
+            inputMode="email" autoComplete="email" maxLength={254}
+            placeholder="teacher@example.com" className={inputClass("email")} />
         </Field>
 
         <div className="sm:col-span-2">
-          <Field label="Current District of Residence">
-            <input type="text" required value={data.district}
-              onChange={e => set("district", e.target.value)}
-              placeholder="Your current district / city" className={inputCls} />
+          <Field label="Current District of Residence" htmlFor="district" error={errors.district}>
+            <input {...fieldProps("district")} type="text" required value={data.district}
+              onChange={e => set("district", sanitizeText(e.target.value))}
+              autoComplete="address-level2" maxLength={120}
+              placeholder="Your current district / city" className={inputClass("district")} />
           </Field>
         </div>
 
@@ -248,15 +462,16 @@ export default function MembersForm() {
 
     3: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Teaching Subject">
-          <input type="text" required value={data.subject}
-            onChange={e => set("subject", e.target.value)}
-            placeholder="Mathematics, English, Science..." className={inputCls} />
+        <Field label="Teaching Subject" htmlFor="subject" error={errors.subject}>
+          <input {...fieldProps("subject")} type="text" required value={data.subject}
+            onChange={e => set("subject", sanitizeText(e.target.value))}
+            maxLength={120}
+            placeholder="Mathematics, English, Science..." className={inputClass("subject")} />
         </Field>
 
-        <Field label="Education Level">
-          <select required value={data.teachingStatus}
-            onChange={e => set("teachingStatus", e.target.value)} className={selectCls}>
+        <Field label="Education Level" htmlFor="teachingStatus" error={errors.teachingStatus}>
+          <select {...fieldProps("teachingStatus")} required value={data.teachingStatus}
+            onChange={e => set("teachingStatus", e.target.value)} className={inputClass("teachingStatus", true)}>
             <option value="">Choose Level</option>
             <option value="University">University</option>
             <option value="Secondary">Secondary School</option>
@@ -266,15 +481,16 @@ export default function MembersForm() {
           </select>
         </Field>
 
-        <Field label="Field of Study / Specialization">
-          <input type="text" required value={data.fieldOfStudy}
-            onChange={e => set("fieldOfStudy", e.target.value)}
-            placeholder="e.g., Bachelor of Education" className={inputCls} />
+        <Field label="Field of Study / Specialization" htmlFor="fieldOfStudy" error={errors.fieldOfStudy}>
+          <input {...fieldProps("fieldOfStudy")} type="text" required value={data.fieldOfStudy}
+            onChange={e => set("fieldOfStudy", sanitizeText(e.target.value))}
+            maxLength={120}
+            placeholder="e.g., Bachelor of Education" className={inputClass("fieldOfStudy")} />
         </Field>
 
-        <Field label="Class Levels Taught">
-          <select required value={data.teachingLevel}
-            onChange={e => set("teachingLevel", e.target.value)} className={selectCls}>
+        <Field label="Class Levels Taught" htmlFor="teachingLevel" error={errors.teachingLevel}>
+          <select {...fieldProps("teachingLevel")} required value={data.teachingLevel}
+            onChange={e => set("teachingLevel", e.target.value)} className={inputClass("teachingLevel", true)}>
             <option value="">Choose Level</option>
             <option value="Level 1">Level 1 – Primary School (Grades 1-4)</option>
             <option value="Level 2">Level 2 – Middle School (Grades 5-8)</option>
@@ -284,16 +500,18 @@ export default function MembersForm() {
           </select>
         </Field>
 
-        <Field label="Institution Name">
-          <input type="text" required value={data.institutionName}
-            onChange={e => set("institutionName", e.target.value)}
-            placeholder="School / University Name" className={inputCls} />
+        <Field label="Institution Name" htmlFor="institutionName" error={errors.institutionName}>
+          <input {...fieldProps("institutionName")} type="text" required value={data.institutionName}
+            onChange={e => set("institutionName", sanitizeText(e.target.value, true))}
+            autoComplete="organization" maxLength={120}
+            placeholder="School / University Name" className={inputClass("institutionName")} />
         </Field>
 
-        <Field label="Institution Location">
-          <input type="text" required value={data.institutionLocation}
-            onChange={e => set("institutionLocation", e.target.value)}
-            placeholder="District / City" className={inputCls} />
+        <Field label="Institution Location" htmlFor="institutionLocation" error={errors.institutionLocation}>
+          <input {...fieldProps("institutionLocation")} type="text" required value={data.institutionLocation}
+            onChange={e => set("institutionLocation", sanitizeText(e.target.value))}
+            maxLength={120}
+            placeholder="District / City" className={inputClass("institutionLocation")} />
         </Field>
       </div>
     ),
@@ -308,27 +526,30 @@ export default function MembersForm() {
         </div>
 
         <div className="sm:col-span-2">
-          <Field label="Emergency Contact Name">
-            <input type="text" required value={data.emergencyName}
-              onChange={e => set("emergencyName", e.target.value)}
-              placeholder="Full name of emergency contact" className={inputCls} />
+          <Field label="Emergency Contact Name" htmlFor="emergencyName" error={errors.emergencyName}>
+            <input {...fieldProps("emergencyName")} type="text" required value={data.emergencyName}
+              onChange={e => set("emergencyName", sanitizeName(e.target.value))}
+              autoComplete="name" maxLength={100}
+              placeholder="Full name of emergency contact" className={inputClass("emergencyName")} />
           </Field>
         </div>
 
-        <Field label="Emergency Contact Phone">
+        <Field label="Emergency Contact Phone" htmlFor="emergencyPhone" error={errors.emergencyPhone}>
           <div className="relative">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
-            <input type="tel" required value={data.emergencyPhone}
-              onChange={e => set("emergencyPhone", e.target.value)}
+            <input {...fieldProps("emergencyPhone")} type="tel" required value={data.emergencyPhone}
+              onChange={e => set("emergencyPhone", e.target.value.replace(/\D/g, "").slice(0, 9))}
+              inputMode="numeric" autoComplete="tel-national" maxLength={9}
               placeholder="61 XXXXXXX"
-              className={inputCls + " pl-14"} />
+              className={inputClass("emergencyPhone", false, " pl-14")} />
           </div>
         </Field>
 
-        <Field label="Emergency Contact Email">
-          <input type="email" required value={data.emergencyEmail}
-            onChange={e => set("emergencyEmail", e.target.value)}
-            placeholder="contact@example.com" className={inputCls} />
+        <Field label="Emergency Contact Email" htmlFor="emergencyEmail" error={errors.emergencyEmail}>
+          <input {...fieldProps("emergencyEmail")} type="email" required value={data.emergencyEmail}
+            onChange={e => set("emergencyEmail", sanitizeEmail(e.target.value))}
+            inputMode="email" autoComplete="email" maxLength={254}
+            placeholder="contact@example.com" className={inputClass("emergencyEmail")} />
         </Field>
 
         {/* Membership requirements */}
@@ -464,7 +685,7 @@ export default function MembersForm() {
             </div>
 
             {/* ── Form body ───────────────────────────────────────────────────── */}
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} noValidate>
               <div className="p-6 md:p-10">
                 {/* Step heading */}
                 <div className="mb-7 flex items-center gap-3">

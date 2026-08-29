@@ -59,14 +59,15 @@ export default function Affiliates({ initialData }: { initialData: AffiliateData
                 className={affiliate.website ? 'block h-full' : 'block h-full cursor-default'}
               >
                 <div className="relative flex h-36 items-center justify-center border-b border-slate-100 bg-white p-6">
-                  <Image
-                    src={affiliate.logoUrl}
-                    alt={`${affiliate.name} logo`}
-                    width={220}
-                    height={112}
-                    unoptimized
-                    className="max-h-full w-auto max-w-full object-contain transition-transform duration-300 group-hover:scale-105"
-                  />
+                  <div className="relative h-full w-full">
+                    <Image
+                      src={affiliate.logoUrl}
+                      alt={`${affiliate.name} logo`}
+                      fill
+                      unoptimized
+                      className="object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                  </div>
                 </div>
                 <div className="p-5 text-center">
                   <div className="flex items-center justify-center gap-2">
