@@ -8,7 +8,7 @@ const prioritiesData = [
   {
     id: "01",
     title: "Teachers’ Rights & Dignity",
-    description: "We stand for the rights, dignity, welfare, and professional recognition of every teacher."
+    description: "We stand for the rights, dignity, welfare, and professional recognition of every teacher across Somalia."
   },
   {
     id: "02",
@@ -18,42 +18,42 @@ const prioritiesData = [
   {
     id: "03",
     title: "Professional Teachers",
-    description: "We promote continuous professional development, teacher training, ethical standards, and career advancement."
+    description: "We promote continuous professional development, teacher training, ethical standards, and career growth."
   },
   {
     id: "04",
     title: "Fair Working Conditions",
-    description: "We advocate for fair salaries, safe workplaces, reasonable workloads, job security, and social protection for teachers."
+    description: "We advocate for fair salaries, safe workplaces, reasonable workloads, job security, and social welfare."
   },
   {
     id: "05",
     title: "Teacher Voice & Representation",
-    description: "We ensure teachers have a strong and meaningful voice in education policies, reforms, and decision-making."
+    description: "We ensure teachers have a strong and meaningful voice in national education policies and reforms."
   },
   {
     id: "06",
     title: "Unity & Solidarity",
-    description: "We bring Somali teachers together across regions and institutions to build a united and respected teaching profession."
+    description: "We bring Somali teachers together across all regions to build a united and respected teaching profession."
   },
   {
     id: "07",
     title: "Education Reform & Innovation",
-    description: "We support evidence-based reforms, technology, innovation, and modern approaches that improve teaching and learning."
+    description: "We support evidence-based reforms, modern technology, and innovative teaching and learning methods."
   },
   {
     id: "08",
-    title: "Equality, Inclusion & Non-Discrimination",
-    description: "We stand for equal opportunities for teachers and learners, regardless of gender, location, background, or circumstance."
+    title: "Equality, Inclusion & Rights",
+    description: "We stand for equal opportunities for teachers and learners, regardless of background or circumstance."
   },
   {
     id: "09",
     title: "Integrity & Accountability",
-    description: "We promote transparency, professionalism, ethical leadership, and accountability within the education sector."
+    description: "We promote transparency, professionalism, ethical leadership, and accountability within education."
   },
   {
     id: "10",
-    title: "Partnership for National Development",
-    description: "We work with government, education institutions, civil society, development partners, and other stakeholders to strengthen Somalia’s education system."
+    title: "Partnership for Development",
+    description: "We work with education institutions, partners, and stakeholders to strengthen Somalia’s education system."
   }
 ];
 
@@ -208,7 +208,7 @@ export default function Priorities() {
                   className="px-4 flex-shrink-0 flex items-stretch"
                   style={{ width: `${100 / prioritiesData.length}%` }}
                 >
-                  <div className="bg-white rounded-3xl p-8 relative group overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100/50 flex flex-col justify-between w-full min-h-[320px] hover:-translate-y-2 cursor-pointer">
+                  <div className="bg-white rounded-3xl p-8 relative group overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100/50 flex flex-col justify-between w-full h-full min-h-[340px] hover:-translate-y-2 cursor-pointer">
                     {/* Background Big Number */}
                     <div className="absolute -right-4 -top-8 text-[120px] font-black text-gray-50 group-hover:text-secondary/5 transition-colors duration-500 pointer-events-none select-none z-0">
                       {item.id}
@@ -217,18 +217,18 @@ export default function Priorities() {
                     {/* Top Accent Gradient Line */}
                     <div className="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-transparent via-secondary to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-                    <div className="relative z-10 flex flex-col h-full justify-between">
+                    <div className="relative z-10 flex flex-col flex-1 justify-between">
                       <div>
                         {/* Number Badge */}
                         <div className="w-14 h-14 rounded-2xl bg-primary/5 group-hover:bg-primary group-hover:text-white flex items-center justify-center text-2xl font-bold text-primary mb-6 transition-all duration-300 shadow-sm">
                           {item.id}
                         </div>
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-4 group-hover:text-primary transition-colors line-clamp-2">
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem] flex items-start">
                           {item.title}
                         </h3>
                         
-                        <p className="text-gray-500 leading-relaxed text-sm group-hover:text-gray-600 transition-colors">
+                        <p className="text-gray-500 leading-relaxed text-sm group-hover:text-gray-600 transition-colors min-h-[4.5rem]">
                           {item.description}
                         </p>
                       </div>

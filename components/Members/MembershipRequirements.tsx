@@ -17,7 +17,7 @@ const requirements = [
     icon: BookOpen,
     title: "Recognized Educator",
     description:
-      "Be a teacher or educator employed by a formally recognized educational institution, including a primary school, secondary school, university, or Technical and Vocational Education and Training (TVET) institution.",
+      "Be an educator employed by a recognized school, college, university, or vocational training institution.",
     light: "bg-[#1E0D79]/10",
     textColor: "text-[#1E0D79]",
   },
@@ -25,7 +25,7 @@ const requirements = [
     icon: ClipboardList,
     title: "Complete Application",
     description:
-      "Complete and submit the membership application form accurately and in full.",
+      "Complete and submit the official membership application form accurately and in full with all details.",
     light: "bg-[#F4313F]/10",
     textColor: "text-[#F4313F]",
   },
@@ -33,7 +33,7 @@ const requirements = [
     icon: DollarSign,
     title: "Monthly Membership Fee",
     description:
-      "Pay the monthly membership fee of USD $3 on a regular and timely basis.",
+      "Pay the regular monthly union membership contribution fee of USD $3 on a timely basis.",
     light: "bg-emerald-50",
     textColor: "text-emerald-600",
   },
@@ -41,7 +41,7 @@ const requirements = [
     icon: IdCard,
     title: "Annual ID Card Fee",
     description:
-      "Pay the annual Membership Identification Card (ID Card) fee of USD $5 for the issuance or renewal of the membership ID card.",
+      "Pay the annual Membership ID Card fee of USD $5 for the official issuance or renewal.",
     light: "bg-amber-50",
     textColor: "text-amber-600",
   },
@@ -49,7 +49,7 @@ const requirements = [
     icon: Users,
     title: "Active Participation",
     description:
-      "Be willing to actively participate in the union's meetings, training programs, workshops, and other official activities.",
+      "Actively participate in union assemblies, professional training programs, workshops, and events.",
     light: "bg-sky-50",
     textColor: "text-sky-600",
   },
@@ -57,7 +57,7 @@ const requirements = [
     icon: ShieldCheck,
     title: "Constitution & Rules",
     description:
-      "Comply with and uphold the Constitution, Bylaws, policies, and rules of the union.",
+      "Comply with and uphold the official Constitution, Bylaws, organizational policies, and union rules.",
     light: "bg-purple-50",
     textColor: "text-purple-600",
   },
@@ -65,7 +65,7 @@ const requirements = [
     icon: BadgeCheck,
     title: "Values & Code of Conduct",
     description:
-      "Comply with and uphold the values and Code of Conduct of the union.",
+      "Uphold professional teaching ethics, union integrity, and the established educator Code of Conduct.",
     light: "bg-indigo-50",
     textColor: "text-indigo-600",
   },
@@ -73,7 +73,7 @@ const requirements = [
     icon: HeartHandshake,
     title: "Support the Union",
     description:
-      "Support the mission, vision, and objectives of the union, and contribute positively to its growth, unity, and reputation.",
+      "Support the mission, vision, and advocacy of the union to advance the dignity of all teachers.",
     light: "bg-rose-50",
     textColor: "text-rose-600",
   },
@@ -111,7 +111,7 @@ export default function MembershipRequirements() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="text-muted-foreground max-w-2xl mx-auto text-sm md:text-base"
           >
-            Please review the requirements below to verify your eligibility before proceeding to the registration form.
+            Please review the requirements below to verify your eligibility for SONUT membership.
           </motion.p>
         </div>
 
@@ -138,19 +138,21 @@ export default function MembershipRequirements() {
                         delay: animationIndex * 0.08,
                       }}
                       whileHover={{ y: -6 }}
-                      className="group h-full min-h-[280px] rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-xl"
+                      className="group flex flex-col justify-between h-full min-h-[290px] rounded-2xl border border-gray-100 bg-white p-7 shadow-sm transition-all duration-300 hover:shadow-xl"
                     >
-                      <div
-                        className={`w-14 h-14 rounded-2xl ${req.light} flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110`}
-                      >
-                        <Icon className={`w-7 h-7 ${req.textColor}`} />
+                      <div>
+                        <div
+                          className={`w-14 h-14 rounded-2xl ${req.light} flex items-center justify-center mb-6 transition-transform duration-300 group-hover:scale-110`}
+                        >
+                          <Icon className={`w-7 h-7 ${req.textColor}`} />
+                        </div>
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 min-h-[3.25rem] flex items-start">
+                          {req.title}
+                        </h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">
+                          {req.description}
+                        </p>
                       </div>
-                      <h3 className="text-xl font-bold text-gray-900 mb-3">
-                        {req.title}
-                      </h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">
-                        {req.description}
-                      </p>
                     </motion.div>
                   );
                 })}

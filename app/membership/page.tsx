@@ -1,7 +1,7 @@
 import WhoCanJoin from "@/components/Members/WhoCanJoin";
 import MembershipBenefits from "@/components/Members/MembershipBenefits";
 import MembershipRequirements from "@/components/Members/MembershipRequirements";
-import MembersForm from "@/components/Members/memebrsform";
+import Cta from "@/components/ui/Home/Cta";
 
 export const metadata = {
   title: "Membership | SONUT",
@@ -22,13 +22,10 @@ export default function MembershipPage() {
         </div>
       </section>
       
-      <WhoCanJoin registerHref="#register" />
+      <WhoCanJoin registerHref="/join" />
       <MembershipBenefits />
       <MembershipRequirements />
-      
-      <div id="register" className="py-12 bg-white">
-        <MembersForm />
-      </div>
+      <Cta />
     </main>
   );
 }
