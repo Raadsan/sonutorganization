@@ -6,10 +6,10 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 
 const aboutImages = [
-  "/images/1.jpg",
-  "/images/2222.jpg",
-  "/images/3.jpg",
-  "/images/1 (2).jpg",
+  "/images/Sonut imges -04.jpg",
+  "/images/Sonut imges -06.jpg",
+  "/images/Sonut imges -05.jpg",
+  "/images/Sonut imges -07.jpg",
 ];
 
 export default function About() {

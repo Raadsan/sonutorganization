@@ -36,7 +36,7 @@ export default function Footer() {
             <Link href="/" className="inline-block mb-6">
               <img src="/images/logo2.png" alt="SONUT Logo" className="h-16 w-auto" />
             </Link>
-            <p className="text-sm leading-relaxed mb-6 max-w-xs text-white/70">
+            <p className="mb-6 max-w-xs text-justify text-sm leading-relaxed text-white/70">
               Somali National Union of Teachers. Empowering educators, strengthening education, and building a brighter future for Somalia since 2004.
             </p>
             <div className="flex gap-4">
@@ -92,8 +92,8 @@ export default function Footer() {
               <li className="flex items-start gap-3 text-sm">
                 <MapPin className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
                 <span>
-                  Howl-Wadaag District,Mogadishu,<br />
-                  Somalia
+                  Howl-Wadaag District,<br />
+                  Mogadishu,Somalia
                 </span>
               </li>
               <li className="flex items-center gap-3 text-sm">

@@ -1,14 +1,56 @@
+"use client";
+
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import { useEffect, useState } from "react";
+
+const aboutImages = [
+  "/images/Sonut imges -04.jpg",
+  "/images/Sonut imges -06.jpg",
+  "/images/Sonut imges -05.jpg",
+  "/images/Sonut imges -07.jpg",
+];
 
 export default function AboutPageContent() {
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
+  const prefersReducedMotion = useReducedMotion();
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setCurrentImageIndex(
+        (previousIndex) => (previousIndex + 1) % aboutImages.length,
+      );
+    }, 4000);
+
+    return () => window.clearInterval(timer);
+  }, []);
+
   return (
     <section className="overflow-hidden bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-lg overflow-hidden rounded-3xl bg-gray-100 shadow-2xl md:mx-0">
-            <Image src="/images/1.jpg" alt="SONUT teacher representative" fill className="object-cover" sizes="(max-width: 768px) 100vw, 50vw" />
+            <AnimatePresence initial={false}>
+              <motion.div
+                key={aboutImages[currentImageIndex]}
+                initial={prefersReducedMotion ? false : { opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={prefersReducedMotion ? undefined : { opacity: 0 }}
+                transition={{ duration: prefersReducedMotion ? 0 : 0.8 }}
+                className="absolute inset-0"
+              >
+                <Image
+                  src={aboutImages[currentImageIndex]}
+                  alt="SONUT members and teacher representatives"
+                  fill
+                  priority={currentImageIndex === 0}
+                  className="object-cover"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           <div className="flex flex-col">
@@ -28,7 +70,7 @@ export default function AboutPageContent() {
                 SONUT formerly SNUT was established in November 21st 2004 by a group of head teachers from seven different regions across Somalia. It has been set to relive the hopes and support teachers in our effort to transform the lives of our pupils/students at all levels of education.
               </p>
               <p>
-                SONUT is committed to provide programs answering to teacher's basic needs that are relevant on the current situation. It is open to all teachers no matter which race or location the individual belongs.
+                SONUT is committed to provide programs answering to teacher&apos;s basic needs that are relevant on the current situation. It is open to all teachers no matter which race or location the individual belongs.
               </p>
               <p>
                 At the moment SONUT is in the process of developing an educational policy to guide regional scholastic process as it embarks on the path of reconstruction and educational development Current membership is about 490 schools and 27,200 membership teachers.
