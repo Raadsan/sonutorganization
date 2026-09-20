@@ -7,6 +7,7 @@ import {
   Calendar, MapPin, Clock, Eye, EyeOff, CheckCircle, AlertCircle,
 } from 'lucide-react';
 import Image from 'next/image';
+import { compressImage } from '@/lib/clientImageCompress';
 
 interface Event {
   id: number;
@@ -114,11 +115,16 @@ export default function EventsAdminPage() {
     setShowModal(true);
   };
 
-  const handleCover = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setCoverFile(file);
     setCoverPreview(URL.createObjectURL(file));
+    try {
+      const compressed = await compressImage(file, 1600, 0.85);
+      setCoverFile(compressed);
+    } catch {
+      setCoverFile(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {

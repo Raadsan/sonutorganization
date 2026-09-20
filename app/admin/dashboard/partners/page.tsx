@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Plus, Pencil, Trash2, X, Upload, Loader2, Handshake } from 'lucide-react';
 import Image from 'next/image';
+import { compressImage } from '@/lib/clientImageCompress';
 
 interface Partner {
   id: number;
@@ -70,11 +71,16 @@ export default function PartnersPage() {
     setLogoFile(null); setLogoPreview(p.logoUrl); setShowModal(true);
   };
 
-  const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogo = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setLogoFile(file);
     setLogoPreview(URL.createObjectURL(file));
+    try {
+      const compressed = await compressImage(file, 800, 0.85);
+      setLogoFile(compressed);
+    } catch {
+      setLogoFile(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -88,7 +94,10 @@ export default function PartnersPage() {
       else await axios.post('/api/admin/partners', fd);
       setShowModal(false);
       fetchPartners();
-    } catch (e) { console.error(e); }
+    } catch (e: any) {
+      console.error(e);
+      alert(e.response?.data?.error || e.message || 'Failed to save partner');
+    }
     finally { setSaving(false); }
   };
 

@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import { Plus, Pencil, Trash2, X, Upload, Loader2, BookOpen, Eye, EyeOff } from 'lucide-react';
 import Image from 'next/image';
+import { compressImage } from '@/lib/clientImageCompress';
 
 interface BlogPost {
   id: number;
@@ -50,11 +51,16 @@ export default function BlogPage() {
     setCoverFile(null); setCoverPreview(post.coverImageUrl); setShowModal(true);
   };
 
-  const handleCover = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    setCoverFile(file);
     setCoverPreview(URL.createObjectURL(file));
+    try {
+      const compressed = await compressImage(file, 1400, 0.85);
+      setCoverFile(compressed);
+    } catch {
+      setCoverFile(file);
+    }
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -68,7 +74,10 @@ export default function BlogPage() {
       else await axios.post('/api/admin/blog', fd);
       setShowModal(false);
       fetchPosts();
-    } catch (e) { console.error(e); }
+    } catch (e: any) {
+      console.error(e);
+      alert(e.response?.data?.error || e.message || 'Failed to save blog post');
+    }
     finally { setSaving(false); }
   };
 
