@@ -208,7 +208,7 @@ export default function Priorities() {
                   className="px-4 flex-shrink-0 flex items-stretch"
                   style={{ width: `${100 / prioritiesData.length}%` }}
                 >
-                  <div className="bg-white rounded-3xl p-8 relative group overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100/50 flex flex-col justify-between w-full h-full min-h-[340px] hover:-translate-y-2 cursor-pointer">
+                  <div className="bg-white rounded-3xl p-8 relative group overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-300 border border-gray-100/50 flex flex-col justify-between w-full h-full min-h-[360px] hover:-translate-y-2 cursor-pointer">
                     {/* Background Big Number */}
                     <div className="absolute -right-4 -top-8 text-[120px] font-black text-gray-50 group-hover:text-secondary/5 transition-colors duration-500 pointer-events-none select-none z-0">
                       {item.id}
@@ -224,11 +224,11 @@ export default function Priorities() {
                           {item.id}
                         </div>
 
-                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors line-clamp-2 min-h-[3.5rem] flex items-start">
+                        <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-primary transition-colors line-clamp-2 h-[3.5rem] flex items-start leading-snug">
                           {item.title}
                         </h3>
                         
-                        <p className="text-gray-500 leading-relaxed text-sm group-hover:text-gray-600 transition-colors min-h-[4.5rem]">
+                        <p className="text-gray-500 leading-relaxed text-sm text-justify group-hover:text-gray-600 transition-colors min-h-[5.25rem]">
                           {item.description}
                         </p>
                       </div>

@@ -26,7 +26,15 @@ const navLinks = [
       { label: "Activity", href: "/activity" },
     ],
   },
-  { label: "Membership", href: "/membership" },
+  {
+    label: "Membership",
+    href: "#",
+    submenu: [
+      { label: "Who Can Join?", href: "/membership/who-can-join" },
+      { label: "Membership Benefits", href: "/membership/benefits" },
+      { label: "Membership Requirements", href: "/membership/requirements" },
+    ],
+  },
   {
     label: "Media",
     href: "#",
@@ -104,7 +112,7 @@ export default function Nav() {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: 10 }}
                         transition={{ duration: 0.15 }}
-                        className="absolute top-full left-0 pt-2 w-44 z-50"
+                        className="absolute top-full left-0 pt-2 min-w-[220px] z-50"
                       >
                         <div className="rounded-lg bg-white shadow-lg border p-1">
                           {link.submenu.map((sub) => (

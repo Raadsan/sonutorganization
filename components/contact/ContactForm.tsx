@@ -28,7 +28,7 @@ const contactInfo = [
     {
         icon: MapPin,
         title: "Address",
-        value: "Hool-wadaag Distirct, Mogadishu, Somalia",
+        value: "Howl-Wadaag District, Mogadishu, Somalia",
         href: "#map",
     },
 ];
