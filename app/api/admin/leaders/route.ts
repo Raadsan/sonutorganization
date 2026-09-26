@@ -32,6 +32,10 @@ export async function POST(request: Request) {
     const isActive = formData.get('isActive') !== 'false';
     const imageFile = formData.get('image') as File | null;
 
+    const categoryRaw = (formData.get('category') as string)?.trim();
+    const allowedCategories = ['Trustee Board', 'Executive Committee', 'State Representative'];
+    const category = allowedCategories.includes(categoryRaw) ? categoryRaw : 'Executive Committee';
+
     if (!name) {
       return NextResponse.json({ error: 'Full name is required' }, { status: 400 });
     }
@@ -60,6 +64,7 @@ export async function POST(request: Request) {
       data: {
         name,
         title,
+        category,
         bio,
         facebook,
         tiktok,

@@ -12,15 +12,55 @@ import {
   UserCircle,
   CheckCircle2,
   AlertCircle,
-  ExternalLink,
+  ShieldCheck,
+  Briefcase,
+  Landmark,
+  Search,
+  Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import { compressImage } from '@/lib/clientImageCompress';
+
+export const LEADERSHIP_CATEGORIES = [
+  {
+    id: 'Trustee Board',
+    name: 'Trustee Board',
+    somaliName: 'Guddiga Ammaanada',
+    desc: 'Board of Trustees & Oversight',
+    icon: ShieldCheck,
+    badgeBg: 'bg-purple-50 border-purple-200 text-purple-700',
+    headerBg: 'bg-purple-50/70 border-purple-200',
+    accentColor: '#6B21A8',
+  },
+  {
+    id: 'Executive Committee',
+    name: 'Executive Committee',
+    somaliName: 'Guddiga Fulinta',
+    desc: 'Executive & Operational Leadership',
+    icon: Briefcase,
+    badgeBg: 'bg-blue-50 border-blue-200 text-blue-700',
+    headerBg: 'bg-blue-50/70 border-blue-200',
+    accentColor: '#1E0D79',
+  },
+  {
+    id: 'State Representative',
+    name: 'State Representative',
+    somaliName: 'Wakiillada Dowlad-Goboleedyada',
+    desc: 'Regional State Representatives',
+    icon: Landmark,
+    badgeBg: 'bg-emerald-50 border-emerald-200 text-emerald-700',
+    headerBg: 'bg-emerald-50/70 border-emerald-200',
+    accentColor: '#059669',
+  },
+] as const;
+
+export type CategoryType = (typeof LEADERSHIP_CATEGORIES)[number]['id'];
 
 interface Leader {
   id: number;
   name: string;
   title: string;
+  category: string;
   bio: string | null;
   facebook: string | null;
   tiktok: string | null;
@@ -33,6 +73,7 @@ interface Leader {
 type FormState = {
   name: string;
   title: string;
+  category: CategoryType;
   bio: string;
   facebook: string;
   tiktok: string;
@@ -44,6 +85,7 @@ type FormState = {
 const emptyForm: FormState = {
   name: '',
   title: '',
+  category: 'Executive Committee',
   bio: '',
   facebook: '',
   tiktok: '',
@@ -60,7 +102,7 @@ function getErrorMessage(error: unknown): string {
   return 'An unexpected error occurred';
 }
 
-export default function LeadershipPage() {
+export default function LeadershipAdminPage() {
   const [leaders, setLeaders] = useState<Leader[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -71,6 +113,8 @@ export default function LeadershipPage() {
   const [imagePreview, setImagePreview] = useState<string | null>(null);
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'all' | CategoryType>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
 
   const showToast = (message: string, type: 'success' | 'error') => {
@@ -102,9 +146,9 @@ export default function LeadershipPage() {
     };
   }, [imagePreview]);
 
-  const openCreate = () => {
+  const openCreate = (defaultCategory: CategoryType = 'Executive Committee') => {
     setEditing(null);
-    setForm(emptyForm);
+    setForm({ ...emptyForm, category: defaultCategory });
     setImageFile(null);
     setImagePreview(null);
     setFormError(null);
@@ -113,9 +157,14 @@ export default function LeadershipPage() {
 
   const openEdit = (leader: Leader) => {
     setEditing(leader);
+    const cat = LEADERSHIP_CATEGORIES.some((c) => c.id === leader.category)
+      ? (leader.category as CategoryType)
+      : 'Executive Committee';
+
     setForm({
       name: leader.name,
       title: leader.title,
+      category: cat,
       bio: leader.bio || '',
       facebook: leader.facebook || '',
       tiktok: leader.tiktok || '',
@@ -141,7 +190,6 @@ export default function LeadershipPage() {
     setFormError(null);
     setImagePreview(URL.createObjectURL(file));
 
-    // Compress client-side to ensure fast, failure-proof upload
     try {
       const compressed = await compressImage(file, 1200, 0.85);
       setImageFile(compressed);
@@ -199,15 +247,42 @@ export default function LeadershipPage() {
     }
   };
 
+  // Helper counts
+  const trusteeCount = leaders.filter((l) => l.category === 'Trustee Board').length;
+  const execCount = leaders.filter((l) => l.category === 'Executive Committee').length;
+  const stateRepCount = leaders.filter((l) => l.category === 'State Representative').length;
+
+  const filteredLeaders = leaders.filter((l) => {
+    const matchesTab = activeTab === 'all' ? true : l.category === activeTab;
+    const matchesSearch =
+      searchQuery.trim() === '' ||
+      l.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      l.title.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesTab && matchesSearch;
+  });
+
+  const getCategoryMeta = (catId: string) => {
+    return (
+      LEADERSHIP_CATEGORIES.find((c) => c.id === catId) || {
+        id: catId,
+        name: catId,
+        somaliName: '',
+        desc: '',
+        icon: Users,
+        badgeBg: 'bg-slate-100 border-slate-200 text-slate-700',
+        headerBg: 'bg-slate-50 border-slate-200',
+        accentColor: '#1E0D79',
+      }
+    );
+  };
+
   return (
-    <div className="space-y-6 max-w-7xl mx-auto">
+    <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Toast Notification */}
       {toast && (
         <div
           className={`fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl text-sm font-semibold transition-all transform animate-in fade-in slide-in-from-top-4 ${
-            toast.type === 'success'
-              ? 'bg-emerald-600 text-white'
-              : 'bg-rose-600 text-white'
+            toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
           }`}
         >
           {toast.type === 'success' ? (
@@ -220,126 +295,272 @@ export default function LeadershipPage() {
       )}
 
       {/* Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-6 rounded-2xl border border-[#E6E8F0] shadow-sm">
-        <div>
-          <h2 className="text-2xl font-extrabold text-slate-900 tracking-tight">Leadership</h2>
-          <p className="text-slate-500 text-sm mt-1">
-            Manage executive leadership members and national representatives ({leaders.length} total)
-          </p>
+      <div className="bg-white p-6 rounded-3xl border border-[#E6E8F0] shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <span className="p-2 rounded-xl bg-[#1E0D79]/10 text-[#1E0D79]">
+                <Users className="w-6 h-6" />
+              </span>
+              <div>
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight">
+                  Leadership Management
+                </h2>
+                <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+                  Maamul 3-da qaybood ee hoggaanka ururka: Trustee Board, Executive Committee, iyo State Representative ({leaders.length} total)
+                </p>
+              </div>
+            </div>
+          </div>
+          <button
+            onClick={() => openCreate(activeTab !== 'all' ? activeTab : 'Executive Committee')}
+            className="inline-flex items-center justify-center gap-2 bg-[#1E0D79] hover:bg-[#160a5c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1E0D79]/20 transition-all hover:scale-[1.02] cursor-pointer"
+          >
+            <Plus className="w-4 h-4" /> Add Leader
+          </button>
         </div>
-        <button
-          onClick={openCreate}
-          className="inline-flex items-center justify-center gap-2 bg-[#1E0D79] hover:bg-[#160a5c] text-white px-5 py-2.5 rounded-xl text-sm font-bold shadow-md shadow-[#1E0D79]/20 transition-all hover:scale-102"
-        >
-          <Plus className="w-4 h-4" /> Add Leader
-        </button>
+
+        {/* 3 Categories Summary Cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4 mt-6 pt-6 border-t border-slate-100">
+          {LEADERSHIP_CATEGORIES.map((cat, idx) => {
+            const Icon = cat.icon;
+            const count =
+              cat.id === 'Trustee Board'
+                ? trusteeCount
+                : cat.id === 'Executive Committee'
+                ? execCount
+                : stateRepCount;
+            const isCurrent = activeTab === cat.id;
+
+            return (
+              <div
+                key={cat.id}
+                onClick={() => setActiveTab(isCurrent ? 'all' : cat.id)}
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
+                  isCurrent
+                    ? 'border-[#1E0D79] ring-2 ring-[#1E0D79]/10 bg-[#1E0D79]/5 shadow-sm'
+                    : 'border-slate-200/80 hover:border-slate-300 bg-slate-50/60 hover:bg-slate-50'
+                }`}
+              >
+                <div className="flex items-center gap-3">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${cat.badgeBg}`}>
+                    <Icon className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-slate-400">0{idx + 1}.</span>
+                      <h4 className="text-sm font-extrabold text-slate-900 leading-none">{cat.name}</h4>
+                    </div>
+                    <p className="text-[11px] text-slate-500 mt-1">{cat.somaliName}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <span className="text-xl font-black text-slate-900">{count}</span>
+                  <span className="block text-[10px] uppercase font-bold text-slate-400 tracking-wider">
+                    members
+                  </span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Filter Navigation & Search */}
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mt-6 pt-5 border-t border-slate-100">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
+            <button
+              onClick={() => setActiveTab('all')}
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
+                activeTab === 'all'
+                  ? 'bg-[#1E0D79] text-white shadow-sm'
+                  : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+              }`}
+            >
+              All Sections ({leaders.length})
+            </button>
+            {LEADERSHIP_CATEGORIES.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveTab(cat.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
+                  activeTab === cat.id
+                    ? 'bg-[#1E0D79] text-white shadow-sm'
+                    : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                }`}
+              >
+                <span>{cat.name}</span>
+                <span
+                  className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+                    activeTab === cat.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                  }`}
+                >
+                  {cat.id === 'Trustee Board'
+                    ? trusteeCount
+                    : cat.id === 'Executive Committee'
+                    ? execCount
+                    : stateRepCount}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          {/* Search bar */}
+          <div className="relative min-w-[220px]">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search by name or title..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 pl-9 pr-3 py-1.5 rounded-xl text-xs text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#1E0D79]/20 focus:border-[#1E0D79] transition-all"
+            />
+          </div>
+        </div>
       </div>
 
       {/* Loading state */}
       {loading ? (
-        <div className="flex flex-col items-center justify-center py-24 bg-white rounded-2xl border border-[#E6E8F0]">
+        <div className="flex flex-col items-center justify-center py-24 bg-white rounded-3xl border border-[#E6E8F0]">
           <Loader2 className="w-9 h-9 text-[#1E0D79] animate-spin mb-3" />
-          <p className="text-sm font-medium text-slate-500">Loading leadership list...</p>
+          <p className="text-sm font-medium text-slate-500">Loading leadership records...</p>
         </div>
       ) : leaders.length === 0 ? (
         /* Empty state */
-        <div className="text-center py-20 bg-white rounded-2xl border border-dashed border-slate-300 p-8">
+        <div className="text-center py-20 bg-white rounded-3xl border border-dashed border-slate-300 p-8">
           <div className="w-16 h-16 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-4 text-slate-400">
             <UserCircle className="w-10 h-10" />
           </div>
           <h3 className="text-lg font-bold text-slate-800 mb-1">No leadership members yet</h3>
           <p className="text-slate-500 text-sm max-w-md mx-auto mb-6">
-            Get started by adding the union leaders, executive chairperson, and council members.
+            Get started by adding members to Trustee Board, Executive Committee, or State Representative.
           </p>
           <button
-            onClick={openCreate}
-            className="inline-flex items-center gap-2 bg-[#1E0D79] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#160a5c] transition-colors"
+            onClick={() => openCreate('Executive Committee')}
+            className="inline-flex items-center gap-2 bg-[#1E0D79] text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:bg-[#160a5c] transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4" /> Add First Leader
           </button>
         </div>
-      ) : (
-        /* Leaders Grid */
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {leaders.map((leader) => (
-            <div
-              key={leader.id}
-              className="bg-white border border-[#E6E8F0] rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col justify-between group"
-            >
-              <div>
-                {/* Photo container */}
-                <div className="h-52 bg-slate-100 relative overflow-hidden">
-                  {leader.imageUrl ? (
-                    <Image
-                      src={leader.imageUrl}
-                      alt={leader.name}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
-                    />
+      ) : activeTab === 'all' && searchQuery.trim() === '' ? (
+        /* 3 Cleanly Divided Sections when viewing "All" */
+        <div className="space-y-10">
+          {LEADERSHIP_CATEGORIES.map((cat, idx) => {
+            const Icon = cat.icon;
+            const categoryMembers = leaders.filter((l) => l.category === cat.id);
+
+            return (
+              <div
+                key={cat.id}
+                className="bg-white rounded-3xl border border-[#E6E8F0] overflow-hidden shadow-sm"
+              >
+                {/* Section Header */}
+                <div className={`p-5 sm:p-6 border-b flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${cat.headerBg}`}>
+                  <div className="flex items-center gap-3.5">
+                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center border shadow-xs ${cat.badgeBg}`}>
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs font-black uppercase tracking-wider text-slate-400">
+                          Part 0{idx + 1}
+                        </span>
+                        <span className="text-slate-300">•</span>
+                        <span className="text-xs font-bold text-slate-600">{cat.somaliName}</span>
+                      </div>
+                      <h3 className="text-xl font-extrabold text-slate-900 tracking-tight flex items-center gap-2 mt-0.5">
+                        {cat.name}
+                        <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-white border border-slate-200 text-slate-700 shadow-xs">
+                          {categoryMembers.length} {categoryMembers.length === 1 ? 'member' : 'members'}
+                        </span>
+                      </h3>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => openCreate(cat.id)}
+                    className="inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-white border border-slate-200 text-slate-800 hover:bg-[#1E0D79] hover:text-white hover:border-[#1E0D79] transition-all shadow-xs cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" /> Add to {cat.name}
+                  </button>
+                </div>
+
+                {/* Section Members Grid */}
+                <div className="p-6">
+                  {categoryMembers.length === 0 ? (
+                    <div className="py-12 text-center rounded-2xl border border-dashed border-slate-200 bg-slate-50/50">
+                      <p className="text-slate-500 text-sm font-medium">
+                        No members currently in <strong className="text-slate-700">{cat.name}</strong>.
+                      </p>
+                      <button
+                        onClick={() => openCreate(cat.id)}
+                        className="mt-3 inline-flex items-center gap-1.5 text-xs font-bold text-[#1E0D79] hover:underline cursor-pointer"
+                      >
+                        <Plus className="w-3.5 h-3.5" /> Click here to add members to this section
+                      </button>
+                    </div>
                   ) : (
-                    <div className="flex items-center justify-center h-full text-slate-300 bg-slate-50">
-                      <UserCircle className="w-20 h-20" />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                      {categoryMembers.map((leader) => (
+                        <LeaderCard
+                          key={leader.id}
+                          leader={leader}
+                          catMeta={cat}
+                          onEdit={openEdit}
+                          onDelete={handleDelete}
+                        />
+                      ))}
                     </div>
                   )}
-
-                  {/* Status badge */}
-                  <div className="absolute top-3 right-3">
-                    <span
-                      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold backdrop-blur-md shadow-sm ${
-                        leader.isActive
-                          ? 'bg-emerald-500/90 text-white'
-                          : 'bg-slate-700/80 text-white'
-                      }`}
-                    >
-                      <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
-                      {leader.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </div>
-
-                  {/* Order pill */}
-                  <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white px-2.5 py-0.5 rounded-md text-[11px] font-semibold">
-                    Order #{leader.order}
-                  </div>
-                </div>
-
-                {/* Information */}
-                <div className="p-5">
-                  <h3 className="text-lg font-bold text-slate-900 leading-snug">{leader.name}</h3>
-                  <p className="text-sm font-semibold text-[#1E0D79] mt-0.5">{leader.title}</p>
-                  {leader.bio && (
-                    <p className="text-slate-500 text-xs mt-3 line-clamp-3 leading-relaxed">
-                      {leader.bio}
-                    </p>
-                  )}
                 </div>
               </div>
+            );
+          })}
+        </div>
+      ) : (
+        /* Filtered List (by Tab or Search) */
+        <div className="space-y-4">
+          <div className="flex items-center justify-between px-1">
+            <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+              Showing {filteredLeaders.length} {filteredLeaders.length === 1 ? 'member' : 'members'}
+              {activeTab !== 'all' && ` in ${activeTab}`}
+              {searchQuery && ` matching "${searchQuery}"`}
+            </p>
+          </div>
 
-              {/* Action Buttons */}
-              <div className="p-5 pt-0 border-t border-slate-100 mt-2 flex items-center gap-2">
-                <button
-                  onClick={() => openEdit(leader)}
-                  className="flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-[#1E0D79] text-slate-700 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition-colors"
-                >
-                  <Pencil className="w-3.5 h-3.5" /> Edit
-                </button>
-                <button
-                  onClick={() => handleDelete(leader.id)}
-                  className="inline-flex items-center justify-center p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-colors"
-                  title="Delete Leader"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
-              </div>
+          {filteredLeaders.length === 0 ? (
+            <div className="text-center py-16 bg-white rounded-3xl border border-dashed border-slate-300 p-6">
+              <UserCircle className="w-12 h-12 text-slate-300 mx-auto mb-2" />
+              <p className="text-slate-600 text-sm font-medium">No leadership members match your filter.</p>
+              <button
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveTab('all');
+                }}
+                className="mt-3 text-xs font-bold text-[#1E0D79] hover:underline"
+              >
+                Clear filters
+              </button>
             </div>
-          ))}
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {filteredLeaders.map((leader) => (
+                <LeaderCard
+                  key={leader.id}
+                  leader={leader}
+                  catMeta={getCategoryMeta(leader.category)}
+                  onEdit={openEdit}
+                  onDelete={handleDelete}
+                />
+              ))}
+            </div>
+          )}
         </div>
       )}
 
-      {/* Modal dialog */}
+      {/* Add / Edit Modal Dialog */}
       {showModal && (
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white border border-[#E6E8F0] rounded-3xl w-full max-w-lg max-h-[92vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+          <div className="bg-white border border-[#E6E8F0] rounded-3xl w-full max-w-xl max-h-[92vh] overflow-y-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
             {/* Modal Header */}
             <div className="flex items-center justify-between p-6 border-b border-slate-100 sticky top-0 bg-white z-10">
               <div>
@@ -347,12 +568,12 @@ export default function LeadershipPage() {
                   {editing ? 'Edit Leader' : 'Add New Leader'}
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5">
-                  Provide leader details and photo to display across the site
+                  Dooro qaybta (category) iyo xogta xubinta hoggaanka
                 </p>
               </div>
               <button
                 onClick={() => setShowModal(false)}
-                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-600 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -367,14 +588,54 @@ export default function LeadershipPage() {
                 </div>
               )}
 
+              {/* 3 Categories Selector - Prominent and Clear */}
+              <div>
+                <label className="block text-slate-800 text-xs font-extrabold uppercase tracking-wider mb-2.5">
+                  1. Leadership Category / Qaybta Hoggaanka <span className="text-rose-500">*</span>
+                </label>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                  {LEADERSHIP_CATEGORIES.map((cat, idx) => {
+                    const Icon = cat.icon;
+                    const isSelected = form.category === cat.id;
+
+                    return (
+                      <div
+                        key={cat.id}
+                        onClick={() => setForm({ ...form, category: cat.id })}
+                        className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
+                          isSelected
+                            ? 'border-[#1E0D79] bg-[#1E0D79]/5 shadow-sm'
+                            : 'border-slate-200 hover:border-slate-300 bg-white'
+                        }`}
+                      >
+                        <div className="flex items-center justify-between mb-2">
+                          <span
+                            className={`w-7 h-7 rounded-lg flex items-center justify-center border text-xs ${
+                              isSelected ? 'bg-[#1E0D79] text-white border-[#1E0D79]' : cat.badgeBg
+                            }`}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                          </span>
+                          <span className="text-[10px] font-bold text-slate-400">0{idx + 1}</span>
+                        </div>
+                        <div>
+                          <p className="text-xs font-bold text-slate-900 leading-tight">{cat.name}</p>
+                          <p className="text-[10px] text-slate-500 mt-0.5 line-clamp-1">{cat.somaliName}</p>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
               {/* Photo Upload Area */}
               <div>
                 <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-2">
-                  Leader Photograph
+                  2. Leader Photograph / Sawirka Xubinta
                 </label>
                 <div
                   onClick={() => fileRef.current?.click()}
-                  className="cursor-pointer border-2 border-dashed border-slate-300 hover:border-[#1E0D79] rounded-2xl h-44 flex flex-col items-center justify-center gap-2 transition-all relative overflow-hidden bg-slate-50/70 hover:bg-slate-50 group"
+                  className="cursor-pointer border-2 border-dashed border-slate-300 hover:border-[#1E0D79] rounded-2xl h-40 flex flex-col items-center justify-center gap-2 transition-all relative overflow-hidden bg-slate-50/70 hover:bg-slate-50 group"
                 >
                   {imagePreview ? (
                     <>
@@ -390,11 +651,11 @@ export default function LeadershipPage() {
                     </>
                   ) : (
                     <>
-                      <div className="w-12 h-12 rounded-full bg-white shadow-sm flex items-center justify-center text-[#1E0D79] group-hover:scale-110 transition-transform">
+                      <div className="w-11 h-11 rounded-full bg-white shadow-sm flex items-center justify-center text-[#1E0D79] group-hover:scale-110 transition-transform">
                         <Upload className="w-5 h-5" />
                       </div>
-                      <p className="text-slate-700 text-sm font-bold">Click to upload photo</p>
-                      <p className="text-slate-400 text-xs">JPG, PNG or WEBP (auto-compressed)</p>
+                      <p className="text-slate-700 text-xs font-bold">Click to upload photo</p>
+                      <p className="text-slate-400 text-[11px]">JPG, PNG or WEBP (auto-compressed)</p>
                     </>
                   )}
                   <input
@@ -416,7 +677,7 @@ export default function LeadershipPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Hassan Ali Jama"
+                    placeholder="e.g. Prof. Mohamed Ali"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E0D79]/20 focus:border-[#1E0D79] transition-all"
@@ -430,7 +691,7 @@ export default function LeadershipPage() {
                   <input
                     type="text"
                     required
-                    placeholder="e.g. Chairperson, Secretary General"
+                    placeholder="e.g. Chairman, Board Member, Representative"
                     value={form.title}
                     onChange={(e) => setForm({ ...form, title: e.target.value })}
                     className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E0D79]/20 focus:border-[#1E0D79] transition-all"
@@ -441,7 +702,7 @@ export default function LeadershipPage() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    Display Order
+                    Display Order / Kala Horraynta
                   </label>
                   <input
                     type="number"
@@ -454,7 +715,7 @@ export default function LeadershipPage() {
 
                 <div>
                   <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                    Status
+                    Status / Xaaladda
                   </label>
                   <select
                     value={form.isActive}
@@ -470,11 +731,11 @@ export default function LeadershipPage() {
               {/* Bio */}
               <div>
                 <label className="block text-slate-700 text-xs font-bold uppercase tracking-wider mb-1.5">
-                  Biography / Summary
+                  Biography / Summary (Taariikh Kooban)
                 </label>
                 <textarea
                   rows={3}
-                  placeholder="A brief overview of their background, role, and achievements..."
+                  placeholder="A brief overview of their background, contribution, and role..."
                   value={form.bio}
                   onChange={(e) => setForm({ ...form, bio: e.target.value })}
                   className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl p-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#1E0D79]/20 focus:border-[#1E0D79] transition-all resize-none"
@@ -515,23 +776,123 @@ export default function LeadershipPage() {
                   type="button"
                   onClick={() => setShowModal(false)}
                   disabled={saving}
-                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl text-sm font-bold transition-colors"
+                  className="flex-1 bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-3 rounded-xl text-sm font-bold transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 bg-[#1E0D79] hover:bg-[#160a5c] disabled:opacity-60 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center gap-2"
+                  className="flex-1 bg-[#1E0D79] hover:bg-[#160a5c] disabled:opacity-60 text-white px-4 py-3 rounded-xl text-sm font-bold transition-all shadow-md flex items-center justify-center gap-2 cursor-pointer"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
-                  {saving ? 'Uploading & Saving...' : editing ? 'Update Leader' : 'Save Leader'}
+                  {saving ? 'Saving...' : editing ? 'Update Leader' : 'Save Leader'}
                 </button>
               </div>
             </form>
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+// Subcomponent for individual leader card
+function LeaderCard({
+  leader,
+  catMeta,
+  onEdit,
+  onDelete,
+}: {
+  leader: Leader;
+  catMeta: {
+    name: string;
+    badgeBg: string;
+    icon: React.ComponentType<{ className?: string }>;
+  };
+  onEdit: (leader: Leader) => void;
+  onDelete: (id: number) => void;
+}) {
+  const Icon = catMeta.icon;
+
+  return (
+    <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col justify-between group">
+      <div>
+        {/* Photo Container */}
+        <div className="h-48 bg-slate-100 relative overflow-hidden">
+          {leader.imageUrl ? (
+            <Image
+              src={leader.imageUrl}
+              alt={leader.name}
+              fill
+              sizes="(max-width: 768px) 100vw, 33vw"
+              className="object-cover object-top group-hover:scale-105 transition-transform duration-500"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-slate-300 bg-slate-50">
+              <UserCircle className="w-16 h-16" />
+            </div>
+          )}
+
+          {/* Status badge */}
+          <div className="absolute top-3 right-3 flex items-center gap-1.5">
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold backdrop-blur-md shadow-xs ${
+                leader.isActive ? 'bg-emerald-500/90 text-white' : 'bg-slate-700/80 text-white'
+              }`}
+            >
+              <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
+              {leader.isActive ? 'Active' : 'Inactive'}
+            </span>
+          </div>
+
+          {/* Order pill */}
+          <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white px-2 py-0.5 rounded-md text-[10px] font-bold">
+            Order #{leader.order}
+          </div>
+        </div>
+
+        {/* Content */}
+        <div className="p-4 sm:p-5">
+          {/* Category Pill */}
+          <div className="mb-2">
+            <span
+              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-md text-[11px] font-bold border ${catMeta.badgeBg}`}
+            >
+              <Icon className="w-3 h-3" />
+              {leader.category || catMeta.name}
+            </span>
+          </div>
+
+          <h3 className="text-base font-bold text-slate-900 leading-snug group-hover:text-[#1E0D79] transition-colors">
+            {leader.name}
+          </h3>
+          <p className="text-xs font-semibold text-[#1E0D79] mt-0.5">{leader.title}</p>
+
+          {leader.bio && (
+            <p className="text-slate-500 text-xs mt-2.5 line-clamp-2 leading-relaxed">
+              {leader.bio}
+            </p>
+          )}
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="p-4 pt-0 border-t border-slate-100 mt-2 flex items-center gap-2">
+        <button
+          onClick={() => onEdit(leader)}
+          className="flex-1 inline-flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-[#1E0D79] text-slate-700 hover:text-white px-3 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+        >
+          <Pencil className="w-3.5 h-3.5" /> Edit
+        </button>
+        <button
+          onClick={() => onDelete(leader.id)}
+          className="inline-flex items-center justify-center p-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white transition-colors cursor-pointer"
+          title="Delete Leader"
+        >
+          <Trash2 className="w-4 h-4" />
+        </button>
+      </div>
     </div>
   );
 }

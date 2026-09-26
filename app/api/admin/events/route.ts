@@ -71,6 +71,9 @@ export async function POST(request: Request) {
     });
 
     revalidatePath('/');
+    revalidatePath('/media/news');
+    revalidatePath('/media/events');
+    revalidatePath('/Resources/events');
     revalidatePath('/activity');
     revalidatePath('/admin/dashboard/events');
 

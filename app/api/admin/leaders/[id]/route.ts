@@ -59,9 +59,25 @@ export async function PUT(request: Request, { params }: { params: Promise<{ id: 
       }
     }
 
+    const categoryRaw = (formData.get('category') as string)?.trim();
+    const allowedCategories = ['Trustee Board', 'Executive Committee', 'State Representative'];
+    const category = categoryRaw && allowedCategories.includes(categoryRaw) ? categoryRaw : undefined;
+
     const leader = await prisma.leader.update({
       where: { id: leaderId },
-      data: { name, title, bio, facebook, tiktok, instagram, imageUrl, imagePublicId, order, isActive },
+      data: {
+        name,
+        title,
+        ...(category ? { category } : {}),
+        bio,
+        facebook,
+        tiktok,
+        instagram,
+        imageUrl,
+        imagePublicId,
+        order,
+        isActive,
+      },
     });
 
     revalidatePath('/');

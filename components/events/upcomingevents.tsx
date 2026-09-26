@@ -30,10 +30,10 @@ function isPast(startDate: string) {
   return new Date(startDate) < new Date();
 }
 
-export default function UpcomingEvents() {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState<"upcoming" | "past">("upcoming");
+export default function UpcomingEvents({ initialEvents = [] }: { initialEvents?: Event[] }) {
+  const [events, setEvents] = useState<Event[]>(initialEvents);
+  const [loading, setLoading] = useState(initialEvents.length === 0);
+  const [filter, setFilter] = useState<"all" | "upcoming" | "past">("all");
   const [search, setSearch] = useState("");
   const sectionRef = useRef<HTMLElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
@@ -55,7 +55,11 @@ export default function UpcomingEvents() {
   }, []);
 
   const filtered = events
-    .filter((e) => (filter === "past" ? isPast(e.startDate) : !isPast(e.startDate)))
+    .filter((e) => {
+      if (filter === "all") return true;
+      if (filter === "past") return isPast(e.startDate);
+      return !isPast(e.startDate);
+    })
     .filter(
       (e) =>
         e.title.toLowerCase().includes(search.toLowerCase()) ||
@@ -131,20 +135,30 @@ export default function UpcomingEvents() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-10">
-          <div className="flex items-center gap-2 bg-white rounded-2xl p-1.5 shadow-sm border border-gray-100">
+          <div className="flex items-center gap-1.5 sm:gap-2 bg-white rounded-2xl p-1.5 shadow-sm border border-gray-100 flex-wrap">
+            <button
+              onClick={() => setFilter("all")}
+              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
+                filter === "all"
+                  ? "bg-primary text-white shadow-lg shadow-primary/30"
+                  : "text-gray-500 hover:text-primary hover:bg-primary/5"
+              }`}
+            >
+              All Events ({events.length})
+            </button>
             <button
               onClick={() => setFilter("upcoming")}
-              className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
+              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
                 filter === "upcoming"
                   ? "bg-primary text-white shadow-lg shadow-primary/30"
                   : "text-gray-500 hover:text-primary hover:bg-primary/5"
               }`}
             >
-              Upcoming Events
+              Upcoming
             </button>
             <button
               onClick={() => setFilter("past")}
-              className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all duration-300 ${
+              className={`px-4 sm:px-5 py-2 sm:py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 cursor-pointer ${
                 filter === "past"
                   ? "bg-primary text-white shadow-lg shadow-primary/30"
                   : "text-gray-500 hover:text-primary hover:bg-primary/5"

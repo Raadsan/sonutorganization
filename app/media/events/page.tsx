@@ -1,8 +1,13 @@
-import Banneevents from "@/components/events/eventbanner";
+import MediaPageBanner from "@/components/Media/PageBanner";
 import UpcomingEvents from "@/components/events/upcomingevents";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
+
+export const metadata = {
+  title: "Events | SONUT",
+  description: "Stay connected with SONUT's upcoming and past events, workshops, and community gatherings.",
+};
 
 async function getEvents() {
   try {
@@ -28,13 +33,16 @@ async function getEvents() {
   }
 }
 
-export default async function Events() {
+export default async function MediaEventsPage() {
   const events = await getEvents();
 
   return (
-    <>
-      <Banneevents />
+    <main>
+      <MediaPageBanner
+        title="Events"
+        description="Explore our upcoming conferences, educational forums, and teacher union gatherings across Somalia."
+      />
       <UpcomingEvents initialEvents={events} />
-    </>
+    </main>
   );
 }

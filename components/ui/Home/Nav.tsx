@@ -40,6 +40,7 @@ const navLinks = [
     href: "#",
     submenu: [
       { label: "News", href: "/media/news" },
+      { label: "Events", href: "/media/events" },
       { label: "Reports", href: "/media/reports" },
       { label: "SONUT Talk", href: "/media/sonut-talk" },
     ],

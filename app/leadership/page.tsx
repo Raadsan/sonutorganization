@@ -1,5 +1,5 @@
 import WhoWeAreBanner from "@/components/About/WhoWeAreBanner";
-import Team from "@/components/ui/Home/Team";
+import LeadershipShowcase from "@/components/Leadership/LeadershipShowcase";
 import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
@@ -22,6 +22,7 @@ export default async function LeadershipPage() {
     id: leader.id,
     name: leader.name,
     role: leader.title,
+    category: leader.category || "Executive Committee",
     image: leader.imageUrl,
     bio: leader.bio,
     socials: {
@@ -34,7 +35,7 @@ export default async function LeadershipPage() {
   return (
     <main>
       <WhoWeAreBanner title="Leadership" />
-      <Team initialData={formattedLeaders} />
+      <LeadershipShowcase leaders={formattedLeaders} />
     </main>
   );
 }

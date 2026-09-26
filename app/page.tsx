@@ -22,8 +22,11 @@ async function getHomepageData(): Promise<{
   try {
     const [leaders, partners, blogPosts] = await Promise.all([
       prisma.leader.findMany({
-        where: { isActive: true },
-        orderBy: { order: "asc" },
+        where: {
+          isActive: true,
+          category: 'Executive Committee',
+        },
+        orderBy: { order: 'asc' },
       }),
       prisma.partner.findMany({
         where: { isActive: true },

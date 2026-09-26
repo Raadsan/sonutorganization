@@ -84,6 +84,9 @@ export async function PUT(
     });
 
     revalidatePath('/');
+    revalidatePath('/media/news');
+    revalidatePath('/media/events');
+    revalidatePath('/Resources/events');
     revalidatePath('/activity');
     revalidatePath('/admin/dashboard/events');
 
@@ -112,6 +115,9 @@ export async function DELETE(
     await prisma.event.delete({ where: { id: eventId } });
 
     revalidatePath('/');
+    revalidatePath('/media/news');
+    revalidatePath('/media/events');
+    revalidatePath('/Resources/events');
     revalidatePath('/activity');
     revalidatePath('/admin/dashboard/events');
 
