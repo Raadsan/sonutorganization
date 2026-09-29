@@ -186,6 +186,8 @@ export default function MembersForm() {
   const [step, setStep] = useState(1);
   const [data, setData] = useState<FormData>(INITIAL);
   const [errors, setErrors] = useState<FormErrors>({});
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsError, setTermsError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -302,6 +304,14 @@ export default function MembersForm() {
       setStep(invalidStep);
       focusField(firstInvalid);
       toast.error("Please correct the highlighted fields before submitting.");
+      return;
+    }
+
+    if (!termsAccepted) {
+      setTermsError("Fadlan calaamadee sanduuqa xaqiijinta si aad codsigaaga u gudbiso.");
+      toast.error("Fadlan calaamadee sanduuqa xaqiijinta si aad codsigaaga u gudbiso.");
+      const termsElem = document.getElementById("termsAccepted");
+      termsElem?.focus();
       return;
     }
 
@@ -552,24 +562,47 @@ export default function MembersForm() {
             placeholder="contact@example.com" className={inputClass("emergencyEmail")} />
         </Field>
 
-        {/* Membership requirements */}
-        <div className="sm:col-span-2 space-y-3">
-          <p className="text-sm font-bold text-gray-800">
-            Requirements for Membership
-          </p>
-          {[
-            "You must be an active teacher working in an official educational institution.",
-            "You must complete the membership application form fully and accurately.",
-            "You must pay a monthly membership fee of $3.",
-            "You must pay an annual ID Card issuance fee of $5.",
-            "You must be willing to participate in Union meetings, trainings, and activities.",
-            "You must respect and adhere to the Union's Constitution and values.",
-          ].map((req, i) => (
-            <div key={i} className="flex items-start gap-3 text-xs text-gray-600">
-              <CheckCircle2 className="w-4 h-4 text-[#1E0D79] shrink-0 mt-0.5" />
-              <span>{req}</span>
+        {/* Confirmation & Agreement Checkbox */}
+        <div className="sm:col-span-2 pt-2">
+          <label
+            htmlFor="termsAccepted"
+            className={`flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer select-none ${
+              termsError
+                ? "border-[#F4313F] bg-red-50/40 ring-2 ring-[#F4313F]/15"
+                : termsAccepted
+                ? "border-[#1E0D79] bg-[#1E0D79]/5 shadow-xs"
+                : "border-gray-200 bg-gray-50/60 hover:bg-gray-50 hover:border-gray-300"
+            }`}
+          >
+            <input
+              id="termsAccepted"
+              type="checkbox"
+              required
+              checked={termsAccepted}
+              onChange={(e) => {
+                setTermsAccepted(e.target.checked);
+                if (e.target.checked) setTermsError(null);
+              }}
+              className="w-5 h-5 text-[#1E0D79] rounded-md border-gray-300 focus:ring-[#1E0D79] cursor-pointer mt-0.5 accent-[#1E0D79] shrink-0"
+            />
+            <div className="text-xs sm:text-sm leading-relaxed text-gray-700">
+              <p className="font-bold text-gray-900 flex items-center gap-1.5">
+                Xaqiijinta Xogta iyo Aqbalaadda Shuruudaha <span className="text-[#F4313F]">*</span>
+              </p>
+              <p className="text-gray-600 mt-1 text-xs sm:text-[13px] leading-relaxed">
+                Waxaan halkan ku caddaynayaa in dhammaan macluumaadka aan ku buuxiyay foomkan ay yihiin kuwo sax ah oo run ah, waxaana si buuxda u aqbalay shuruudaha iyo xeerarka xubinimada Ururka Midowga Macallimiinta Soomaaliyeed (SONUT).
+              </p>
+              <p className="text-gray-400 mt-1 text-[11px] leading-relaxed">
+                I declare that all information provided in this form is accurate and true, and I agree to the terms and regulations of SONUT.
+              </p>
             </div>
-          ))}
+          </label>
+          {termsError && (
+            <p role="alert" className="flex items-center gap-1.5 text-xs text-[#F4313F] mt-2 ml-1 font-medium">
+              <AlertCircle className="h-4 w-4 shrink-0" />
+              {termsError}
+            </p>
+          )}
         </div>
       </div>
     ),

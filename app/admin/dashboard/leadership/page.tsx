@@ -44,7 +44,7 @@ export const LEADERSHIP_CATEGORIES = [
   },
   {
     id: 'State Representative',
-    name: 'State Representative',
+    name: 'State Representatives',
     somaliName: 'Wakiillada Dowlad-Goboleedyada',
     desc: 'Regional State Representatives',
     icon: Landmark,
@@ -248,9 +248,9 @@ export default function LeadershipAdminPage() {
   };
 
   // Helper counts
-  const trusteeCount = leaders.filter((l) => l.category === 'Trustee Board').length;
-  const execCount = leaders.filter((l) => l.category === 'Executive Committee').length;
-  const stateRepCount = leaders.filter((l) => l.category === 'State Representative').length;
+  const trusteeCount = leaders.filter((l) => (l.category || '').toLowerCase() === 'trustee board').length;
+  const execCount = leaders.filter((l) => (l.category || '').toLowerCase() === 'executive committee').length;
+  const stateRepCount = leaders.filter((l) => (l.category || '').toLowerCase().startsWith('state representative')).length;
 
   const filteredLeaders = leaders.filter((l) => {
     const matchesTab = activeTab === 'all' ? true : l.category === activeTab;
@@ -281,9 +281,8 @@ export default function LeadershipAdminPage() {
       {/* Toast Notification */}
       {toast && (
         <div
-          className={`fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl text-sm font-semibold transition-all transform animate-in fade-in slide-in-from-top-4 ${
-            toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
-          }`}
+          className={`fixed top-6 right-6 z-[100] flex items-center gap-3 px-5 py-3.5 rounded-2xl shadow-2xl text-sm font-semibold transition-all transform animate-in fade-in slide-in-from-top-4 ${toast.type === 'success' ? 'bg-emerald-600 text-white' : 'bg-rose-600 text-white'
+            }`}
         >
           {toast.type === 'success' ? (
             <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
@@ -307,7 +306,7 @@ export default function LeadershipAdminPage() {
                   Leadership Management
                 </h2>
                 <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
-                  Maamul 3-da qaybood ee hoggaanka ururka: Trustee Board, Executive Committee, iyo State Representative ({leaders.length} total)
+                  Maamul 3-da qaybood ee hoggaanka ururka: Trustee Board, Executive Committee, iyo State Representatives ({leaders.length} total)
                 </p>
               </div>
             </div>
@@ -328,19 +327,18 @@ export default function LeadershipAdminPage() {
               cat.id === 'Trustee Board'
                 ? trusteeCount
                 : cat.id === 'Executive Committee'
-                ? execCount
-                : stateRepCount;
+                  ? execCount
+                  : stateRepCount;
             const isCurrent = activeTab === cat.id;
 
             return (
               <div
                 key={cat.id}
                 onClick={() => setActiveTab(isCurrent ? 'all' : cat.id)}
-                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${
-                  isCurrent
+                className={`p-4 rounded-2xl border transition-all cursor-pointer flex items-center justify-between ${isCurrent
                     ? 'border-[#1E0D79] ring-2 ring-[#1E0D79]/10 bg-[#1E0D79]/5 shadow-sm'
                     : 'border-slate-200/80 hover:border-slate-300 bg-slate-50/60 hover:bg-slate-50'
-                }`}
+                  }`}
               >
                 <div className="flex items-center gap-3">
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center border ${cat.badgeBg}`}>
@@ -370,11 +368,10 @@ export default function LeadershipAdminPage() {
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0 scrollbar-none">
             <button
               onClick={() => setActiveTab('all')}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${
-                activeTab === 'all'
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeTab === 'all'
                   ? 'bg-[#1E0D79] text-white shadow-sm'
                   : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-              }`}
+                }`}
             >
               All Sections ({leaders.length})
             </button>
@@ -382,23 +379,21 @@ export default function LeadershipAdminPage() {
               <button
                 key={cat.id}
                 onClick={() => setActiveTab(cat.id)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${
-                  activeTab === cat.id
+                className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all whitespace-nowrap cursor-pointer flex items-center gap-1.5 ${activeTab === cat.id
                     ? 'bg-[#1E0D79] text-white shadow-sm'
                     : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                }`}
+                  }`}
               >
                 <span>{cat.name}</span>
                 <span
-                  className={`px-1.5 py-0.2 rounded-full text-[10px] ${
-                    activeTab === cat.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
-                  }`}
+                  className={`px-1.5 py-0.2 rounded-full text-[10px] ${activeTab === cat.id ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-700'
+                    }`}
                 >
                   {cat.id === 'Trustee Board'
                     ? trusteeCount
                     : cat.id === 'Executive Committee'
-                    ? execCount
-                    : stateRepCount}
+                      ? execCount
+                      : stateRepCount}
                 </span>
               </button>
             ))}
@@ -602,17 +597,15 @@ export default function LeadershipAdminPage() {
                       <div
                         key={cat.id}
                         onClick={() => setForm({ ...form, category: cat.id })}
-                        className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${
-                          isSelected
+                        className={`p-3 rounded-2xl border-2 transition-all cursor-pointer flex flex-col justify-between ${isSelected
                             ? 'border-[#1E0D79] bg-[#1E0D79]/5 shadow-sm'
                             : 'border-slate-200 hover:border-slate-300 bg-white'
-                        }`}
+                          }`}
                       >
                         <div className="flex items-center justify-between mb-2">
                           <span
-                            className={`w-7 h-7 rounded-lg flex items-center justify-center border text-xs ${
-                              isSelected ? 'bg-[#1E0D79] text-white border-[#1E0D79]' : cat.badgeBg
-                            }`}
+                            className={`w-7 h-7 rounded-lg flex items-center justify-center border text-xs ${isSelected ? 'bg-[#1E0D79] text-white border-[#1E0D79]' : cat.badgeBg
+                              }`}
                           >
                             <Icon className="w-3.5 h-3.5" />
                           </span>
@@ -837,9 +830,8 @@ function LeaderCard({
           {/* Status badge */}
           <div className="absolute top-3 right-3 flex items-center gap-1.5">
             <span
-              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold backdrop-blur-md shadow-xs ${
-                leader.isActive ? 'bg-emerald-500/90 text-white' : 'bg-slate-700/80 text-white'
-              }`}
+              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[11px] font-bold backdrop-blur-md shadow-xs ${leader.isActive ? 'bg-emerald-500/90 text-white' : 'bg-slate-700/80 text-white'
+                }`}
             >
               <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse" />
               {leader.isActive ? 'Active' : 'Inactive'}

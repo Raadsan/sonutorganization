@@ -21,28 +21,25 @@ export type TeamMember = {
 // 3 Sections in exact user-requested order:
 // 1. Executive Committee
 // 2. Trustee Board
-// 3. State Representative
+// 3. State Representatives
 const CATEGORY_SECTIONS = [
   {
     id: 'Executive Committee',
     badge: 'OUR LEADERSHIP',
     title: 'Executive Committee',
     subtitle: 'Guddiga Fulinta Qaranka',
-    emptyNotice: 'Executive Committee members are being updated.',
   },
   {
     id: 'Trustee Board',
     badge: 'GOVERNANCE & TRUSTEES',
     title: 'Trustee Board',
     subtitle: 'Guddiga Ammaanada',
-    emptyNotice: 'Trustee Board members are currently being appointed by the General Assembly.',
   },
   {
-    id: 'State Representative',
+    id: 'State Representatives',
     badge: 'REGIONAL LEADERSHIP',
-    title: 'State Representative',
+    title: 'State Representatives',
     subtitle: 'Wakiillada Dowlad-Goboleedyada',
-    emptyNotice: 'State Representatives from Federal Member States are being compiled.',
   },
 ] as const;
 
@@ -93,13 +90,23 @@ function CategorySlider({
   activeShareId,
   setActiveShareId,
 }: {
-  categoryInfo: (typeof CATEGORY_SECTIONS)[number];
+  categoryInfo: {
+    id: string;
+    badge: string;
+    title: string;
+    subtitle?: string;
+  };
   members: TeamMember[];
-  onSelectMember: (m: TeamMember) => void;
+  onSelectMember: (m) => void;
   activeShareId: string | number | null;
   setActiveShareId: (id: string | number | null) => void;
 }) {
   const sliderRef = useRef<HTMLDivElement>(null);
+
+  // If admin has not added any members to this category, hide the entire section completely
+  if (!members || members.length === 0) {
+    return null;
+  }
 
   const scrollLeft = () => {
     if (sliderRef.current) {
@@ -137,8 +144,8 @@ function CategorySlider({
         )}
       </motion.div>
 
-      {/* Slider Controls (shown when there are members) */}
-      {members.length > 0 && (
+      {/* Slider Controls (shown when there are multiple members) */}
+      {members.length > 1 && (
         <div className="flex justify-end gap-3 mb-6 pr-2">
           <button
             onClick={scrollLeft}
@@ -158,24 +165,17 @@ function CategorySlider({
       )}
 
       {/* Team Slider / List */}
-      {members.length === 0 ? (
-        /* Clean placeholder if category has no members added yet */
-        <div className="max-w-xl mx-auto bg-white rounded-3xl p-8 border border-gray-100 shadow-sm text-center">
-          <div className="w-16 h-16 rounded-full bg-gray-50 flex items-center justify-center mx-auto mb-4 text-slate-300">
-            <UserCircle2 className="w-10 h-10" />
-          </div>
-          <h3 className="text-lg font-bold text-primary mb-1">{categoryInfo.title}</h3>
-          <p className="text-slate-500 text-xs sm:text-sm leading-relaxed">
-            {categoryInfo.emptyNotice}
-          </p>
-        </div>
-      ) : (
-        <div
-          ref={sliderRef}
-          className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {members.map((member, index) => (
+      <div
+        ref={sliderRef}
+        className="flex overflow-x-auto snap-x snap-mandatory gap-6 pb-6 -mx-4 px-4 sm:mx-0 sm:px-0 hide-scrollbar"
+        style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+      >
+        {members.map((member, index) => {
+          const hasSocials = Boolean(
+            member.socials.facebook || member.socials.tiktok || member.socials.instagram
+          );
+
+          return (
             <motion.div
               key={member.id}
               initial={{ opacity: 0, scale: 0.92 }}
@@ -199,94 +199,159 @@ function CategorySlider({
                 {/* Overlay for aesthetic */}
                 <div className="absolute inset-0 bg-gradient-to-t from-primary/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                {/* Share Button Logic */}
-                <div className="absolute top-3 right-3 flex flex-col items-end gap-2 z-10">
-                  <button
-                    onClick={() =>
-                      setActiveShareId(activeShareId === member.id ? null : member.id)
-                    }
-                    className="w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
-                  >
-                    <Share2 className="w-5 h-5" />
-                  </button>
+                {/* Share Button Logic - Only show if member has at least one social media link */}
+                {hasSocials && (
+                  <div className="absolute top-3 right-3 flex flex-col items-end gap-2 z-10">
+                    <button
+                      onClick={() =>
+                        setActiveShareId(activeShareId === member.id ? null : member.id)
+                      }
+                      className="w-10 h-10 rounded-full bg-white/90 backdrop-blur shadow-lg flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-colors cursor-pointer"
+                    >
+                      <Share2 className="w-5 h-5" />
+                    </button>
 
-                  <AnimatePresence>
-                    {activeShareId === member.id && (
-                      <motion.div
-                        initial={{ opacity: 0, y: -10, scale: 0.8 }}
-                        animate={{ opacity: 1, y: 0, scale: 1 }}
-                        exit={{ opacity: 0, y: -10, scale: 0.8 }}
-                        className="flex flex-col gap-2"
-                      >
-                        {member.socials.facebook && (
-                          <a
-                            href={member.socials.facebook}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                          >
-                            <FacebookIcon className="w-4 h-4" />
-                          </a>
-                        )}
-                        {member.socials.tiktok && (
-                          <a
-                            href={member.socials.tiktok}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                          >
-                            <TikTokIcon className="w-4 h-4" />
-                          </a>
-                        )}
-                        {member.socials.instagram && (
-                          <a
-                            href={member.socials.instagram}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] text-white flex items-center justify-center shadow-md hover:scale-110 transition-transform"
-                          >
-                            <InstagramIcon className="w-4 h-4" />
-                          </a>
-                        )}
+                    <AnimatePresence>
+                      {activeShareId === member.id && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10, scale: 0.8 }}
+                          animate={{ opacity: 1, y: 0, scale: 1 }}
+                          exit={{ opacity: 0, y: -10, scale: 0.8 }}
+                          className="flex flex-col gap-2"
+                        >
+                          {member.socials.facebook && (
+                            <a
+                              href={member.socials.facebook}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-9 h-9 rounded-full bg-[#1877F2] text-white flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                            >
+                              <FacebookIcon className="w-4 h-4" />
+                            </a>
+                          )}
+                          {member.socials.tiktok && (
+                            <a
+                              href={member.socials.tiktok}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-9 h-9 rounded-full bg-black text-white flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                            >
+                              <TikTokIcon className="w-4 h-4" />
+                            </a>
+                          )}
+                          {member.socials.instagram && (
+                            <a
+                              href={member.socials.instagram}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="w-9 h-9 rounded-full bg-gradient-to-tr from-[#f09433] via-[#e6683c] to-[#bc1888] text-white flex items-center justify-center shadow-md hover:scale-110 transition-transform"
+                            >
+                              <InstagramIcon className="w-4 h-4" />
+                            </a>
+                          )}
                       </motion.div>
                     )}
                   </AnimatePresence>
                 </div>
-              </div>
+              )}
+            </div>
 
-              {/* Info */}
-              <div className="text-center px-2 pb-2">
-                <button onClick={() => onSelectMember(member)} className="block w-full">
-                  <h3 className="text-xl font-bold text-primary hover:text-secondary transition-colors cursor-pointer mb-1">
-                    {member.name}
-                  </h3>
-                </button>
-                <p className="text-sm font-medium text-secondary uppercase tracking-wider">
-                  {member.role}
-                </p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
+            {/* Info */}
+            <div className="text-center px-2 pb-2">
+              <button onClick={() => onSelectMember(member)} className="block w-full">
+                <h3 className="text-xl font-bold text-primary hover:text-secondary transition-colors cursor-pointer mb-1">
+                  {member.name}
+                </h3>
+              </button>
+              <p className="text-sm font-medium text-secondary uppercase tracking-wider">
+                {member.role}
+              </p>
+            </div>
+          </motion.div>
+        );
+      })}
     </div>
-  );
+  </div>
+);
 }
 
 export default function LeadershipShowcase({ leaders }: { leaders: TeamMember[] }) {
   const [activeShareId, setActiveShareId] = useState<string | number | null>(null);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
 
-  // Group leaders by category
+  // Only consider leaders who have been added with name and image
+  const validLeaders = (leaders || []).filter(
+    (l) => l && l.name && l.name.trim() !== '' && l.image && l.image.trim() !== ''
+  );
+
+  // Group leaders by category (handles both singular and plural for State Representative(s))
   const getCategoryLeaders = (catId: string) => {
-    return leaders.filter((l) => (l.category || '').toLowerCase() === catId.toLowerCase());
+    const target = catId.toLowerCase().trim();
+    return validLeaders.filter((l) => {
+      const cat = (l.category || '').toLowerCase().trim();
+      if (cat === target) return true;
+      if (
+        (target === 'state representatives' || target === 'state representative') &&
+        (cat === 'state representatives' || cat === 'state representative')
+      ) {
+        return true;
+      }
+      return false;
+    });
   };
+
+  // Only include predefined sections that have at least 1 member entered by admin
+  const activePredefinedSections = CATEGORY_SECTIONS.filter(
+    (sec) => getCategoryLeaders(sec.id).length > 0
+  );
+
+  const isPredefinedCategory = (cat: string) => {
+    const c = cat.toLowerCase().trim();
+    return (
+      c === 'executive committee' ||
+      c === 'trustee board' ||
+      c === 'state representative' ||
+      c === 'state representatives'
+    );
+  };
+
+  // Support any other categories that might be dynamically entered in database
+  const otherCategoryNames = Array.from(
+    new Set(
+      validLeaders
+        .map((l) => (l.category || '').trim())
+        .filter((cat) => cat && !isPredefinedCategory(cat))
+    )
+  );
+
+  const allVisibleSections = [
+    ...activePredefinedSections,
+    ...otherCategoryNames.map((catName) => ({
+      id: catName,
+      badge: 'LEADERSHIP',
+      title: catName,
+      subtitle: undefined,
+    })),
+  ];
+
+  // If no leaders are added yet in the database, don't show empty/broken sections
+  if (allVisibleSections.length === 0) {
+    return null;
+  }
+
+  const selectedHasSocials = selectedMember
+    ? Boolean(
+        selectedMember.socials.facebook ||
+        selectedMember.socials.tiktok ||
+        selectedMember.socials.instagram
+      )
+    : false;
 
   return (
     <section className="py-20 md:py-28 bg-gray-50 relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Render each of the 3 sections stacked vertically in order */}
-        {CATEGORY_SECTIONS.map((categoryInfo) => {
+        {/* Render only categories that have members added by admin */}
+        {allVisibleSections.map((categoryInfo) => {
           const sectionMembers = getCategoryLeaders(categoryInfo.id);
 
           return (
@@ -344,44 +409,46 @@ export default function LeadershipShowcase({ leaders }: { leaders: TeamMember[] 
                   About {selectedMember.name.split(' ')[0]}
                 </h4>
                 <p className="text-gray-600 leading-relaxed">
-                  {selectedMember.bio || 'Member of Somali National Union of Teachers leadership.'}
+                  {selectedMember.bio || 'Hoggaanka Ururka Midowga Macallimiinta Soomaaliyeed (SONUT).'}
                 </p>
 
-                <div className="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
-                  <span className="text-sm font-semibold text-primary">Connect:</span>
-                  <div className="flex gap-3">
-                    {selectedMember.socials.facebook && (
-                      <a
-                        href={selectedMember.socials.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-[#1877F2] transition-colors"
-                      >
-                        <FacebookIcon className="w-5 h-5" />
-                      </a>
-                    )}
-                    {selectedMember.socials.tiktok && (
-                      <a
-                        href={selectedMember.socials.tiktok}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-black transition-colors"
-                      >
-                        <TikTokIcon className="w-5 h-5" />
-                      </a>
-                    )}
-                    {selectedMember.socials.instagram && (
-                      <a
-                        href={selectedMember.socials.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-gray-400 hover:text-[#E1306C] transition-colors"
-                      >
-                        <InstagramIcon className="w-5 h-5" />
-                      </a>
-                    )}
+                {selectedHasSocials && (
+                  <div className="mt-8 flex items-center gap-4 border-t border-gray-100 pt-6">
+                    <span className="text-sm font-semibold text-primary">Connect:</span>
+                    <div className="flex gap-3">
+                      {selectedMember.socials.facebook && (
+                        <a
+                          href={selectedMember.socials.facebook}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-400 hover:text-[#1877F2] transition-colors"
+                        >
+                          <FacebookIcon className="w-5 h-5" />
+                        </a>
+                      )}
+                      {selectedMember.socials.tiktok && (
+                        <a
+                          href={selectedMember.socials.tiktok}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-400 hover:text-black transition-colors"
+                        >
+                          <TikTokIcon className="w-5 h-5" />
+                        </a>
+                      )}
+                      {selectedMember.socials.instagram && (
+                        <a
+                          href={selectedMember.socials.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-gray-400 hover:text-[#E1306C] transition-colors"
+                        >
+                          <InstagramIcon className="w-5 h-5" />
+                        </a>
+                      )}
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
             </motion.div>
           </div>

@@ -7,7 +7,10 @@ export const dynamic = "force-dynamic";
 async function getLeaders() {
   try {
     return await prisma.leader.findMany({
-      where: { isActive: true },
+      where: {
+        isActive: true,
+        imageUrl: { not: null },
+      },
       orderBy: { order: "asc" },
     });
   } catch (error) {
@@ -18,19 +21,21 @@ async function getLeaders() {
 
 export default async function LeadershipPage() {
   const leaders = await getLeaders();
-  const formattedLeaders = leaders.map((leader) => ({
-    id: leader.id,
-    name: leader.name,
-    role: leader.title,
-    category: leader.category || "Executive Committee",
-    image: leader.imageUrl,
-    bio: leader.bio,
-    socials: {
-      facebook: leader.facebook || undefined,
-      tiktok: leader.tiktok || undefined,
-      instagram: leader.instagram || undefined,
-    },
-  }));
+  const formattedLeaders = leaders
+    .filter((leader) => leader.name?.trim() && leader.imageUrl?.trim())
+    .map((leader) => ({
+      id: leader.id,
+      name: leader.name,
+      role: leader.title,
+      category: leader.category || "Executive Committee",
+      image: leader.imageUrl,
+      bio: leader.bio,
+      socials: {
+        facebook: leader.facebook || undefined,
+        tiktok: leader.tiktok || undefined,
+        instagram: leader.instagram || undefined,
+      },
+    }));
 
   return (
     <main>
