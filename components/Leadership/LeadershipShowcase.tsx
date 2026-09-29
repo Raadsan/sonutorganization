@@ -97,7 +97,7 @@ function CategorySlider({
     subtitle?: string;
   };
   members: TeamMember[];
-  onSelectMember: (m) => void;
+  onSelectMember: (m: TeamMember) => void;
   activeShareId: string | number | null;
   setActiveShareId: (id: string | number | null) => void;
 }) {
