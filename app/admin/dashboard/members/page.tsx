@@ -34,6 +34,7 @@ type Member = {
   institutionLocation: string;
   emergencyName: string;
   emergencyPhone: string;
+  emergencyPhone2?: string | null;
   emergencyEmail: string;
   membershipCategory: string | null;
   status: "PENDING" | "APPROVED" | "REJECTED";
@@ -265,8 +266,9 @@ function MemberPanel({
               <AlertCircle className="w-3.5 h-3.5" /> Xaaladda Deg-degta / Emergency Contact
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <InfoRow icon={Phone} label="Taleefanka Degdegga ah 1 / Phone 1" value={member.emergencyPhone} />
+              <InfoRow icon={Phone} label="Taleefanka 2-aad / Alternative Phone" value={member.emergencyPhone2} />
               <InfoRow icon={User}  label="Magaca / Name"   value={member.emergencyName} />
-              <InfoRow icon={Phone} label="Taleefan / Phone" value={member.emergencyPhone} />
               <InfoRow icon={Mail}  label="Email"            value={member.emergencyEmail} />
             </div>
           </section>

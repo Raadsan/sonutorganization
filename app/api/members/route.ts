@@ -65,6 +65,7 @@ export async function POST(req: Request) {
         institutionLocation: (data.institutionLocation as string) || "",
         emergencyName: (data.emergencyName as string) || "",
         emergencyPhone: (data.emergencyPhone as string) || "",
+        emergencyPhone2: (data.emergencyPhone2 as string) || "",
         emergencyEmail: (data.emergencyEmail as string) || "",
         membershipCategory: (data.membershipCategory as string) || "Full Member",
         status: "PENDING"

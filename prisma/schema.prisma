@@ -113,7 +113,7 @@ model Member {
   // Contact
   phone               String
   email               String
-  district            String
+  district            String?      @default("")
   // Professional
   subject             String
   teachingStatus      String
@@ -122,9 +122,10 @@ model Member {
   institutionName     String
   institutionLocation String
   // Emergency
-  emergencyName       String
+  emergencyName       String?      @default("")
   emergencyPhone      String
-  emergencyEmail      String
+  emergencyPhone2     String?      @default("")
+  emergencyEmail      String?      @default("")
   // Membership
   membershipCategory  String?      @default("Full Member")
   // Admin

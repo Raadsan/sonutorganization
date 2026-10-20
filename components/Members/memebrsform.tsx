@@ -22,9 +22,11 @@ type FormData = {
   bloodType: string;
   teacherImage: File | null;
   nationalIdImage: File | null;
-  // Tab 2 – Contact
+  // Tab 2 – Contact & Emergency
   phone: string;
   email: string;
+  emergencyPhone: string;
+  emergencyPhone2: string;
   district: string;
   // Tab 3 – Professional
   subject: string;
@@ -33,10 +35,9 @@ type FormData = {
   teachingLevel: string;
   institutionName: string;
   institutionLocation: string;
-  // Tab 4 – Membership & Emergency
+  // Tab 4 – Membership Status
   membershipCategory: string;
   emergencyName: string;
-  emergencyPhone: string;
   emergencyEmail: string;
 };
 
@@ -47,10 +48,11 @@ const INITIAL: FormData = {
   fullName: "", motherName: "", gender: "", dateOfBirth: "",
   placeOfBirth: "", bloodType: "", teacherImage: null, nationalIdImage: null,
   phone: "", email: "", district: "",
+  emergencyPhone: "", emergencyPhone2: "",
   subject: "", teachingStatus: "", fieldOfStudy: "",
   teachingLevel: "", institutionName: "", institutionLocation: "",
-  membershipCategory: "Full Member",
-  emergencyName: "", emergencyPhone: "", emergencyEmail: "",
+  membershipCategory: "Xubin buuxda",
+  emergencyName: "", emergencyEmail: "",
 };
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
@@ -63,7 +65,7 @@ const TABS = [
 
 const STEP_FIELDS: Record<number, FormField[]> = {
   1: ["fullName", "motherName", "gender", "bloodType", "dateOfBirth", "placeOfBirth", "nationalIdImage", "teacherImage"],
-  2: ["phone", "email", "district"],
+  2: ["phone", "email", "emergencyPhone"],
   3: ["subject", "teachingStatus", "fieldOfStudy", "teachingLevel", "institutionName", "institutionLocation"],
   4: ["membershipCategory"],
 };
@@ -114,7 +116,7 @@ function validateField(field: FormField, value: string | File | null): string {
   }
 
   if (field === "nationalIdImage") {
-    if (!(value instanceof File)) return "Please upload your NIRA Card / National ID.";
+    if (!(value instanceof File)) return "Please upload your Passport or NIRA National ID.";
     if (!VALID_IMAGE_TYPES.includes(value.type)) return "Only JPG and PNG images are allowed.";
     if (value.size > MAX_IMAGE_SIZE) return "The ID photo must be 10 MB or smaller.";
     return "";
@@ -122,7 +124,7 @@ function validateField(field: FormField, value: string | File | null): string {
 
   const text = typeof value === "string" ? value.trim() : "";
   if (!text) {
-    if (field === "emergencyName" || field === "emergencyPhone" || field === "emergencyEmail") {
+    if (field === "emergencyName" || field === "emergencyPhone2" || field === "emergencyEmail" || field === "district") {
       return "";
     }
     return "This field is required.";
@@ -143,7 +145,9 @@ function validateField(field: FormField, value: string | File | null): string {
     case "phone":
       return /^\d{9}$/.test(text) ? "" : "Enter exactly 9 digits after +252.";
     case "emergencyPhone":
-      if (text && !/^\d{9}$/.test(text)) return "Enter exactly 9 digits after +252.";
+      return /^\d{9}$/.test(text) ? "" : "Enter exactly 9 digits after +252.";
+    case "emergencyPhone2":
+      if (text && !/^\d{9}$/.test(text)) return "Enter exactly 9 digits after +252 (or leave blank).";
       return "";
     case "email":
       return EMAIL_PATTERN.test(text) ? "" : "Enter a valid email, for example name@example.com.";
@@ -363,8 +367,8 @@ export default function MembersForm() {
     }
 
     if (!termsAccepted) {
-      setTermsError("Fadlan calaamadee sanduuqa xaqiijinta si aad codsigaaga u gudbiso.");
-      toast.error("Fadlan calaamadee sanduuqa xaqiijinta si aad codsigaaga u gudbiso.");
+      setTermsError("Please agree to the declaration and terms before submitting your application.");
+      toast.error("Please agree to the declaration and terms before submitting your application.");
       const termsElem = document.getElementById("termsAccepted");
       termsElem?.focus();
       return;
@@ -458,16 +462,16 @@ export default function MembersForm() {
             placeholder="City / District" className={inputClass("placeOfBirth")} />
         </Field>
 
-        {/* Photos: National ID / NIRA Card + Teacher Photo */}
+        {/* Photos: Passport / NIRA National ID + Teacher Photo */}
         <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {/* 1. NIRA Card / National ID */}
-          <Field label="Kaarka Aqoonsiga NIRA / National ID" htmlFor="nationalIdImage" error={errors.nationalIdImage}>
+          {/* 1. Passport / NIRA National ID */}
+          <Field label="Passport / NIRA National ID" htmlFor="nationalIdImage" error={errors.nationalIdImage}>
             <div
               onClick={() => nationalIdFileRef.current?.click()}
               className={`relative flex items-center gap-3.5 border-2 border-dashed rounded-2xl p-4 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all ${errors.nationalIdImage ? "border-[#F4313F] bg-red-50/40" : "border-gray-200"}`}
             >
               {nationalIdPreview ? (
-                <img src={nationalIdPreview} alt="NIRA preview"
+                <img src={nationalIdPreview} alt="Passport / NIRA preview"
                   className="w-16 h-16 rounded-xl object-cover shrink-0 shadow" />
               ) : (
                 <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
@@ -476,7 +480,7 @@ export default function MembersForm() {
               )}
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-gray-800 truncate">
-                  {data.nationalIdImage ? data.nationalIdImage.name : "Soo Geli Kaarka NIRA"}
+                  {data.nationalIdImage ? data.nationalIdImage.name : "Upload Passport or NIRA ID"}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">PNG, JPG · Max 10 MB</p>
               </div>
@@ -487,7 +491,7 @@ export default function MembersForm() {
           </Field>
 
           {/* 2. Teacher Photo */}
-          <Field label="Sawirka Macallinka / Teacher Photo" htmlFor="teacherImage" error={errors.teacherImage}>
+          <Field label="Teacher Photo" htmlFor="teacherImage" error={errors.teacherImage}>
             <div
               onClick={() => fileRef.current?.click()}
               className={`relative flex items-center gap-3.5 border-2 border-dashed rounded-2xl p-4 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all ${errors.teacherImage ? "border-[#F4313F] bg-red-50/40" : "border-gray-200"}`}
@@ -502,7 +506,7 @@ export default function MembersForm() {
               )}
               <div className="min-w-0 flex-1">
                 <p className="text-sm font-semibold text-gray-800 truncate">
-                  {data.teacherImage ? data.teacherImage.name : "Soo Geli Sawirkaaga"}
+                  {data.teacherImage ? data.teacherImage.name : "Upload Teacher Photo"}
                 </p>
                 <p className="text-xs text-gray-400 mt-0.5">PNG, JPG · Max 10 MB</p>
               </div>
@@ -516,41 +520,62 @@ export default function MembersForm() {
     ),
 
     2: (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <Field label="Phone Number" htmlFor="phone" error={errors.phone}>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
-            <input {...fieldProps("phone")} type="tel" required value={data.phone}
-              onChange={e => set("phone", e.target.value.replace(/\D/g, "").slice(0, 9))}
-              inputMode="numeric" autoComplete="tel-national" maxLength={9}
-              placeholder="61 XXXXXXX"
-              className={inputClass("phone", false, " pl-14")} />
-          </div>
-        </Field>
+      <div className="space-y-6">
+        {/* Primary Contact Info */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <Field label="Phone Number" htmlFor="phone" error={errors.phone}>
+            <div className="relative">
+              <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm font-medium">+252</span>
+              <input {...fieldProps("phone")} type="tel" required value={data.phone}
+                onChange={e => set("phone", e.target.value.replace(/\D/g, "").slice(0, 9))}
+                inputMode="numeric" autoComplete="tel-national" maxLength={9}
+                placeholder="61 XXXXXXX"
+                className={inputClass("phone", false, " pl-14")} />
+            </div>
+          </Field>
 
-        <Field label="Email Address" htmlFor="email" error={errors.email}>
-          <input {...fieldProps("email")} type="email" required value={data.email}
-            onChange={e => set("email", sanitizeEmail(e.target.value))}
-            inputMode="email" autoComplete="email" maxLength={254}
-            placeholder="teacher@example.com" className={inputClass("email")} />
-        </Field>
-
-        <div className="sm:col-span-2">
-          <Field label="Current District of Residence" htmlFor="district" error={errors.district}>
-            <input {...fieldProps("district")} type="text" required value={data.district}
-              onChange={e => set("district", sanitizeText(e.target.value))}
-              autoComplete="address-level2" maxLength={120}
-              placeholder="Your current district / city" className={inputClass("district")} />
+          <Field label="Email Address" htmlFor="email" error={errors.email}>
+            <input {...fieldProps("email")} type="email" required value={data.email}
+              onChange={e => set("email", sanitizeEmail(e.target.value))}
+              inputMode="email" autoComplete="email" maxLength={254}
+              placeholder="teacher@example.com" className={inputClass("email")} />
           </Field>
         </div>
 
-        {/* Info card */}
-        <div className="sm:col-span-2 bg-[#1E0D79]/5 rounded-2xl p-5 border border-[#1E0D79]/10">
-          <p className="text-xs text-[#1E0D79] font-semibold mb-2">📌 Note</p>
-          <p className="text-xs text-gray-600 leading-relaxed">
-            The contact details you provide will be used for application verification and
-            future communication from the Union. Please ensure they are accurate.
-          </p>
+        {/* Emergency Contact Section */}
+        <div className="pt-2">
+          <div className="mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
+            <span className="w-2.5 h-2.5 rounded-full bg-[#1E0D79]"></span>
+            <h4 className="text-sm font-bold text-gray-900 tracking-wide uppercase">
+              Emergency Contact 
+            </h4>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+            {/* Input 1: Required Emergency Phone */}
+            <Field label="Emergency Contact Phone" htmlFor="emergencyPhone" error={errors.emergencyPhone} required={true}>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm font-medium">+252</span>
+                <input {...fieldProps("emergencyPhone")} type="tel" required value={data.emergencyPhone}
+                  onChange={e => set("emergencyPhone", e.target.value.replace(/\D/g, "").slice(0, 9))}
+                  inputMode="numeric" autoComplete="tel-national" maxLength={9}
+                  placeholder="61 XXXXXXX"
+                  className={inputClass("emergencyPhone", false, " pl-14")} />
+              </div>
+            </Field>
+
+            {/* Input 2: Optional Alternative Emergency Phone */}
+            <Field label="Alternative Emergency Phone (Optional)" htmlFor="emergencyPhone2" error={errors.emergencyPhone2} required={false}>
+              <div className="relative">
+                <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm font-medium">+252</span>
+                <input {...fieldProps("emergencyPhone2")} type="tel" value={data.emergencyPhone2}
+                  onChange={e => set("emergencyPhone2", e.target.value.replace(/\D/g, "").slice(0, 9))}
+                  inputMode="numeric" autoComplete="tel-national" maxLength={9}
+                  placeholder="61 XXXXXXX (Optional)"
+                  className={inputClass("emergencyPhone2", false, " pl-14")} />
+              </div>
+            </Field>
+          </div>
         </div>
       </div>
     ),
@@ -618,12 +643,12 @@ export default function MembersForm() {
             <ShieldCheck className="w-4 h-4 text-[#1E0D79]" /> Membership Status &amp; Verification
           </p>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Dooro heerka xubinimadaada SONUT oo buuxi qofka xiriirka degdegga ah (Emergency Contact).
+            Please select your membership category and review the declaration below to complete your registration.
           </p>
         </div>
 
         <div className="sm:col-span-2">
-          <Field label="Membership Category / Nooca Xubinimada" htmlFor="membershipCategory" error={errors.membershipCategory}>
+          <Field label="Membership Category" htmlFor="membershipCategory" error={errors.membershipCategory}>
             <select
               {...fieldProps("membershipCategory")}
               required
@@ -631,47 +656,13 @@ export default function MembersForm() {
               onChange={e => set("membershipCategory", e.target.value)}
               className={inputClass("membershipCategory", true)}
             >
-              <option value="Full Member">Full Member – Active Public or Private School Teacher</option>
-              <option value="Higher Education Member">Higher Education &amp; TVET Faculty Member</option>
-              <option value="Newly Qualified Member">Newly Qualified / Early-Career Educator</option>
-              <option value="Senior Member">Senior / Retired Educator Member</option>
-              <option value="Associate Member">Associate / Student Teacher Member</option>
+              <option value="Xubin buuxda">Xubin buuxda</option>
+              <option value="Xubin taageere">Xubin taageere</option>
+              <option value="Xubin sharafeed">Xubin sharafeed</option>
+              <option value="Xubin hawlgab ah">Xubin hawlgab ah</option>
             </select>
           </Field>
         </div>
-
-        <div className="sm:col-span-2 pt-2 border-t border-gray-100">
-          <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
-            Emergency Contact Details (Qofka Xiriirka Degdegga ah - Ikhtiyaari)
-          </p>
-        </div>
-
-        <div className="sm:col-span-2">
-          <Field label="Emergency Contact Name" htmlFor="emergencyName" error={errors.emergencyName} required={false}>
-            <input {...fieldProps("emergencyName")} type="text" value={data.emergencyName}
-              onChange={e => set("emergencyName", sanitizeName(e.target.value))}
-              autoComplete="name" maxLength={100}
-              placeholder="Full name of emergency contact" className={inputClass("emergencyName")} />
-          </Field>
-        </div>
-
-        <Field label="Emergency Contact Phone" htmlFor="emergencyPhone" error={errors.emergencyPhone} required={false}>
-          <div className="relative">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
-            <input {...fieldProps("emergencyPhone")} type="tel" value={data.emergencyPhone}
-              onChange={e => set("emergencyPhone", e.target.value.replace(/\D/g, "").slice(0, 9))}
-              inputMode="numeric" autoComplete="tel-national" maxLength={9}
-              placeholder="61 XXXXXXX"
-              className={inputClass("emergencyPhone", false, " pl-14")} />
-          </div>
-        </Field>
-
-        <Field label="Emergency Contact Email" htmlFor="emergencyEmail" error={errors.emergencyEmail} required={false}>
-          <input {...fieldProps("emergencyEmail")} type="email" value={data.emergencyEmail}
-            onChange={e => set("emergencyEmail", sanitizeEmail(e.target.value))}
-            inputMode="email" autoComplete="email" maxLength={254}
-            placeholder="contact@example.com (optional)" className={inputClass("emergencyEmail")} />
-        </Field>
 
         {/* Confirmation & Agreement Checkbox */}
         <div className="sm:col-span-2 pt-2">
@@ -698,13 +689,10 @@ export default function MembersForm() {
             />
             <div className="text-xs sm:text-sm leading-relaxed text-gray-700">
               <p className="font-bold text-gray-900 flex items-center gap-1.5">
-                Xaqiijinta Xogta iyo Aqbalaadda Shuruudaha <span className="text-[#F4313F]">*</span>
+                Declaration and Terms Agreement <span className="text-[#F4313F]">*</span>
               </p>
               <p className="text-gray-600 mt-1 text-xs sm:text-[13px] leading-relaxed">
-                Waxaan halkan ku caddaynayaa in dhammaan macluumaadka aan ku buuxiyay foomkan ay yihiin kuwo sax ah oo run ah, waxaana si buuxda u aqbalay shuruudaha iyo xeerarka xubinimada Ururka Midowga Macallimiinta Soomaaliyeed (SONUT).
-              </p>
-              <p className="text-gray-400 mt-1 text-[11px] leading-relaxed">
-                I declare that all information provided in this form is accurate and true, and I agree to the terms and regulations of SONUT.
+                I declare that all information provided in this registration form is accurate, complete, and true. I agree to abide by the constitution, code of conduct, and regulations of the Somali National Union of Teachers (SONUT).
               </p>
             </div>
           </label>
