@@ -187,37 +187,6 @@ export default async function BlogDetail({ params }: PageProps) {
         </div>
       </article>
 
-      {/* CTA */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mt-20">
-        <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary to-blue-900 text-center px-6 py-16 sm:px-12 sm:py-20 shadow-2xl">
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-5 blur-3xl" />
-          <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-500 opacity-20 blur-3xl" />
-
-          <div className="relative z-10">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-6">
-              Are you ready to be part of SONUT?
-            </h2>
-            <p className="text-blue-100 text-lg md:text-xl max-w-2xl mx-auto mb-10">
-              Join the Somali National Union of Teachers to be part of improving
-              the quality of education and protecting teachers&apos; rights.
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-              <Link
-                href="/join"
-                className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-full hover:scale-105 hover:shadow-lg transition-all duration-300"
-              >
-                Register Now
-              </Link>
-              <Link
-                href="/about"
-                className="w-full sm:w-auto px-8 py-4 bg-primary-foreground/10 text-white font-bold rounded-full border border-white/20 hover:bg-white/10 transition-all duration-300"
-              >
-                Learn More
-              </Link>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 }

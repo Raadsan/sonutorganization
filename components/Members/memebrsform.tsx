@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Phone, Send, ChevronRight, ChevronLeft,
   CheckCircle2, Camera, BookOpen, AlertCircle,
+  IdCard, UserCheck, ShieldCheck,
 } from "lucide-react";
 
 import { useState, useRef } from "react";
@@ -20,6 +21,7 @@ type FormData = {
   placeOfBirth: string;
   bloodType: string;
   teacherImage: File | null;
+  nationalIdImage: File | null;
   // Tab 2 – Contact
   phone: string;
   email: string;
@@ -31,7 +33,8 @@ type FormData = {
   teachingLevel: string;
   institutionName: string;
   institutionLocation: string;
-  // Tab 4 – Emergency
+  // Tab 4 – Membership & Emergency
+  membershipCategory: string;
   emergencyName: string;
   emergencyPhone: string;
   emergencyEmail: string;
@@ -42,10 +45,11 @@ type FormErrors = Partial<Record<FormField, string>>;
 
 const INITIAL: FormData = {
   fullName: "", motherName: "", gender: "", dateOfBirth: "",
-  placeOfBirth: "", bloodType: "", teacherImage: null,
+  placeOfBirth: "", bloodType: "", teacherImage: null, nationalIdImage: null,
   phone: "", email: "", district: "",
   subject: "", teachingStatus: "", fieldOfStudy: "",
   teachingLevel: "", institutionName: "", institutionLocation: "",
+  membershipCategory: "Full Member",
   emergencyName: "", emergencyPhone: "", emergencyEmail: "",
 };
 
@@ -54,14 +58,14 @@ const TABS = [
   { id: 1, label: "Personal Info", icon: User },
   { id: 2, label: "Contact Info", icon: Phone },
   { id: 3, label: "Professional Details", icon: BookOpen },
-  { id: 4, label: "Emergency Contact", icon: AlertCircle },
+  { id: 4, label: "Membership Status", icon: UserCheck },
 ];
 
 const STEP_FIELDS: Record<number, FormField[]> = {
-  1: ["fullName", "motherName", "gender", "bloodType", "dateOfBirth", "placeOfBirth", "teacherImage"],
+  1: ["fullName", "motherName", "gender", "bloodType", "dateOfBirth", "placeOfBirth", "nationalIdImage", "teacherImage"],
   2: ["phone", "email", "district"],
   3: ["subject", "teachingStatus", "fieldOfStudy", "teachingLevel", "institutionName", "institutionLocation"],
-  4: ["emergencyName", "emergencyPhone", "emergencyEmail"],
+  4: ["membershipCategory"],
 };
 
 const TODAY = new Date().toISOString().slice(0, 10);
@@ -103,29 +107,49 @@ function sanitizeEmail(value: string) {
 
 function validateField(field: FormField, value: string | File | null): string {
   if (field === "teacherImage") {
-    if (!(value instanceof File)) return "Please upload a teacher photo.";
+    if (!(value instanceof File)) return "Please upload your teacher photo.";
     if (!VALID_IMAGE_TYPES.includes(value.type)) return "Only JPG and PNG images are allowed.";
     if (value.size > MAX_IMAGE_SIZE) return "The photo must be 10 MB or smaller.";
     return "";
   }
 
+  if (field === "nationalIdImage") {
+    if (!(value instanceof File)) return "Please upload your NIRA Card / National ID.";
+    if (!VALID_IMAGE_TYPES.includes(value.type)) return "Only JPG and PNG images are allowed.";
+    if (value.size > MAX_IMAGE_SIZE) return "The ID photo must be 10 MB or smaller.";
+    return "";
+  }
+
   const text = typeof value === "string" ? value.trim() : "";
-  if (!text) return "This field is required.";
+  if (!text) {
+    if (field === "emergencyName" || field === "emergencyPhone" || field === "emergencyEmail") {
+      return "";
+    }
+    return "This field is required.";
+  }
 
   switch (field) {
     case "fullName":
     case "motherName":
-    case "emergencyName":
       if (text.length < 3 || !NAME_PATTERN.test(text)) {
         return "Use letters only and enter a valid full name.";
       }
       return "";
+    case "emergencyName":
+      if (text && (text.length < 3 || !NAME_PATTERN.test(text))) {
+        return "Use letters only and enter a valid full name.";
+      }
+      return "";
     case "phone":
-    case "emergencyPhone":
       return /^\d{9}$/.test(text) ? "" : "Enter exactly 9 digits after +252.";
+    case "emergencyPhone":
+      if (text && !/^\d{9}$/.test(text)) return "Enter exactly 9 digits after +252.";
+      return "";
     case "email":
-    case "emergencyEmail":
       return EMAIL_PATTERN.test(text) ? "" : "Enter a valid email, for example name@example.com.";
+    case "emergencyEmail":
+      if (text && !EMAIL_PATTERN.test(text)) return "Enter a valid email address.";
+      return "";
     case "dateOfBirth":
       if (Number.isNaN(Date.parse(text))) return "Enter a valid date of birth.";
       return text <= TODAY ? "" : "Date of birth cannot be in the future.";
@@ -136,7 +160,13 @@ function validateField(field: FormField, value: string | File | null): string {
         ? ""
         : "Choose a valid blood type.";
     case "teachingStatus":
-      return ["University", "Secondary", "Middle", "Primary", "TVET"].includes(text)
+      return [
+        "Bachelor’s Degree",
+        "Master’s Degree",
+        "PhD / Doctoral Degree",
+        "Diploma / Associate Degree",
+        "Other"
+      ].includes(text)
         ? ""
         : "Choose a valid education level.";
     case "teachingLevel":
@@ -189,11 +219,13 @@ export default function MembersForm() {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [nationalIdPreview, setNationalIdPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const nationalIdFileRef = useRef<HTMLInputElement>(null);
 
-  const set = (field: Exclude<FormField, "teacherImage">, value: string) => {
+  const set = (field: Exclude<FormField, "teacherImage" | "nationalIdImage">, value: string) => {
     setData((current) => ({ ...current, [field]: value }));
     setErrors((current) => {
       if (!current[field]) return current;
@@ -280,6 +312,29 @@ export default function MembersForm() {
     setPreview(URL.createObjectURL(file));
   };
 
+  const handleNationalId = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    const error = validateField("nationalIdImage", file);
+    if (error) {
+      setData((current) => ({ ...current, nationalIdImage: null }));
+      setErrors((current) => ({ ...current, nationalIdImage: error }));
+      setNationalIdPreview(null);
+      e.target.value = "";
+      return;
+    }
+
+    if (nationalIdPreview) URL.revokeObjectURL(nationalIdPreview);
+    setData((d) => ({ ...d, nationalIdImage: file }));
+    setErrors((current) => {
+      const next = { ...current };
+      delete next.nationalIdImage;
+      return next;
+    });
+    setNationalIdPreview(URL.createObjectURL(file));
+  };
+
   const next = () => {
     const firstInvalid = validateFields(STEP_FIELDS[step]);
     if (firstInvalid) {
@@ -321,14 +376,17 @@ export default function MembersForm() {
 
       // Append all string fields
       Object.entries(data).forEach(([key, value]) => {
-        if (key !== "teacherImage") {
+        if (key !== "teacherImage" && key !== "nationalIdImage") {
           formData.append(key, (value as string).trim());
         }
       });
 
-      // Append image if exists
+      // Append images if exist
       if (data.teacherImage) {
         formData.append("teacherImage", data.teacherImage);
+      }
+      if (data.nationalIdImage) {
+        formData.append("nationalIdImage", data.nationalIdImage);
       }
 
       const res = await fetch("/api/members", {
@@ -400,26 +458,53 @@ export default function MembersForm() {
             placeholder="City / District" className={inputClass("placeOfBirth")} />
         </Field>
 
-        {/* Image upload – full width */}
-        <div className="sm:col-span-2">
-          <Field label="Teacher Photo" htmlFor="teacherImage" error={errors.teacherImage}>
+        {/* Photos: National ID / NIRA Card + Teacher Photo */}
+        <div className="sm:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* 1. NIRA Card / National ID */}
+          <Field label="Kaarka Aqoonsiga NIRA / National ID" htmlFor="nationalIdImage" error={errors.nationalIdImage}>
             <div
-              onClick={() => fileRef.current?.click()}
-              className={`relative flex items-center gap-4 border-2 border-dashed rounded-2xl p-5 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all ${errors.teacherImage ? "border-[#F4313F] bg-red-50/40" : "border-gray-200"}`}
+              onClick={() => nationalIdFileRef.current?.click()}
+              className={`relative flex items-center gap-3.5 border-2 border-dashed rounded-2xl p-4 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all ${errors.nationalIdImage ? "border-[#F4313F] bg-red-50/40" : "border-gray-200"}`}
             >
-              {preview ? (
-                <img src={preview} alt="preview"
-                  className="w-20 h-20 rounded-xl object-cover shrink-0 shadow" />
+              {nationalIdPreview ? (
+                <img src={nationalIdPreview} alt="NIRA preview"
+                  className="w-16 h-16 rounded-xl object-cover shrink-0 shadow" />
               ) : (
-                <div className="w-20 h-20 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
-                  <Camera className="w-8 h-8 text-gray-400" />
+                <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+                  <IdCard className="w-7 h-7 text-gray-400" />
                 </div>
               )}
-              <div>
-                <p className="text-sm font-semibold text-gray-700">
-                  {data.teacherImage ? data.teacherImage.name : "Click to upload your photo"}
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-gray-800 truncate">
+                  {data.nationalIdImage ? data.nationalIdImage.name : "Soo Geli Kaarka NIRA"}
                 </p>
-                <p className="text-xs text-gray-400 mt-1">PNG, JPG · Max 10 MB</p>
+                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG · Max 10 MB</p>
+              </div>
+              <input {...fieldProps("nationalIdImage")} ref={nationalIdFileRef} type="file"
+                accept=".jpg,.jpeg,.png,image/jpeg,image/png"
+                className="hidden" onChange={handleNationalId} />
+            </div>
+          </Field>
+
+          {/* 2. Teacher Photo */}
+          <Field label="Sawirka Macallinka / Teacher Photo" htmlFor="teacherImage" error={errors.teacherImage}>
+            <div
+              onClick={() => fileRef.current?.click()}
+              className={`relative flex items-center gap-3.5 border-2 border-dashed rounded-2xl p-4 cursor-pointer hover:border-[#1E0D79]/40 hover:bg-[#1E0D79]/5 transition-all ${errors.teacherImage ? "border-[#F4313F] bg-red-50/40" : "border-gray-200"}`}
+            >
+              {preview ? (
+                <img src={preview} alt="Teacher preview"
+                  className="w-16 h-16 rounded-xl object-cover shrink-0 shadow" />
+              ) : (
+                <div className="w-16 h-16 rounded-xl bg-gray-100 flex items-center justify-center shrink-0">
+                  <Camera className="w-7 h-7 text-gray-400" />
+                </div>
+              )}
+              <div className="min-w-0 flex-1">
+                <p className="text-sm font-semibold text-gray-800 truncate">
+                  {data.teacherImage ? data.teacherImage.name : "Soo Geli Sawirkaaga"}
+                </p>
+                <p className="text-xs text-gray-400 mt-0.5">PNG, JPG · Max 10 MB</p>
               </div>
               <input {...fieldProps("teacherImage")} ref={fileRef} type="file"
                 accept=".jpg,.jpeg,.png,image/jpeg,image/png"
@@ -483,11 +568,11 @@ export default function MembersForm() {
           <select {...fieldProps("teachingStatus")} required value={data.teachingStatus}
             onChange={e => set("teachingStatus", e.target.value)} className={inputClass("teachingStatus", true)}>
             <option value="">Choose Level</option>
-            <option value="University">University</option>
-            <option value="Secondary">Secondary School</option>
-            <option value="Middle">Middle School</option>
-            <option value="Primary">Primary School</option>
-            <option value="TVET">TVET / Vocational</option>
+            <option value="Bachelor’s Degree">Bachelor’s Degree</option>
+            <option value="Master’s Degree">Master’s Degree</option>
+            <option value="PhD / Doctoral Degree">PhD / Doctoral Degree</option>
+            <option value="Diploma / Associate Degree">Diploma / Associate Degree</option>
+            <option value="Other">Other</option>
           </select>
         </Field>
 
@@ -528,26 +613,52 @@ export default function MembersForm() {
 
     4: (
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="sm:col-span-2 bg-[#F4313F]/5 rounded-2xl p-5 border border-[#F4313F]/10">
-          <p className="text-xs text-[#F4313F] font-semibold mb-2">⚠️ Emergency Contact Details</p>
+        <div className="sm:col-span-2 bg-[#1E0D79]/5 rounded-2xl p-5 border border-[#1E0D79]/10">
+          <p className="text-xs text-[#1E0D79] font-bold mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
+            <ShieldCheck className="w-4 h-4 text-[#1E0D79]" /> Membership Status &amp; Verification
+          </p>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Please provide the details of a contact person we can reach in case of an emergency.
+            Dooro heerka xubinimadaada SONUT oo buuxi qofka xiriirka degdegga ah (Emergency Contact).
           </p>
         </div>
 
         <div className="sm:col-span-2">
-          <Field label="Emergency Contact Name" htmlFor="emergencyName" error={errors.emergencyName}>
-            <input {...fieldProps("emergencyName")} type="text" required value={data.emergencyName}
+          <Field label="Membership Category / Nooca Xubinimada" htmlFor="membershipCategory" error={errors.membershipCategory}>
+            <select
+              {...fieldProps("membershipCategory")}
+              required
+              value={data.membershipCategory}
+              onChange={e => set("membershipCategory", e.target.value)}
+              className={inputClass("membershipCategory", true)}
+            >
+              <option value="Full Member">Full Member – Active Public or Private School Teacher</option>
+              <option value="Higher Education Member">Higher Education &amp; TVET Faculty Member</option>
+              <option value="Newly Qualified Member">Newly Qualified / Early-Career Educator</option>
+              <option value="Senior Member">Senior / Retired Educator Member</option>
+              <option value="Associate Member">Associate / Student Teacher Member</option>
+            </select>
+          </Field>
+        </div>
+
+        <div className="sm:col-span-2 pt-2 border-t border-gray-100">
+          <p className="text-xs font-bold text-gray-600 uppercase tracking-wider mb-1">
+            Emergency Contact Details (Qofka Xiriirka Degdegga ah - Ikhtiyaari)
+          </p>
+        </div>
+
+        <div className="sm:col-span-2">
+          <Field label="Emergency Contact Name" htmlFor="emergencyName" error={errors.emergencyName} required={false}>
+            <input {...fieldProps("emergencyName")} type="text" value={data.emergencyName}
               onChange={e => set("emergencyName", sanitizeName(e.target.value))}
               autoComplete="name" maxLength={100}
               placeholder="Full name of emergency contact" className={inputClass("emergencyName")} />
           </Field>
         </div>
 
-        <Field label="Emergency Contact Phone" htmlFor="emergencyPhone" error={errors.emergencyPhone}>
+        <Field label="Emergency Contact Phone" htmlFor="emergencyPhone" error={errors.emergencyPhone} required={false}>
           <div className="relative">
             <span className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-400 text-sm">+252</span>
-            <input {...fieldProps("emergencyPhone")} type="tel" required value={data.emergencyPhone}
+            <input {...fieldProps("emergencyPhone")} type="tel" value={data.emergencyPhone}
               onChange={e => set("emergencyPhone", e.target.value.replace(/\D/g, "").slice(0, 9))}
               inputMode="numeric" autoComplete="tel-national" maxLength={9}
               placeholder="61 XXXXXXX"
@@ -555,11 +666,11 @@ export default function MembersForm() {
           </div>
         </Field>
 
-        <Field label="Emergency Contact Email" htmlFor="emergencyEmail" error={errors.emergencyEmail}>
-          <input {...fieldProps("emergencyEmail")} type="email" required value={data.emergencyEmail}
+        <Field label="Emergency Contact Email" htmlFor="emergencyEmail" error={errors.emergencyEmail} required={false}>
+          <input {...fieldProps("emergencyEmail")} type="email" value={data.emergencyEmail}
             onChange={e => set("emergencyEmail", sanitizeEmail(e.target.value))}
             inputMode="email" autoComplete="email" maxLength={254}
-            placeholder="contact@example.com" className={inputClass("emergencyEmail")} />
+            placeholder="contact@example.com (optional)" className={inputClass("emergencyEmail")} />
         </Field>
 
         {/* Confirmation & Agreement Checkbox */}

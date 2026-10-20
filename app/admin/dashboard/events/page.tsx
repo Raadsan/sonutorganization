@@ -4,7 +4,7 @@ import { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import {
   Plus, Pencil, Trash2, X, Upload, Loader2,
-  Calendar, MapPin, Clock, Eye, EyeOff, CheckCircle, AlertCircle,
+  Calendar, MapPin, Clock, Eye, EyeOff, CheckCircle, AlertCircle, Users,
 } from 'lucide-react';
 import Image from 'next/image';
 import { compressImage } from '@/lib/clientImageCompress';
@@ -17,6 +17,8 @@ interface Event {
   startDate: string;
   endDate: string;
   time: string;
+  organizer?: string | null;
+  organizerRole?: string | null;
   coverImageUrl: string | null;
   isPublished: boolean;
   createdAt: string;
@@ -29,6 +31,8 @@ type FormState = {
   startDate: string;
   endDate: string;
   time: string;
+  organizer: string;
+  organizerRole: string;
   isPublished: string;
 };
 
@@ -39,6 +43,8 @@ const emptyForm: FormState = {
   startDate: '',
   endDate: '',
   time: '',
+  organizer: 'SONUT',
+  organizerRole: 'Somali National Union of Teachers',
   isPublished: 'true',
 };
 
@@ -107,6 +113,8 @@ export default function EventsAdminPage() {
       startDate: toDateInputValue(ev.startDate),
       endDate: toDateInputValue(ev.endDate),
       time: ev.time,
+      organizer: ev.organizer || 'SONUT',
+      organizerRole: ev.organizerRole ?? 'Somali National Union of Teachers',
       isPublished: String(ev.isPublished),
     });
     setCoverFile(null);
@@ -173,6 +181,8 @@ export default function EventsAdminPage() {
       fd.append('startDate', ev.startDate);
       fd.append('endDate', ev.endDate);
       fd.append('time', ev.time);
+      if (ev.organizer) fd.append('organizer', ev.organizer);
+      if (ev.organizerRole) fd.append('organizerRole', ev.organizerRole);
       fd.append('isPublished', String(!ev.isPublished));
       await axios.put(`/api/admin/events/${ev.id}`, fd);
       fetchEvents();
@@ -243,6 +253,11 @@ export default function EventsAdminPage() {
                       <span className="flex items-center gap-1 text-gray-500 text-xs">
                         <Clock className="w-3 h-3" />{ev.time}
                       </span>
+                      {ev.organizer && (
+                        <span className="flex items-center gap-1 text-purple-400 text-xs">
+                          <Users className="w-3 h-3" />{ev.organizer}
+                        </span>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-center gap-2 flex-shrink-0">
@@ -317,6 +332,21 @@ export default function EventsAdminPage() {
                 <input type="text" required placeholder="City, Country" value={form.location}
                   onChange={(e) => setForm({ ...form, location: e.target.value })}
                   className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors" />
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-1.5">Organizer</label>
+                  <input type="text" placeholder="e.g. SONUT" value={form.organizer}
+                    onChange={(e) => setForm({ ...form, organizer: e.target.value })}
+                    className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors" />
+                </div>
+                <div>
+                  <label className="block text-gray-300 text-sm font-medium mb-1.5">Organizer Subtitle / Role</label>
+                  <input type="text" placeholder="e.g. Somali National Union of Teachers" value={form.organizerRole}
+                    onChange={(e) => setForm({ ...form, organizerRole: e.target.value })}
+                    className="w-full bg-gray-800 border border-gray-700 text-white rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-purple-500 transition-colors" />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-3">

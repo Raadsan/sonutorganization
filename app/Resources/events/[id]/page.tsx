@@ -253,10 +253,14 @@ export default async function EventDetailPage({ params }: PageProps) {
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-wider mb-0.5">
                       Organizer
                     </p>
-                    <p className="text-sm font-semibold text-gray-900">SONUT</p>
-                    <p className="text-xs text-gray-500">
-                      Somali National Union of Teachers
+                    <p className="text-sm font-semibold text-gray-900">
+                      {event.organizer || "SONUT"}
                     </p>
+                    {(event.organizerRole || (!event.organizer || event.organizer === "SONUT")) && (
+                      <p className="text-xs text-gray-500">
+                        {event.organizerRole || "Somali National Union of Teachers"}
+                      </p>
+                    )}
                   </div>
                 </div>
 
@@ -355,36 +359,6 @@ export default async function EventDetailPage({ params }: PageProps) {
           </div>
         )}
 
-        {/* CTA */}
-        <div className="mt-16">
-          <div className="relative rounded-3xl overflow-hidden bg-gradient-to-br from-primary to-blue-900 text-center px-6 py-14 sm:px-12 sm:py-16 shadow-2xl">
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-white opacity-5 blur-3xl" />
-            <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-80 h-80 rounded-full bg-blue-500 opacity-20 blur-3xl" />
-            <div className="relative z-10">
-              <h2 className="text-3xl md:text-4xl font-serif font-bold text-white mb-4">
-                Be Part of SONUT&apos;s Mission
-              </h2>
-              <p className="text-blue-100 text-lg max-w-xl mx-auto mb-8">
-                Join the Somali National Union of Teachers and participate in
-                events, workshops, and advocacy programs.
-              </p>
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-                <Link
-                  href="/join"
-                  className="w-full sm:w-auto px-8 py-4 bg-white text-primary font-bold rounded-full hover:scale-105 hover:shadow-lg transition-all duration-300"
-                >
-                  Join SONUT
-                </Link>
-                <Link
-                  href="/Resources/events"
-                  className="w-full sm:w-auto px-8 py-4 bg-white/10 text-white font-bold rounded-full border border-white/20 hover:bg-white/20 transition-all duration-300"
-                >
-                  All Events
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   );

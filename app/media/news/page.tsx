@@ -40,6 +40,8 @@ async function getData() {
       startDate: e.startDate.toISOString(),
       endDate: e.endDate.toISOString(),
       time: e.time,
+      organizer: e.organizer,
+      organizerRole: e.organizerRole,
       coverImageUrl: e.coverImageUrl,
       isPublished: e.isPublished,
       createdAt: e.createdAt.toISOString(),

@@ -9,54 +9,64 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+async function uploadFileToCloudinary(file: File, folder = "sonut_members"): Promise<string | null> {
+  if (!file || file.size === 0) return null;
+  const arrayBuffer = await file.arrayBuffer();
+  const buffer = Buffer.from(arrayBuffer);
+  return new Promise<string | null>((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      { folder },
+      (error, result) => {
+        if (error) {
+          console.error("Cloudinary upload error:", error);
+          reject(error);
+        } else {
+          resolve(result?.secure_url || null);
+        }
+      }
+    );
+    uploadStream.end(buffer);
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const formData = await req.formData();
     
-    // Extract file
-    const file = formData.get("teacherImage") as File | null;
-    let teacherImageUrl = null;
+    // Extract files
+    const teacherImageFile = formData.get("teacherImage") as File | null;
+    const nationalIdFile = (formData.get("nationalIdImage") || formData.get("nationalId")) as File | null;
 
-    if (file && file.size > 0) {
-      const arrayBuffer = await file.arrayBuffer();
-      const buffer = Buffer.from(arrayBuffer);
-
-      const uploadResult = await new Promise<any>((resolve, reject) => {
-        const uploadStream = cloudinary.uploader.upload_stream(
-          { folder: "sonut_members" },
-          (error, result) => {
-            if (error) reject(error);
-            else resolve(result);
-          }
-        );
-        uploadStream.end(buffer);
-      });
-      teacherImageUrl = uploadResult.secure_url;
-    }
+    const [teacherImageUrl, nationalIdUrl] = await Promise.all([
+      teacherImageFile ? uploadFileToCloudinary(teacherImageFile) : Promise.resolve(null),
+      nationalIdFile ? uploadFileToCloudinary(nationalIdFile) : Promise.resolve(null),
+    ]);
 
     const data = Object.fromEntries(formData.entries());
 
     const member = await prisma.member.create({
       data: {
-        fullName: data.fullName as string,
-        motherName: data.motherName as string,
-        gender: data.gender as string,
-        dateOfBirth: data.dateOfBirth as string,
-        placeOfBirth: data.placeOfBirth as string,
-        bloodType: data.bloodType as string,
+        fullName: (data.fullName as string) || "",
+        motherName: (data.motherName as string) || "",
+        gender: (data.gender as string) || "",
+        dateOfBirth: (data.dateOfBirth as string) || "",
+        placeOfBirth: (data.placeOfBirth as string) || "",
+        bloodType: (data.bloodType as string) || "",
         teacherImageUrl,
-        phone: data.phone as string,
-        email: data.email as string,
-        district: data.district as string,
-        subject: data.subject as string,
-        teachingStatus: data.teachingStatus as string,
-        fieldOfStudy: data.fieldOfStudy as string,
-        teachingLevel: data.teachingLevel as string,
-        institutionName: data.institutionName as string,
-        institutionLocation: data.institutionLocation as string,
-        emergencyName: data.emergencyName as string,
-        emergencyPhone: data.emergencyPhone as string,
-        emergencyEmail: data.emergencyEmail as string,
+        nationalIdUrl,
+        phone: (data.phone as string) || "",
+        email: (data.email as string) || "",
+        district: (data.district as string) || "",
+        subject: (data.subject as string) || "",
+        teachingStatus: (data.teachingStatus as string) || "",
+        fieldOfStudy: (data.fieldOfStudy as string) || "",
+        teachingLevel: (data.teachingLevel as string) || "",
+        institutionName: (data.institutionName as string) || "",
+        institutionLocation: (data.institutionLocation as string) || "",
+        emergencyName: (data.emergencyName as string) || "",
+        emergencyPhone: (data.emergencyPhone as string) || "",
+        emergencyEmail: (data.emergencyEmail as string) || "",
+        membershipCategory: (data.membershipCategory as string) || "Full Member",
         status: "PENDING"
       }
     });

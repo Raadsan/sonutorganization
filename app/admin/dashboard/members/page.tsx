@@ -9,6 +9,7 @@ import {
   Loader2, Search, Trash2, CheckCircle, XCircle, Clock,
   X, User, Phone, Mail, MapPin, Droplets, Calendar,
   BookOpen, Building2, AlertCircle, GraduationCap, ChevronRight,
+  IdCard, ExternalLink, ArrowUpDown, Filter, ShieldCheck,
 } from "lucide-react";
 
 // ─── Full Member type ─────────────────────────────────────────────────────────
@@ -21,6 +22,7 @@ type Member = {
   placeOfBirth: string;
   bloodType: string;
   teacherImageUrl: string | null;
+  nationalIdUrl: string | null;
   phone: string;
   email: string;
   district: string;
@@ -33,6 +35,7 @@ type Member = {
   emergencyName: string;
   emergencyPhone: string;
   emergencyEmail: string;
+  membershipCategory: string | null;
   status: "PENDING" | "APPROVED" | "REJECTED";
   adminNote: string | null;
   createdAt: string;
@@ -129,6 +132,84 @@ function MemberPanel({
         {/* Body */}
         <div className="flex-1 px-6 py-6 space-y-8">
 
+          {/* Photos & Identification */}
+          <section>
+            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
+              <IdCard className="w-3.5 h-3.5 text-purple-400" /> Sawirrada &amp; Aqoonsiga / Photos &amp; ID
+            </h4>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Teacher Photo */}
+              <div className="bg-gray-800/60 rounded-xl p-3 border border-gray-700/60 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-gray-300 mb-1.5 flex items-center gap-1.5">
+                    <User className="w-3.5 h-3.5 text-blue-400" /> Sawirka Macallinka (Photo)
+                  </p>
+                  {member.teacherImageUrl ? (
+                    <div className="relative w-full h-44 rounded-lg overflow-hidden bg-gray-950 border border-gray-700/80 mb-2">
+                      <Image
+                        src={member.teacherImageUrl}
+                        alt="Teacher Photo"
+                        fill
+                        unoptimized
+                        className="object-cover"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-44 rounded-lg bg-gray-950/60 border border-dashed border-gray-700 flex items-center justify-center text-gray-500 text-xs mb-2">
+                      Sawir lama soo galin
+                    </div>
+                  )}
+                </div>
+                {member.teacherImageUrl && (
+                  <a
+                    href={member.teacherImageUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-purple-400 hover:text-purple-300 transition-colors pt-1"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" /> Eeg Sawirka Weyn
+                  </a>
+                )}
+              </div>
+
+              {/* National ID / NIRA Card */}
+              <div className="bg-gray-800/60 rounded-xl p-3 border border-gray-700/60 flex flex-col justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-gray-300 mb-1.5 flex items-center gap-1.5">
+                    <IdCard className="w-3.5 h-3.5 text-emerald-400" /> Kaarka NIRA (National ID)
+                  </p>
+                  {member.nationalIdUrl ? (
+                    <div className="relative w-full h-44 rounded-lg overflow-hidden bg-gray-950 border border-gray-700/80 mb-2">
+                      <Image
+                        src={member.nationalIdUrl}
+                        alt="NIRA Card ID"
+                        fill
+                        unoptimized
+                        className="object-contain"
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-full h-44 rounded-lg bg-gray-950/60 border border-dashed border-gray-700 flex items-center justify-center text-gray-500 text-xs mb-2">
+                      Kaarka NIRA lama soo galin
+                    </div>
+                  )}
+                </div>
+                {member.nationalIdUrl && (
+                  <a
+                    href={member.nationalIdUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 text-xs text-emerald-400 hover:text-emerald-300 transition-colors pt-1"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" /> Eeg Kaarka NIRA
+                  </a>
+                )}
+              </div>
+            </div>
+          </section>
+
+          <div className="border-t border-gray-800" />
+
           {/* Personal */}
           <section>
             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -160,18 +241,19 @@ function MemberPanel({
 
           <div className="border-t border-gray-800" />
 
-          {/* Professional */}
+          {/* Professional & Membership */}
           <section>
             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-              <BookOpen className="w-3.5 h-3.5" /> Xirfadda / Professional Info
+              <BookOpen className="w-3.5 h-3.5" /> Xirfadda &amp; Xubinimada / Professional &amp; Membership
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <InfoRow icon={BookOpen}      label="Maadada / Subject"             value={member.subject} />
-              <InfoRow icon={GraduationCap} label="Heerka Waxbarasho / Level"     value={member.teachingLevel} />
-              <InfoRow icon={BookOpen}      label="Takhasuska / Field of Study"   value={member.fieldOfStudy} />
-              <InfoRow icon={GraduationCap} label="Status of Teaching"            value={member.teachingStatus} />
-              <InfoRow icon={Building2}     label="Magaca Xarunta / Institution"  value={member.institutionName} />
-              <InfoRow icon={MapPin}        label="Goobta Xarunta / Location"     value={member.institutionLocation} />
+              <InfoRow icon={ShieldCheck}   label="Nooca Xubinimada / Membership Status" value={member.membershipCategory || "Full Member"} />
+              <InfoRow icon={GraduationCap} label="Heerka Waxbarasho / Education Level"  value={member.teachingStatus} />
+              <InfoRow icon={BookOpen}      label="Maadada / Subject"                    value={member.subject} />
+              <InfoRow icon={GraduationCap} label="Fasallada la Dhigo / Levels Taught"   value={member.teachingLevel} />
+              <InfoRow icon={BookOpen}      label="Takhasuska / Field of Study"          value={member.fieldOfStudy} />
+              <InfoRow icon={Building2}     label="Magaca Xarunta / Institution"         value={member.institutionName} />
+              <InfoRow icon={MapPin}        label="Goobta Xarunta / Location"            value={member.institutionLocation} />
             </div>
           </section>
 
@@ -180,7 +262,7 @@ function MemberPanel({
           {/* Emergency */}
           <section>
             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4 flex items-center gap-2">
-              <AlertCircle className="w-3.5 h-3.5" /> Xaaladda Deg-degta / Emergency
+              <AlertCircle className="w-3.5 h-3.5" /> Xaaladda Deg-degta / Emergency Contact
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InfoRow icon={User}  label="Magaca / Name"   value={member.emergencyName} />
@@ -230,11 +312,15 @@ function MemberPanel({
 }
 
 // ─── Main page ────────────────────────────────────────────────────────────────
+const ALPHABET = ["ALL", ..."ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")];
+
 export default function MembersAdminPage() {
   const [members, setMembers] = useState<Member[]>([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [filterStatus, setFilterStatus] = useState<"ALL" | "PENDING" | "APPROVED" | "REJECTED">("ALL");
+  const [letterFilter, setLetterFilter] = useState<string>("ALL");
+  const [sortOrder, setSortOrder] = useState<"A-Z" | "Z-A" | "NEWEST" | "OLDEST">("A-Z");
   const [selected, setSelected] = useState<Member | null>(null);
 
   useEffect(() => {
@@ -294,15 +380,34 @@ export default function MembersAdminPage() {
     REJECTED: members.filter(m => m.status === "REJECTED").length,
   };
 
-  const filtered = members.filter(m => {
-    const matchesSearch =
-      m.fullName.toLowerCase().includes(search.toLowerCase()) ||
-      m.phone.includes(search) ||
-      m.email.toLowerCase().includes(search.toLowerCase()) ||
-      m.district.toLowerCase().includes(search.toLowerCase());
-    const matchesStatus = filterStatus === "ALL" || m.status === filterStatus;
-    return matchesSearch && matchesStatus;
-  });
+  const filtered = members
+    .filter(m => {
+      const matchesSearch =
+        m.fullName.toLowerCase().includes(search.toLowerCase()) ||
+        m.phone.includes(search) ||
+        m.email.toLowerCase().includes(search.toLowerCase()) ||
+        m.district.toLowerCase().includes(search.toLowerCase()) ||
+        (m.membershipCategory && m.membershipCategory.toLowerCase().includes(search.toLowerCase()));
+      const matchesStatus = filterStatus === "ALL" || m.status === filterStatus;
+      const firstChar = (m.fullName || "").trim().charAt(0).toUpperCase();
+      const matchesLetter = letterFilter === "ALL" || firstChar === letterFilter;
+      return matchesSearch && matchesStatus && matchesLetter;
+    })
+    .sort((a, b) => {
+      if (sortOrder === "A-Z") {
+        return (a.fullName || "").localeCompare(b.fullName || "", undefined, { sensitivity: "base" });
+      }
+      if (sortOrder === "Z-A") {
+        return (b.fullName || "").localeCompare(a.fullName || "", undefined, { sensitivity: "base" });
+      }
+      if (sortOrder === "NEWEST") {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      if (sortOrder === "OLDEST") {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      return 0;
+    });
 
   return (
     <>
@@ -310,9 +415,15 @@ export default function MembersAdminPage() {
 
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h2 className="text-2xl font-bold text-white">Membership Applications</h2>
-          <p className="text-gray-400 mt-1">Review, approve, or reject member registrations</p>
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div>
+            <h2 className="text-2xl font-bold text-white">Membership Applications</h2>
+            <p className="text-gray-400 mt-1">Review, approve, or reject member registrations</p>
+          </div>
+          <div className="flex items-center gap-2 text-xs text-gray-400 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-xl self-start sm:self-auto">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            Total Members: <strong className="text-white">{members.length}</strong>
+          </div>
         </div>
 
         {/* Status filter tabs */}
@@ -335,16 +446,79 @@ export default function MembersAdminPage() {
           ))}
         </div>
 
-        {/* Search */}
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search by name, email, phone, or district…"
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-            className="w-full bg-gray-900 border border-gray-800 rounded-xl pl-10 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors"
-          />
+        {/* Search & Sort Controls */}
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+          {/* Search bar */}
+          <div className="md:col-span-8 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
+            <input
+              type="text"
+              placeholder="Search by name, email, phone, or district…"
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              className="w-full bg-gray-900 border border-gray-800 rounded-xl pl-9 pr-4 py-2.5 text-white text-sm focus:outline-none focus:border-blue-500 transition-colors placeholder:text-gray-500"
+            />
+            {search && (
+              <button
+                onClick={() => setSearch("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white text-xs"
+              >
+                Clear
+              </button>
+            )}
+          </div>
+
+          {/* Sort Dropdown */}
+          <div className="md:col-span-4 flex items-center gap-2">
+            <span className="text-xs text-gray-400 flex items-center gap-1 shrink-0">
+              <ArrowUpDown className="w-3.5 h-3.5 text-blue-400" /> Kala Horaysii:
+            </span>
+            <select
+              value={sortOrder}
+              onChange={e => setSortOrder(e.target.value as typeof sortOrder)}
+              className="flex-1 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2.5 text-white text-xs font-medium focus:outline-none focus:border-blue-500 transition-colors cursor-pointer"
+            >
+              <option value="A-Z">A - Z (Magaca Horre)</option>
+              <option value="Z-A">Z - A (Magaca Dambe)</option>
+              <option value="NEWEST">Ugu Dambeeyay (Newest)</option>
+              <option value="OLDEST">Ugu Horreeyay (Oldest)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* A-Z Alphabet Filter Bar */}
+        <div className="bg-gray-900/80 border border-gray-800 rounded-xl p-3">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-[11px] font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
+              <Filter className="w-3 h-3 text-purple-400" /> A-Z Filter (Xarafka Magaca):
+            </span>
+            {letterFilter !== "ALL" && (
+              <button
+                onClick={() => setLetterFilter("ALL")}
+                className="text-[11px] text-purple-400 hover:text-purple-300 font-medium"
+              >
+                Reset to ALL
+              </button>
+            )}
+          </div>
+          <div className="flex items-center gap-1 overflow-x-auto pb-1 scrollbar-thin">
+            {ALPHABET.map(letter => {
+              const isActive = letterFilter === letter;
+              return (
+                <button
+                  key={letter}
+                  onClick={() => setLetterFilter(letter)}
+                  className={`shrink-0 px-2.5 py-1 text-xs font-bold rounded-lg transition-all ${
+                    isActive
+                      ? "bg-purple-600 text-white shadow-lg shadow-purple-600/30 scale-105"
+                      : "bg-gray-800/80 text-gray-400 hover:text-white hover:bg-gray-700/80"
+                  }`}
+                >
+                  {letter}
+                </button>
+              );
+            })}
+          </div>
         </div>
 
         {/* Table */}
@@ -404,7 +578,20 @@ export default function MembersAdminPage() {
                             )}
                             <div>
                               <p className="text-white text-sm font-semibold">{m.fullName}</p>
-                              <p className="text-gray-500 text-xs">{m.gender}</p>
+                              <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
+                                <span className="text-gray-400 text-xs">{m.gender}</span>
+                                {m.membershipCategory && (
+                                  <>
+                                    <span className="text-gray-600 text-xs">•</span>
+                                    <span className="text-purple-300 text-xs font-medium">{m.membershipCategory}</span>
+                                  </>
+                                )}
+                                {m.nationalIdUrl && (
+                                  <span className="inline-flex items-center gap-0.5 text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium" title="Kaarka NIRA waa la galiyay">
+                                    <IdCard className="w-2.5 h-2.5" /> NIRA
+                                  </span>
+                                )}
+                              </div>
                             </div>
                           </div>
                         </td>

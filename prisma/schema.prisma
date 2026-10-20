@@ -87,6 +87,8 @@ model Event {
   coverImageUrl      String?
   coverImagePublicId String?
   isPublished        Boolean  @default(true)
+  organizer          String?  @default("SONUT")
+  organizerRole      String?  @default("Somali National Union of Teachers")
   createdAt          DateTime @default(now())
   updatedAt          DateTime @updatedAt
 }
@@ -107,6 +109,7 @@ model Member {
   placeOfBirth        String
   bloodType           String
   teacherImageUrl     String?
+  nationalIdUrl       String?
   // Contact
   phone               String
   email               String
@@ -122,6 +125,8 @@ model Member {
   emergencyName       String
   emergencyPhone      String
   emergencyEmail      String
+  // Membership
+  membershipCategory  String?      @default("Full Member")
   // Admin
   status              MemberStatus @default(PENDING)
   adminNote           String?      @db.Text

@@ -26,6 +26,8 @@ export async function POST(request: Request) {
     const startDate = new Date(formData.get('startDate') as string);
     const endDate = new Date(formData.get('endDate') as string);
     const time = (formData.get('time') as string)?.trim();
+    const organizer = (formData.get('organizer') as string)?.trim() || 'SONUT';
+    const organizerRole = (formData.get('organizerRole') as string)?.trim() || '';
     const isPublished = formData.get('isPublished') !== 'false';
     const coverFile = formData.get('cover') as File | null;
 
@@ -64,6 +66,8 @@ export async function POST(request: Request) {
         startDate,
         endDate,
         time,
+        organizer,
+        organizerRole,
         isPublished,
         coverImageUrl,
         coverImagePublicId,

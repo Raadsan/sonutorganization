@@ -38,6 +38,8 @@ export async function PUT(
     const startDate = new Date(formData.get('startDate') as string);
     const endDate = new Date(formData.get('endDate') as string);
     const time = (formData.get('time') as string)?.trim();
+    const organizer = formData.has('organizer') ? ((formData.get('organizer') as string)?.trim() || 'SONUT') : undefined;
+    const organizerRole = formData.has('organizerRole') ? ((formData.get('organizerRole') as string)?.trim() || '') : undefined;
     const isPublished = formData.get('isPublished') !== 'false';
     const coverFile = formData.get('cover') as File | null;
 
@@ -77,6 +79,8 @@ export async function PUT(
         startDate,
         endDate,
         time,
+        ...(organizer !== undefined ? { organizer } : {}),
+        ...(organizerRole !== undefined ? { organizerRole } : {}),
         isPublished,
         coverImageUrl,
         coverImagePublicId,

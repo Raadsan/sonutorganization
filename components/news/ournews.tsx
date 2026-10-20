@@ -35,6 +35,8 @@ export interface EventItem {
   startDate: string;
   endDate: string;
   time: string;
+  organizer?: string | null;
+  organizerRole?: string | null;
   coverImageUrl: string | null;
   isPublished: boolean;
   createdAt: string;
