@@ -545,13 +545,13 @@ export default function MembersForm() {
         {/* Emergency Contact Section */}
         <div className="pt-2">
           <div className="mb-4 pb-2 border-b border-gray-100 flex items-center gap-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#1E0D79]"></span>
+            <span className="w-2.5 h-2.5 rounded-full bg-[#D92936]"></span>
             <h4 className="text-sm font-bold text-gray-900 tracking-wide uppercase">
-              Emergency Contact 
+              Emergency Contact
             </h4>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div className="grid grid-cols-1  sm:grid-cols-2 gap-5">
             {/* Input 1: Required Emergency Phone */}
             <Field label="Emergency Contact Phone" htmlFor="emergencyPhone" error={errors.emergencyPhone} required={true}>
               <div className="relative">
@@ -668,13 +668,12 @@ export default function MembersForm() {
         <div className="sm:col-span-2 pt-2">
           <label
             htmlFor="termsAccepted"
-            className={`flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer select-none ${
-              termsError
+            className={`flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer select-none ${termsError
                 ? "border-[#F4313F] bg-red-50/40 ring-2 ring-[#F4313F]/15"
                 : termsAccepted
-                ? "border-[#1E0D79] bg-[#1E0D79]/5 shadow-xs"
-                : "border-gray-200 bg-gray-50/60 hover:bg-gray-50 hover:border-gray-300"
-            }`}
+                  ? "border-[#1E0D79] bg-[#1E0D79]/5 shadow-xs"
+                  : "border-gray-200 bg-gray-50/60 hover:bg-gray-50 hover:border-gray-300"
+              }`}
           >
             <input
               id="termsAccepted"
