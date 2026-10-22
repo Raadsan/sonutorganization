@@ -1,16 +1,9 @@
 "use client";
 
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
-import { useState, useEffect } from "react";
-
-const aboutImages = [
-  "/images/Sonut imges -04.jpg",
-  "/images/Sonut imges -06.jpg",
-  "/images/Sonut imges -05.jpg",
-  "/images/Sonut imges -07.jpg",
-];
+import Image from "next/image";
 
 export default function About() {
   const fadeLeft = {
@@ -37,24 +30,12 @@ export default function About() {
     },
   };
 
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrentImageIndex(
-        (prev) => (prev + 1) % aboutImages.length
-      );
-    }, 4000);
-
-    return () => clearInterval(timer);
-  }, []);
-
   return (
     <section className="py-24 bg-white overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-2 gap-12 lg:gap-16 items-center">
 
-          {/* Left Column - Images */}
+          {/* Left Column - Image */}
           <motion.div
             initial="hidden"
             whileInView="visible"
@@ -64,18 +45,14 @@ export default function About() {
           >
             {/* Main large image */}
             <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square lg:aspect-[4/5] w-full max-w-lg mx-auto md:mx-0 bg-gray-100">
-              <AnimatePresence mode="popLayout">
-                <motion.img
-                  key={currentImageIndex}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.8 }}
-                  src={aboutImages[currentImageIndex]}
-                  alt="About SONUT"
-                  className="w-full h-full object-cover absolute inset-0"
-                />
-              </AnimatePresence>
+              <Image
+                src="/images/1 (2).jpg"
+                alt="About SONUT"
+                fill
+                priority
+                className="object-cover object-center"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
           </motion.div>
 

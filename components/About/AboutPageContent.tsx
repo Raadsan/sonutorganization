@@ -1,57 +1,23 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
-import { useEffect, useState } from "react";
-
-const aboutImages = [
-  "/images/Sonut imges -04.jpg",
-  "/images/Sonut imges -06.jpg",
-  "/images/Sonut imges -05.jpg",
-  "/images/Sonut imges -07.jpg",
-];
 
 export default function AboutPageContent() {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const prefersReducedMotion = useReducedMotion();
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setCurrentImageIndex(
-        (previousIndex) => (previousIndex + 1) % aboutImages.length,
-      );
-    }, 4000);
-
-    return () => window.clearInterval(timer);
-  }, []);
-
   return (
     <section className="overflow-hidden bg-white py-20 md:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-lg overflow-hidden rounded-3xl bg-gray-100 shadow-2xl md:mx-0">
-            <AnimatePresence initial={false}>
-              <motion.div
-                key={aboutImages[currentImageIndex]}
-                initial={prefersReducedMotion ? false : { opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-                transition={{ duration: prefersReducedMotion ? 0 : 0.8 }}
-                className="absolute inset-0"
-              >
-                <Image
-                  src={aboutImages[currentImageIndex]}
-                  alt="SONUT members and teacher representatives"
-                  fill
-                  priority={currentImageIndex === 0}
-                  unoptimized
-                  className="object-cover"
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                />
-              </motion.div>
-            </AnimatePresence>
+            <Image
+              src="/images/1 (2).jpg"
+              alt="SONUT members and teacher representatives"
+              fill
+              priority
+              className="object-cover object-center"
+              sizes="(max-width: 768px) 100vw, 50vw"
+            />
           </div>
 
           <div className="flex flex-col">
