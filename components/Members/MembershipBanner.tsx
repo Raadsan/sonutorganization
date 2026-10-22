@@ -63,8 +63,9 @@ export default function MembershipBanner({
             </Link>
             <ChevronRight className="w-3.5 h-3.5 text-white/40" />
             <Link
-              href="/membership"
-              className="hover:text-white transition-colors duration-200"
+              href="#"
+              onClick={(e) => e.preventDefault()}
+              className="hover:text-white transition-colors duration-200 cursor-default"
             >
               Membership
             </Link>

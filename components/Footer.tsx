@@ -59,11 +59,17 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Quick Links</h3>
             <ul className="space-y-4">
-              {['Home', 'About Us', 'Our Priorities', 'Executive Team', 'Blog'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sm hover:text-secondary flex items-center gap-2 transition-colors group">
+              {[
+                { label: "Home", href: "/" },
+                { label: "About Us", href: "/about" },
+                { label: "Our Programmes", href: "/our-programmes" },
+                { label: "Executive Team", href: "/leadership" },
+                { label: "FAQ", href: "/faq" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm hover:text-secondary flex items-center gap-2 transition-colors group">
                     <ArrowRight className="w-3 h-3 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300 text-secondary" />
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -74,11 +80,17 @@ export default function Footer() {
           <div>
             <h3 className="text-lg font-bold text-white mb-6 uppercase tracking-wider">Media Hub</h3>
             <ul className="space-y-4">
-              {['Join SONUT', 'Teacher Training', 'Events & Conferences', 'Privacy Policy', 'Terms of Service'].map((item) => (
-                <li key={item}>
-                  <Link href="#" className="text-sm hover:text-secondary flex items-center gap-2 transition-colors group">
+              {[
+                { label: "Join SONUT", href: "/join" },
+                { label: "Teacher Training", href: "/activity" },
+                { label: "Events & Conferences", href: "/media/events" },
+                { label: "News & Blog", href: "/media/news" },
+                { label: "SONUT Talk", href: "/media/sonut-talk" },
+              ].map((item) => (
+                <li key={item.label}>
+                  <Link href={item.href} className="text-sm hover:text-secondary flex items-center gap-2 transition-colors group">
                     <ArrowRight className="w-3 h-3 opacity-0 -ml-5 group-hover:opacity-100 group-hover:ml-0 transition-all duration-300 text-secondary" />
-                    {item}
+                    {item.label}
                   </Link>
                 </li>
               ))}
@@ -91,10 +103,15 @@ export default function Footer() {
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-sm">
                 <MapPin className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
-                <span>
+                <a
+                  href="https://www.google.com/maps/place/Somali+National+Union+of+Teachers+(+SONUT+)/@2.0422266,45.3222358,17z/data=!3m1!4b1!4m6!3m5!1s0x3d58438b9d0d4a4d:0xae9f850cd842fd3f!8m2!3d2.0422212!4d45.3248107!16s%2Fg%2F11kqjn7730?entry=ttu&g_ep=EgoyMDI2MTAyMC4wIKXMDSoASAFQAw%3D%3D"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-secondary transition-colors"
+                >
                   Howl-Wadaag District,<br />
-                  Mogadishu,Somalia
-                </span>
+                  Mogadishu, Somalia
+                </a>
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <Phone className="w-5 h-5 text-secondary shrink-0" />
@@ -106,7 +123,7 @@ export default function Footer() {
               </li>
               <li className="flex items-center gap-3 text-sm">
                 <Mail className="w-5 h-5 text-secondary shrink-0" />
-                <a href="mailto:info@sonut.so" className="hover:text-secondary transition-colors">info@sonut.org.so</a>
+                <a href="mailto:support@sonut.org.so" className="hover:text-secondary transition-colors font-medium">support@sonut.org.so</a>
               </li>
             </ul>
           </div>

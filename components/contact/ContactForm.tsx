@@ -9,8 +9,13 @@ import {
     User,
     MessageSquare,
     ChevronDown,
+    ExternalLink,
+    CheckCircle2,
+    AlertCircle,
 } from "lucide-react";
 import { useState } from "react";
+
+const googleMapsPlaceUrl = "https://www.google.com/maps/place/Somali+National+Union+of+Teachers+(+SONUT+)/@2.0422266,45.3222358,17z/data=!3m1!4b1!4m6!3m5!1s0x3d58438b9d0d4a4d:0xae9f850cd842fd3f!8m2!3d2.0422212!4d45.3248107!16s%2Fg%2F11kqjn7730?entry=ttu&g_ep=EgoyMDI2MTAyMC4wIKXMDSoASAFQAw%3D%3D";
 
 const contactInfo = [
     {
@@ -21,30 +26,66 @@ const contactInfo = [
     },
     {
         icon: Mail,
-        title: "Email",
-        value: "info@sonut.org.so",
-        href: "mailto:info@sonut.org.so",
+        title: "Support Email",
+        value: "support@sonut.org.so",
+        href: "mailto:support@sonut.org.so",
     },
     {
         icon: MapPin,
         title: "Address",
         value: "Howl-Wadaag District, Mogadishu, Somalia",
-        href: "#map",
+        href: googleMapsPlaceUrl,
+        external: true,
     },
 ];
 
 export default function ContactForm() {
+    const [formData, setFormData] = useState({
+        fullName: "",
+        email: "",
+        inquiryType: "General Inquiry",
+        subject: "",
+        message: "",
+    });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [submitted, setSubmitted] = useState(false);
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
-        setTimeout(() => {
-            setIsSubmitting(false);
+        setErrorMessage(null);
+
+        try {
+            const res = await fetch("/api/contact", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || "Khalad ayaa dhacay intii farriinta la dirayay.");
+            }
+
             setSubmitted(true);
-            setTimeout(() => setSubmitted(false), 5000);
-        }, 1500);
+            setFormData({
+                fullName: "",
+                email: "",
+                inquiryType: "General Inquiry",
+                subject: "",
+                message: "",
+            });
+            setTimeout(() => setSubmitted(false), 8000);
+        } catch (err: any) {
+            console.error("Submission failed:", err);
+            setErrorMessage(err.message || "Farriinta lama diri karin. Fadlan hubi xiriirkaaga ama toos noogu soo dir support@sonut.org.so");
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -94,6 +135,8 @@ export default function ContactForm() {
                                         <a
                                             key={item.title}
                                             href={item.href}
+                                            target={item.external ? "_blank" : undefined}
+                                            rel={item.external ? "noopener noreferrer" : undefined}
                                             className="flex items-start gap-4 group"
                                         >
                                             <div className="w-11 h-11 rounded-2xl bg-white/10 group-hover:bg-white/20 flex items-center justify-center shrink-0 transition-colors duration-300">
@@ -124,7 +167,9 @@ export default function ContactForm() {
                         <div className="md:col-span-3 p-8 md:p-10">
                             <div className="mb-8">
                                 <h3 className="text-2xl font-bold text-gray-900 mb-1">Send Us a Message</h3>
-                                <p className="text-muted-foreground text-sm">We&apos;ll respond within 24 hours.</p>
+                                <p className="text-muted-foreground text-sm">
+                                    Waxii xog ah waxaa si toos ah loogu dirayaa <span className="font-semibold text-primary">support@sonut.org.so</span>.
+                                </p>
                             </div>
 
                             {submitted ? (
@@ -134,24 +179,40 @@ export default function ContactForm() {
                                     className="flex flex-col items-center justify-center text-center py-16"
                                 >
                                     <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mb-5">
-                                        <Send className="w-7 h-7" />
+                                        <CheckCircle2 className="w-8 h-8" />
                                     </div>
                                     <h4 className="text-xl font-bold text-gray-900 mb-2">Message Sent!</h4>
-                                    <p className="text-muted-foreground text-sm max-w-xs">
-                                        Thank you for reaching out. Our team will get back to you shortly.
+                                    <p className="text-muted-foreground text-sm max-w-sm mb-4">
+                                        Mahadsanid! Farriintaada si guul leh ayaa loo diray waxaana loo gudbiyay <span className="font-medium text-gray-800">support@sonut.org.so</span>.
                                     </p>
+                                    <button
+                                        type="button"
+                                        onClick={() => setSubmitted(false)}
+                                        className="text-xs font-semibold text-primary hover:underline"
+                                    >
+                                        Farriin kale dir (Send another message)
+                                    </button>
                                 </motion.div>
                             ) : (
                                 <form onSubmit={handleSubmit} className="space-y-5">
+                                    {errorMessage && (
+                                        <div className="flex items-center gap-2 p-3 text-sm text-red-700 bg-red-50 border border-red-200 rounded-xl">
+                                            <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
+                                            <span>{errorMessage}</span>
+                                        </div>
+                                    )}
+
                                     <div className="grid sm:grid-cols-2 gap-5">
                                         {/* Name */}
                                         <div className="space-y-1.5">
-                                            <label className="text-sm font-semibold text-gray-700">Full Name</label>
+                                            <label className="text-sm font-semibold text-gray-700">Full Name *</label>
                                             <div className="relative">
                                                 <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                                                 <input
                                                     type="text"
                                                     required
+                                                    value={formData.fullName}
+                                                    onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                                                     placeholder="Your name"
                                                     className="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                                 />
@@ -160,12 +221,14 @@ export default function ContactForm() {
 
                                         {/* Email */}
                                         <div className="space-y-1.5">
-                                            <label className="text-sm font-semibold text-gray-700">Email Address</label>
+                                            <label className="text-sm font-semibold text-gray-700">Email Address *</label>
                                             <div className="relative">
                                                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
                                                 <input
                                                     type="email"
                                                     required
+                                                    value={formData.email}
+                                                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                                                     placeholder="you@example.com"
                                                     className="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                                 />
@@ -182,14 +245,15 @@ export default function ContactForm() {
                                             <select
                                                 id="inquiryType"
                                                 name="inquiryType"
-                                                defaultValue="general-inquiry"
+                                                value={formData.inquiryType}
+                                                onChange={(e) => setFormData({ ...formData, inquiryType: e.target.value })}
                                                 className="w-full appearance-none rounded-xl border border-gray-200 bg-gray-50/50 px-4 py-2.5 pr-10 text-sm text-gray-900 outline-none transition-all focus:border-primary focus:bg-white focus:ring-2 focus:ring-primary/20"
                                             >
-                                                <option value="general-inquiry">General Inquiry</option>
-                                                <option value="membership">Membership</option>
-                                                <option value="technical-support">Technical Support</option>
-                                                <option value="complaint">Complaint</option>
-                                                <option value="suggestion">Suggestion</option>
+                                                <option value="General Inquiry">General Inquiry</option>
+                                                <option value="Membership">Membership</option>
+                                                <option value="Technical Support">Technical Support</option>
+                                                <option value="Complaint">Complaint</option>
+                                                <option value="Suggestion">Suggestion</option>
                                             </select>
                                             <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                                         </div>
@@ -197,10 +261,12 @@ export default function ContactForm() {
 
                                     {/* Subject */}
                                     <div className="space-y-1.5">
-                                        <label className="text-sm font-semibold text-gray-700">Subject</label>
+                                        <label className="text-sm font-semibold text-gray-700">Subject *</label>
                                         <input
                                             type="text"
                                             required
+                                            value={formData.subject}
+                                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                                             placeholder="How can we help you?"
                                             className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                                         />
@@ -208,12 +274,14 @@ export default function ContactForm() {
 
                                     {/* Message */}
                                     <div className="space-y-1.5">
-                                        <label className="text-sm font-semibold text-gray-700">Message</label>
+                                        <label className="text-sm font-semibold text-gray-700">Message *</label>
                                         <div className="relative">
                                             <MessageSquare className="absolute left-3 top-3 w-4 h-4 text-gray-400 pointer-events-none" />
                                             <textarea
                                                 rows={4}
                                                 required
+                                                value={formData.message}
+                                                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                                                 placeholder="Write your message here..."
                                                 className="w-full pl-10 pr-3 py-2.5 text-sm border border-gray-200 rounded-xl bg-gray-50/50 focus:bg-white focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-none"
                                             />
@@ -223,7 +291,7 @@ export default function ContactForm() {
                                     <button
                                         type="submit"
                                         disabled={isSubmitting}
-                                        className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-[#2A1A99] active:scale-[0.98] text-white font-bold py-3 rounded-xl transition-all disabled:opacity-70 disabled:cursor-not-allowed"
+                                        className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-[#2A1A99] active:scale-[0.98] text-white font-bold py-3.5 rounded-xl transition-all shadow-md shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed"
                                     >
                                         {isSubmitting ? (
                                             <div className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
@@ -247,17 +315,31 @@ export default function ContactForm() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ duration: 0.6, delay: 0.2 }}
-                    className="mt-10 rounded-3xl overflow-hidden shadow-xl shadow-gray-200/60 border border-gray-100 h-80 md:h-96"
+                    className="mt-10 rounded-3xl overflow-hidden shadow-xl shadow-gray-200/60 border border-gray-100 h-80 md:h-96 relative group"
                 >
+                    {/* Top action badge to open directly in Google Maps */}
+                    <div className="absolute top-4 left-4 z-10">
+                        <a
+                            href={googleMapsPlaceUrl}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-2 bg-white/95 backdrop-blur-md px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold text-gray-800 shadow-md hover:bg-white hover:text-primary transition-all border border-gray-100"
+                        >
+                            <MapPin className="w-4 h-4 text-red-600" />
+                            Open in Maps
+                            <ExternalLink className="w-3.5 h-3.5 opacity-60" />
+                        </a>
+                    </div>
+
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3931.0!2d45.3182!3d2.0469!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMsKwMDInNDguOCJOIDQ1wrAxOScwNS41IkU!5e0!3m2!1sen!2sso!4v1234567890"
+                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3987.294154867499!2d45.3222358!3d2.0422266!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3d58438b9d0d4a4d%3A0xae9f850cd842fd3f!2sSomali%20National%20Union%20of%20Teachers%20(%20SONUT%20)!5e0!3m2!1sen!2sso!4v1710000000000!5m2!1sen!2sso"
                         width="100%"
                         height="100%"
                         style={{ border: 0 }}
                         allowFullScreen
                         loading="lazy"
                         referrerPolicy="no-referrer-when-downgrade"
-                        title="SONUT Office Location"
+                        title="Somali National Union of Teachers ( SONUT )"
                     />
                 </motion.div>
             </div>
