@@ -218,7 +218,7 @@ function MemberPanel({
             </h4>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InfoRow icon={User}     label="Magaca / Full Name"           value={member.fullName} />
-              <InfoRow icon={User}     label="Magaca Hooyo / Mother Name"   value={member.motherName} />
+              <InfoRow icon={User}     label="Darajada / Title"             value={member.motherName} />
               <InfoRow icon={User}     label="Jinsiga / Gender"             value={member.gender} />
               <InfoRow icon={Droplets} label="Nooca Dhiigaaga / Blood Type" value={member.bloodType} />
               <InfoRow icon={Calendar} label="Taariikhda Dhalashada / DOB"  value={member.dateOfBirth} />

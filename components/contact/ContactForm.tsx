@@ -26,14 +26,14 @@ const contactInfo = [
     },
     {
         icon: Mail,
-        title: "Support Email",
-        value: "support@sonut.org.so",
-        href: "mailto:support@sonut.org.so",
+        title: "Email",
+        value: "info@sonut.org.so",
+        href: "mailto:info@sonut.org.so",
     },
     {
         icon: MapPin,
         title: "Address",
-        value: "Howl-Wadaag District, Mogadishu, Somalia",
+        value: "Howl-Wadaag District- Mogadishu-Somalia",
         href: googleMapsPlaceUrl,
         external: true,
     },

@@ -13,6 +13,20 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/who-we-are",
+        destination: "/about",
+        permanent: false,
+      },
+      {
+        source: "/about-us",
+        destination: "/about",
+        permanent: false,
+      },
+    ];
+  },
   /* config options here */
 };
 

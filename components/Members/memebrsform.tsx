@@ -132,9 +132,13 @@ function validateField(field: FormField, value: string | File | null): string {
 
   switch (field) {
     case "fullName":
-    case "motherName":
       if (text.length < 3 || !NAME_PATTERN.test(text)) {
         return "Use letters only and enter a valid full name.";
+      }
+      return "";
+    case "motherName":
+      if (text.length < 2) {
+        return "Please enter a valid title.";
       }
       return "";
     case "emergencyName":
@@ -423,11 +427,11 @@ export default function MembersForm() {
             placeholder="Enter your full name" className={inputClass("fullName")} />
         </Field>
 
-        <Field label="Mother's Name" htmlFor="motherName" error={errors.motherName}>
+        <Field label="Title" htmlFor="motherName" error={errors.motherName}>
           <input {...fieldProps("motherName")} type="text" required value={data.motherName}
-            onChange={e => set("motherName", sanitizeName(e.target.value))}
+            onChange={e => set("motherName", sanitizeText(e.target.value))}
             maxLength={100}
-            placeholder="Enter mother's full name" className={inputClass("motherName")} />
+            placeholder="Teacher - Head Teacher" className={inputClass("motherName")} />
         </Field>
 
         <Field label="Gender" htmlFor="gender" error={errors.gender}>

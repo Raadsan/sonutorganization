@@ -46,6 +46,7 @@ export default function AboutPageContent() {
                   alt="SONUT members and teacher representatives"
                   fill
                   priority={currentImageIndex === 0}
+                  unoptimized
                   className="object-cover"
                   sizes="(max-width: 768px) 100vw, 50vw"
                 />

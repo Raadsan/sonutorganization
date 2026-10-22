@@ -93,7 +93,15 @@ export default function Nav() {
             >
               {link.submenu ? (
                 <>
-                  <div
+                  <Link
+                    href={link.label === "Who We Are" ? "/about" : "#"}
+                    onClick={(e) => {
+                      if (link.label !== "Who We Are") {
+                        e.preventDefault();
+                      } else {
+                        setActiveDropdown(null);
+                      }
+                    }}
                     className="flex items-center gap-1 text-gray-700 hover:text-[#F4313F] transition-colors duration-300 cursor-pointer"
                   >
                     {link.label}
@@ -105,7 +113,7 @@ export default function Nav() {
                     >
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
-                  </div>
+                  </Link>
                   <AnimatePresence>
                     {activeDropdown === link.label && (
                       <motion.div

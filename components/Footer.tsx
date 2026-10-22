@@ -109,8 +109,8 @@ export default function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-secondary transition-colors"
                 >
-                  Howl-Wadaag District,<br />
-                  Mogadishu, Somalia
+                  Howl-Wadaag District<br />
+                  Mogadishu-Somalia
                 </a>
               </li>
               <li className="flex items-center gap-3 text-sm">
