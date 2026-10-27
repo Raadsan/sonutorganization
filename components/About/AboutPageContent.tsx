@@ -11,8 +11,8 @@ export default function AboutPageContent() {
         <div className="grid items-center gap-12 md:grid-cols-2 lg:gap-16">
           <div className="relative mx-auto aspect-[4/5] w-full max-w-lg overflow-hidden rounded-3xl bg-gray-100 shadow-2xl md:mx-0">
             <Image
-              src="/images/1 (2).jpg"
-              alt="SONUT members and teacher representatives"
+              src="/images/Sonut.jpg"
+              alt="About SONUT"
               fill
               priority
               className="object-cover object-center"

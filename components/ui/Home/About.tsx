@@ -44,9 +44,9 @@ export default function About() {
             className="relative"
           >
             {/* Main large image */}
-            <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-square lg:aspect-[4/5] w-full max-w-lg mx-auto md:mx-0 bg-gray-100">
+            <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-[4/5] w-full max-w-lg mx-auto md:mx-0 bg-gray-100">
               <Image
-                src="/images/1 (2).jpg"
+                src="/images/Sonut.jpg"
                 alt="About SONUT"
                 fill
                 priority
