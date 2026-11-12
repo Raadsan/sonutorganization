@@ -51,9 +51,38 @@ const INITIAL: FormData = {
   emergencyPhone: "", emergencyPhone2: "",
   subject: "", teachingStatus: "", fieldOfStudy: "",
   teachingLevel: "", institutionName: "", institutionLocation: "",
-  membershipCategory: "Xubin buuxda",
+  membershipCategory: "",
   emergencyName: "", emergencyEmail: "",
 };
+
+const MEMBERSHIP_OPTIONS = [
+  {
+    value: "Full Member – Xubin Buuxda ($3)",
+    title: "Full Member",
+    subtitle: "Xubin Buuxda",
+    price: "$3",
+  },
+  {
+    value: "Supporting Member – Xubin Taageere ($1)",
+    title: "Supporting Member",
+    subtitle: "Xubin Taageere",
+    price: "$1",
+  },
+  {
+    value: "Honourable Member – Xubin Sharafeed ($1)",
+    title: "Honourable Member",
+    subtitle: "Xubin Sharafeed",
+    price: "$1",
+  },
+  {
+    value: "Retired Member – Xubin Hawlgab ah",
+    title: "Retired Member",
+    subtitle: "Xubin Hawlgab ah",
+    price: null as string | null,
+  },
+] as const;
+
+const ID_CARD_LABEL = "ID Card Optional ($5)";
 
 // ─── Helpers ─────────────────────────────────────────────────────────────────
 const TABS = [
@@ -181,6 +210,10 @@ function validateField(field: FormField, value: string | File | null): string {
       return ["Level 1", "Level 2", "Level 3", "University Level", "TVET"].includes(text)
         ? ""
         : "Choose a valid class level.";
+    case "membershipCategory":
+      return MEMBERSHIP_OPTIONS.some((option) => option.value === text)
+        ? ""
+        : "Please select a membership category.";
     default:
       return text.length >= 2 ? "" : "Enter at least 2 characters.";
   }
@@ -226,6 +259,7 @@ export default function MembersForm() {
   const [errors, setErrors] = useState<FormErrors>({});
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [termsError, setTermsError] = useState<string | null>(null);
+  const [wantsIdCard, setWantsIdCard] = useState(false);
   const [preview, setPreview] = useState<string | null>(null);
   const [nationalIdPreview, setNationalIdPreview] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -382,10 +416,14 @@ export default function MembersForm() {
     try {
       const formData = new FormData();
 
-      // Append all string fields
+      // Append all string fields (membership includes optional ID card for admin)
       Object.entries(data).forEach(([key, value]) => {
         if (key !== "teacherImage" && key !== "nationalIdImage") {
-          formData.append(key, (value as string).trim());
+          let fieldValue = (value as string).trim();
+          if (key === "membershipCategory" && wantsIdCard) {
+            fieldValue = `${fieldValue} + ${ID_CARD_LABEL}`;
+          }
+          formData.append(key, fieldValue);
         }
       });
 
@@ -641,35 +679,109 @@ export default function MembersForm() {
     ),
 
     4: (
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-        <div className="sm:col-span-2 bg-[#1E0D79]/5 rounded-2xl p-5 border border-[#1E0D79]/10">
+      <div className="grid grid-cols-1 gap-5">
+        <div className="bg-[#1E0D79]/5 rounded-2xl p-5 border border-[#1E0D79]/10">
           <p className="text-xs text-[#1E0D79] font-bold mb-1.5 uppercase tracking-wider flex items-center gap-1.5">
             <ShieldCheck className="w-4 h-4 text-[#1E0D79]" /> Membership Status &amp; Verification
           </p>
           <p className="text-xs text-gray-600 leading-relaxed">
-            Please select your membership category and review the declaration below to complete your registration.
+            Tick one membership category below. You can also optionally add an ID card. Then review the declaration to complete your registration.
           </p>
         </div>
 
-        <div className="sm:col-span-2">
-          <Field label="Membership Category" htmlFor="membershipCategory" error={errors.membershipCategory}>
-            <select
-              {...fieldProps("membershipCategory")}
-              required
-              value={data.membershipCategory}
-              onChange={e => set("membershipCategory", e.target.value)}
-              className={inputClass("membershipCategory", true)}
-            >
-              <option value="Xubin buuxda">Xubin buuxda</option>
-              <option value="Xubin taageere">Xubin taageere</option>
-              <option value="Xubin sharafeed">Xubin sharafeed</option>
-              <option value="Xubin hawlgab ah">Xubin hawlgab ah</option>
-            </select>
-          </Field>
+        <div>
+          <p className="block text-sm font-semibold text-gray-800 mb-3">
+            Membership Category <span className="text-[#F4313F]">*</span>
+          </p>
+          <div
+            id="membershipCategory"
+            role="radiogroup"
+            aria-label="Membership Category"
+            aria-invalid={Boolean(errors.membershipCategory)}
+            aria-describedby={errors.membershipCategory ? "membershipCategory-error" : undefined}
+            className="grid grid-cols-1 sm:grid-cols-2 gap-3"
+          >
+            {MEMBERSHIP_OPTIONS.map((option) => {
+              const selected = data.membershipCategory === option.value;
+              return (
+                <label
+                  key={option.value}
+                  className={`flex items-start gap-3.5 p-4 rounded-2xl border cursor-pointer select-none transition-all ${
+                    selected
+                      ? "border-[#1E0D79] bg-[#1E0D79]/5 ring-2 ring-[#1E0D79]/15 shadow-xs"
+                      : errors.membershipCategory
+                        ? "border-[#F4313F]/40 bg-red-50/30 hover:border-[#F4313F]/60"
+                        : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/80"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    name="membershipCategory"
+                    checked={selected}
+                    onChange={() => set("membershipCategory", option.value)}
+                    className="w-5 h-5 mt-0.5 rounded-md border-gray-300 accent-[#1E0D79] cursor-pointer shrink-0"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <p className="text-sm font-bold text-gray-900">{option.title}</p>
+                        <p className="text-xs text-gray-500 mt-0.5">{option.subtitle}</p>
+                      </div>
+                      {option.price && (
+                        <span className="shrink-0 text-xs font-bold text-[#1E0D79] bg-[#1E0D79]/10 px-2.5 py-1 rounded-full">
+                          {option.price}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </label>
+              );
+            })}
+          </div>
+          {errors.membershipCategory && (
+            <p id="membershipCategory-error" role="alert" className="flex items-center gap-1 text-xs text-[#F4313F] mt-2">
+              <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+              {errors.membershipCategory}
+            </p>
+          )}
         </div>
 
+        {/* Optional ID Card */}
+        <label
+          htmlFor="wantsIdCard"
+          className={`flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl border cursor-pointer select-none transition-all ${
+            wantsIdCard
+              ? "border-[#1E0D79] bg-[#1E0D79]/5 ring-2 ring-[#1E0D79]/15"
+              : "border-gray-200 bg-white hover:border-gray-300 hover:bg-gray-50/80"
+          }`}
+        >
+          <input
+            id="wantsIdCard"
+            type="checkbox"
+            checked={wantsIdCard}
+            onChange={(e) => setWantsIdCard(e.target.checked)}
+            className="w-5 h-5 mt-0.5 rounded-md border-gray-300 accent-[#1E0D79] cursor-pointer shrink-0"
+          />
+          <div className="min-w-0 flex-1">
+            <div className="flex items-start justify-between gap-2">
+              <div>
+                <p className="text-sm font-bold text-gray-900 flex items-center gap-1.5">
+                  <IdCard className="w-4 h-4 text-[#1E0D79]" />
+                  ID Card Optional
+                </p>
+                <p className="text-xs text-gray-500 mt-0.5">
+                  Request an official SONUT membership ID card (optional add-on).
+                </p>
+              </div>
+              <span className="shrink-0 text-xs font-bold text-[#F4313F] bg-[#F4313F]/10 px-2.5 py-1 rounded-full">
+                $5
+              </span>
+            </div>
+          </div>
+        </label>
+
         {/* Confirmation & Agreement Checkbox */}
-        <div className="sm:col-span-2 pt-2">
+        <div className="pt-1">
           <label
             htmlFor="termsAccepted"
             className={`flex items-start gap-3.5 p-4 sm:p-5 rounded-2xl border transition-all cursor-pointer select-none ${termsError

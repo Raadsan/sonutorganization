@@ -6,6 +6,7 @@ import {
   ChevronRight, Users, ExternalLink,
 } from "lucide-react";
 import { prisma } from "@/lib/db";
+import JoinMovementCta from "@/components/shared/JoinMovementCta";
 
 export const dynamic = "force-dynamic";
 
@@ -118,19 +119,26 @@ export default async function EventDetailPage({ params }: PageProps) {
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
         <div className="grid lg:grid-cols-3 gap-8">
           {/* Left — description */}
-          <div className="lg:col-span-2">
+          <div className="lg:col-span-2 space-y-6">
             <Link
               href="/Resources/events"
-              className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary transition-colors mb-8 group"
+              className="inline-flex items-center gap-2 text-sm font-medium text-gray-500 hover:text-primary transition-colors group"
             >
               <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform duration-200" />
               Back to Events
             </Link>
 
-            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8 mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4 font-serif">
+            <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 md:p-8">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2 font-serif">
                 About This Event
               </h2>
+              <p className="text-sm text-gray-500 mb-6">
+                {event.location}
+                {" — "}
+                {isSameDay
+                  ? formatShortDate(event.startDate)
+                  : `${formatShortDate(event.startDate)} - ${formatShortDate(event.endDate)}`}
+              </p>
               <div className="prose prose-blue max-w-none text-gray-600 leading-relaxed">
                 {event.description.split("\n").map((para, i) =>
                   para.trim() ? (
@@ -143,6 +151,9 @@ export default async function EventDetailPage({ params }: PageProps) {
                 )}
               </div>
             </div>
+
+            {/* CTA after reading */}
+            <JoinMovementCta />
 
             {/* Share */}
             <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
