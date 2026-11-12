@@ -10,7 +10,14 @@ import {
   X, User, Phone, Mail, MapPin, Droplets, Calendar,
   BookOpen, Building2, AlertCircle, GraduationCap, ChevronRight,
   IdCard, ExternalLink, ArrowUpDown, Filter, ShieldCheck,
+  FileSpreadsheet, FileText, Download,
 } from "lucide-react";
+import {
+  exportMembersToExcel,
+  exportMembersToPdf,
+  exportMemberToExcel,
+  exportMemberToPdf,
+} from "@/lib/export-members";
 
 // ─── Full Member type ─────────────────────────────────────────────────────────
 type Member = {
@@ -123,11 +130,43 @@ function MemberPanel({
         </div>
 
         {/* Status bar */}
-        <div className="px-6 py-3 flex items-center gap-3 bg-gray-950/50 border-b border-gray-800">
+        <div className="px-6 py-3 flex items-center gap-3 bg-gray-950/50 border-b border-gray-800 flex-wrap">
           <StatusBadge status={member.status} />
-          <span className="text-gray-500 text-xs ml-auto">
+          <span className="text-gray-500 text-xs">
             Registered: {new Date(member.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
           </span>
+          <div className="ml-auto flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  exportMemberToExcel(member);
+                  toast.success("Excel downloaded");
+                } catch {
+                  toast.error("Failed to export Excel");
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-emerald-500/10 text-emerald-300 border border-emerald-500/20 hover:bg-emerald-500/20 transition-colors"
+              title="Download this member as Excel"
+            >
+              <FileSpreadsheet className="w-3.5 h-3.5" /> Excel
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                try {
+                  exportMemberToPdf(member);
+                  toast.success("PDF print dialog opened");
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : "Failed to export PDF");
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-semibold bg-rose-500/10 text-rose-300 border border-rose-500/20 hover:bg-rose-500/20 transition-colors"
+              title="Download this member as PDF"
+            >
+              <FileText className="w-3.5 h-3.5" /> PDF
+            </button>
+          </div>
         </div>
 
         {/* Body */}
@@ -422,9 +461,47 @@ export default function MembersAdminPage() {
             <h2 className="text-2xl font-bold text-white">Membership Applications</h2>
             <p className="text-gray-400 mt-1">Review, approve, or reject member registrations</p>
           </div>
-          <div className="flex items-center gap-2 text-xs text-gray-400 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-xl self-start sm:self-auto">
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-            Total Members: <strong className="text-white">{members.length}</strong>
+          <div className="flex flex-wrap items-center gap-2 self-start sm:self-auto">
+            <button
+              type="button"
+              disabled={filtered.length === 0}
+              onClick={() => {
+                try {
+                  exportMembersToExcel(filtered);
+                  toast.success(`Excel exported (${filtered.length} members)`);
+                } catch {
+                  toast.error("Failed to export Excel");
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-colors"
+              title="Download all filtered members as Excel"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <FileSpreadsheet className="w-3.5 h-3.5" />
+              Excel (All)
+            </button>
+            <button
+              type="button"
+              disabled={filtered.length === 0}
+              onClick={() => {
+                try {
+                  exportMembersToPdf(filtered);
+                  toast.success("PDF print dialog opened — choose Save as PDF");
+                } catch (err) {
+                  toast.error(err instanceof Error ? err.message : "Failed to export PDF");
+                }
+              }}
+              className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-rose-600 hover:bg-rose-500 disabled:opacity-40 disabled:cursor-not-allowed text-white transition-colors"
+              title="Download all filtered members as PDF"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <FileText className="w-3.5 h-3.5" />
+              PDF (All)
+            </button>
+            <div className="flex items-center gap-2 text-xs text-gray-400 bg-gray-900 border border-gray-800 px-3 py-1.5 rounded-xl">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Total Members: <strong className="text-white">{members.length}</strong>
+            </div>
           </div>
         </div>
 
@@ -536,7 +613,7 @@ export default function MembersAdminPage() {
                   <th className="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">District</th>
                   <th className="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Status</th>
                   <th className="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Date</th>
-                  <th className="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right">View</th>
+                  <th className="p-4 text-xs font-semibold text-gray-400 uppercase tracking-wider text-right">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
@@ -608,13 +685,48 @@ export default function MembersAdminPage() {
                           {new Date(m.createdAt).toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "numeric" })}
                         </td>
                         <td className="p-4 text-right">
-                          <button
-                            onClick={e => { e.stopPropagation(); setSelected(m); }}
-                            className="p-2 text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
-                            title="View full details"
-                          >
-                            <ChevronRight className="w-4 h-4" />
-                          </button>
+                          <div className="inline-flex items-center gap-1">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                try {
+                                  exportMemberToExcel(m);
+                                  toast.success("Excel downloaded");
+                                } catch {
+                                  toast.error("Failed to export Excel");
+                                }
+                              }}
+                              className="p-2 text-gray-500 hover:text-emerald-400 hover:bg-emerald-500/10 rounded-lg transition-colors"
+                              title="Download Excel"
+                            >
+                              <FileSpreadsheet className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                try {
+                                  exportMemberToPdf(m);
+                                  toast.success("PDF print dialog opened");
+                                } catch (err) {
+                                  toast.error(err instanceof Error ? err.message : "Failed to export PDF");
+                                }
+                              }}
+                              className="p-2 text-gray-500 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors"
+                              title="Download PDF"
+                            >
+                              <FileText className="w-4 h-4" />
+                            </button>
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); setSelected(m); }}
+                              className="p-2 text-gray-500 hover:text-blue-400 hover:bg-blue-500/10 rounded-lg transition-colors"
+                              title="View full details"
+                            >
+                              <ChevronRight className="w-4 h-4" />
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     );
